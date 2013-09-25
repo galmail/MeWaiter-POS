@@ -18,9 +18,9 @@
 		<module>../openpos-data</module>
 		<module>../openpos-pos</module>
 		<module>../openpos-erp</module>
-<!--                <module>../openpos-pda</module>-->
 		<module>../openpos-commands</module>
 		<module>../openpos-print</module>
+                <module>../openpos-services</module>
 		<module>../openpos-launcher</module>
 	</modules>
 
@@ -69,11 +69,11 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
-                <repository>
+<!--                <repository>
 			<id>maven@apache</id>
 			<name>Maven Repo from Apache</name>
 			<url>http://repo.maven.apache.org/maven2/</url>
-		</repository>
+		</repository>-->
 	</repositories>
 
 	<scm>
