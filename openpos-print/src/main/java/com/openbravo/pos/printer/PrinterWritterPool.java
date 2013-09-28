@@ -7,6 +7,7 @@ import com.openbravo.pos.printer.escpos.PrinterWriterFactory;
 import com.openbravo.pos.printer.escpos.PrinterWritter;
 import com.openbravo.pos.printer.escpos.PrinterWritterFile;
 import com.openbravo.pos.printer.escpos.PrinterWritterRXTX;
+import com.openbravo.pos.printer.escpos.PrinterWritterNet;
 
 public class PrinterWritterPool implements PrinterWriterFactory {
 
@@ -22,6 +23,9 @@ public class PrinterWritterPool implements PrinterWriterFactory {
                 m_apool.put(skey, pw);
             } else if ("file".equals(con)) {
                 pw = new PrinterWritterFile(port);
+                m_apool.put(skey, pw);
+            } else if ("network".equals(con)) {
+                pw = new PrinterWritterNet(port);
                 m_apool.put(skey, pw);
             } else {
                 throw new TicketPrinterException();

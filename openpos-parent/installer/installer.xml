@@ -1,0 +1,153 @@
+<project>
+    <shortName>mewaiterpos</shortName>
+    <fullName>MeWaiter POS</fullName>
+    <version>1.0.0</version>
+    <readmeFile>licenses/README.txt</readmeFile>
+    <licenseFile>licenses/LICENSE.txt</licenseFile>
+    <leftImage>images/left.png</leftImage>
+    <logoImage>images/icon.png</logoImage>
+    <splashImage>images/splash.png</splashImage>
+    <allowLanguageSelection>1</allowLanguageSelection>
+    <componentList>
+        <component>
+            <name>default</name>
+            <description>Default Component</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>1</selected>
+            <show>1</show>
+            <desktopShortcutList>
+                <shortcut>
+                    <comment>MeWaiter POS is a tiny point of sale for mobile apps</comment>
+                    <exec>sh ${installdir}/start.sh</exec>
+                    <icon>${installdir}/mewaiter-logo-128.png</icon>
+                    <name>MeWaiter POS</name>
+                    <path>${installdir}</path>
+                    <platforms>all</platforms>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/start.bat</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon>${installdir}/mewaiter-logo.ico</windowsIcon>
+                    <windowsPath>${installdir}</windowsPath>
+                </shortcut>
+            </desktopShortcutList>
+            <folderList>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfiles</name>
+                    <platforms>all</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>reports</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>locales</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>licenses</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>lib</origin>
+                        </distributionDirectory>
+                        <distributionFile>
+                            <origin>mewaiter.jar</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>images/mewaiter-logo-128.png</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>images/mewaiter-logo.ico</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>start.bat</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>start.sh</origin>
+                        </distributionFile>
+                        <distributionDirectory>
+                            <origin>images</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>Mac OS</description>
+                    <destination>${installdir}/macos</destination>
+                    <name>MacOS</name>
+                    <platforms>osx</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>rabbitmq</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <startMenuShortcutList>
+                <startMenuShortcut>
+                    <comment>MeWaiter POS is a tiny point of sale for mobile apps</comment>
+                    <name>MeWaiter POS</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/start.bat</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon>${installdir}/mewaiter-logo.ico</windowsIcon>
+                    <windowsPath>${installdir}</windowsPath>
+                </startMenuShortcut>
+                <startMenuShortcut>
+                    <comment>Configure MeWaiter POS</comment>
+                    <name>MeWaiter POS configuration</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/configure.bat</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon>${installdir}/mewaiter-logo.ico</windowsIcon>
+                    <windowsPath>${installdir}</windowsPath>
+                </startMenuShortcut>
+                <startMenuShortcut>
+                    <comment>Uninstall ${product_fullname}</comment>
+                    <name>Uninstall ${product_fullname}</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon></windowsIcon>
+                    <windowsPath>${installdir}/</windowsPath>
+                </startMenuShortcut>
+            </startMenuShortcutList>
+        </component>
+    </componentList>
+    <description>Openbravo POS is a point of sale designed for touch screens</description>
+    <enableRollback>1</enableRollback>
+    <enableTimestamp>1</enableTimestamp>
+    <outputDirectory>../build/installerpos</outputDirectory>
+    <release>3</release>
+    <requireInstallationByRootUser>1</requireInstallationByRootUser>
+    <saveRelativePaths>1</saveRelativePaths>
+    <summary>POS</summary>
+    <vendor>MeWaiter</vendor>
+    <parameterList>
+        <directoryParameter>
+            <name>installdir</name>
+            <description>Installer.Parameter.installdir.description</description>
+            <explanation>Installer.Parameter.installdir.explanation</explanation>
+            <value>${platform_install_prefix}/${product_shortname}-${product_version}</value>
+            <default>${platform_install_prefix}/${product_shortname}-${product_version}</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <ask>yes</ask>
+            <cliOptionName>prefix</cliOptionName>
+            <mustBeWritable>yes</mustBeWritable>
+            <mustExist>0</mustExist>
+            <width>30</width>
+        </directoryParameter>
+    </parameterList>
+    <platformOptionsList>
+        <platformOptions>
+            <description>Openbravo POS is a point of sale designed for touch screens</description>
+            <platform>debian</platform>
+            <release>1</release>
+            <summary>POS</summary>
+            <vendor>Openbravo</vendor>
+        </platformOptions>
+    </platformOptionsList>
+</project>
+

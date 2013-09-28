@@ -20,7 +20,6 @@
 		<module>../openpos-erp</module>
 		<module>../openpos-commands</module>
 		<module>../openpos-print</module>
-                <module>../openpos-services</module>
 		<module>../openpos-launcher</module>
 	</modules>
 
