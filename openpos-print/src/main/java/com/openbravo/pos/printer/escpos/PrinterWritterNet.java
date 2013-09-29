@@ -56,13 +56,15 @@ public class PrinterWritterNet extends PrinterWritter {
     }
 
     protected void internalFlush() {
-        try {  
-            if (m_out != null) {
-                m_out.flush();
-            }
-        } catch (IOException e) {
-            System.err.println(e);
-        }    
+        this.internalClose();
+//        try {  
+//            if (m_out != null) {
+//                m_out.flush();
+//                
+//            }
+//        } catch (IOException e) {
+//            System.err.println(e);
+//        }    
     }
 
     protected void internalClose() {
