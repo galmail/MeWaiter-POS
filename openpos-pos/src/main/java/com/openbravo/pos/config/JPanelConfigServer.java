@@ -27,17 +27,27 @@ import com.openbravo.pos.util.AltEncrypter;
 import com.openbravo.pos.util.DirectoryEvent;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+import com.tocarta.Menu;
+import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonProcessingException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  *
@@ -51,9 +61,8 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
     public JPanelConfigServer() {
         initComponents();
         jtxtMwURL.getDocument().addDocumentListener(dirty);
-        jtxtMwUsername.getDocument().addDocumentListener(dirty);
+        jtxtMwEmail.getDocument().addDocumentListener(dirty);
         jtxtMwPassword.getDocument().addDocumentListener(dirty);
-        jtxtMwRestaurantID.getDocument().addDocumentListener(dirty);
     }
     
     public boolean hasChanged() {
@@ -65,32 +74,40 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
     }
    
     public void loadProperties(AppConfig config) {
-        try {
-            jtxtMwLocalIP.setText(InetAddress.getLocalHost().getHostAddress());
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(JPanelConfigServer.class.getName()).log(Level.SEVERE, null, ex);
+        if(config.getProperty("mw.localIP")==null || config.getProperty("mw.localIP")==""){
+            try {
+                jtxtMwLocalIP.setText(InetAddress.getLocalHost().getHostAddress());
+            } catch (UnknownHostException ex) {
+                Logger.getLogger(JPanelConfigServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else {
+            jtxtMwLocalIP.setText(config.getProperty("mw.localIP"));
         }
         jtxtMwURL.setText(config.getProperty("mw.url"));
-        jtxtMwRestaurantID.setText(config.getProperty("mw.restaurantID"));
-        String sMWusername = config.getProperty("mw.username");
+        String sMWemail = config.getProperty("mw.email");
         String sMWpassword = config.getProperty("mw.password");
-        if (sMWusername != null && sMWpassword != null && sMWpassword.startsWith("crypt:")) {
+        if (sMWemail != null && sMWpassword != null && sMWpassword.startsWith("crypt:")) {
             // La clave esta encriptada.
-            AltEncrypter cypher = new AltEncrypter("cypherkey" + sMWusername);
+            AltEncrypter cypher = new AltEncrypter("cypherkey" + sMWemail);
             sMWpassword = cypher.decrypt(sMWpassword.substring(6));
         }        
-        jtxtMwUsername.setText(sMWusername);
+        jtxtMwEmail.setText(sMWemail);
         jtxtMwPassword.setText(sMWpassword);
         dirty.setDirty(false);
     }
    
     public void saveProperties(AppConfig config) {
+        config.setProperty("mw.localIP", jtxtMwLocalIP.getText());
         config.setProperty("mw.url", jtxtMwURL.getText());
-        config.setProperty("mw.restaurantID", jtxtMwRestaurantID.getText());
-        config.setProperty("mw.username", jtxtMwUsername.getText());
-        AltEncrypter cypher = new AltEncrypter("cypherkey" + jtxtMwUsername.getText());       
+        config.setProperty("mw.email", jtxtMwEmail.getText());
+        AltEncrypter cypher = new AltEncrypter("cypherkey" + jtxtMwEmail.getText());       
         config.setProperty("mw.password", "crypt:" + cypher.encrypt(new String(jtxtMwPassword.getPassword())));
         dirty.setDirty(false);
+    }
+    
+    private void updateStatus(String msg){
+        this.jLabelStatus.setText(msg);
     }
     
     /** This method is called from within the constructor to
@@ -105,11 +122,9 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
         jLabel2 = new javax.swing.JLabel();
         jtxtMwURL = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jtxtMwUsername = new javax.swing.JTextField();
+        jtxtMwEmail = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jtxtMwPassword = new javax.swing.JPasswordField();
-        jLabel1 = new javax.swing.JLabel();
-        jtxtMwRestaurantID = new javax.swing.JTextField();
         jLabelStatus = new javax.swing.JLabel();
         jButtonImportMenu = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
@@ -119,15 +134,13 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
 
         jLabel2.setText(AppLocal.getIntString("label.mwURL")); // NOI18N
 
-        jLabel3.setText(AppLocal.getIntString("label.mwUsername")); // NOI18N
+        jLabel3.setText(AppLocal.getIntString("label.mwEmail")); // NOI18N
 
         jLabel4.setText(AppLocal.getIntString("label.mwPassword")); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages"); // NOI18N
-        jLabel1.setText(bundle.getString("label.mwRestaurantId")); // NOI18N
-
         jLabelStatus.setText("Press \"Import Menu\" button to load menu from server");
 
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages"); // NOI18N
         jButtonImportMenu.setLabel(bundle.getString("button.mwImportMenu")); // NOI18N
         jButtonImportMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -147,7 +160,6 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
-                    .addComponent(jLabel1)
                     .addComponent(jButtonImportMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -157,8 +169,7 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jtxtMwLocalIP, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jtxtMwURL, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jtxtMwUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jtxtMwRestaurantID, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtxtMwEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jtxtMwPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -177,16 +188,12 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jtxtMwUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jtxtMwEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jtxtMwPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jtxtMwRestaurantID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonImportMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -217,11 +224,61 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
         ClientConfig config = new DefaultClientConfig();
         Client client = Client.create(config);
         WebResource service = client.resource(UriBuilder.fromUri(jtxtMwURL.getText()).build());
-        
-        this.jLabelStatus.setText("Connecting to server...");
         try {
+            updateStatus("Connecting to server...");
             String response = service.path("/cli/c").path("/hello").accept(MediaType.APPLICATION_JSON).get(String.class);
-            this.jLabelStatus.setText("Server response: "+response);
+            ObjectMapper mapper = new ObjectMapper();
+            //JsonNode actualObj = mapper.readTree(response);
+            HashMap<String,Object> map = mapper.readValue(response, HashMap.class);
+            if((Boolean)map.get("result")){
+                updateStatus("Server is up!");
+                // login and get auth token
+                MultivaluedMap formData = new MultivaluedMapImpl();
+                formData.add("email", jtxtMwEmail.getText());
+                formData.add("password", new String(jtxtMwPassword.getPassword()));
+                String result = service.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(ClientResponse.class, formData).getEntity(String.class);
+                updateStatus(result);
+                map = mapper.readValue(result, HashMap.class);
+                if((Boolean)map.get("success")){
+                   String token = (String)map.get("auth_token");
+                   updateStatus("Login successfull... loading all menus from server...");
+                   // get restaurant menu
+                   String restMenu = service.path("/cli/c").path("/get_restaurant_info?auth_token="+token).accept(MediaType.APPLICATION_JSON).get(String.class);
+                   map = mapper.readValue(restMenu, HashMap.class);
+                   // create all sections
+                   List<Menu> menus = (List<Menu>)map.get("menus");
+                   if(menus.isEmpty()==false){
+                       updateStatus("Menus loaded!!");
+                       // create all sections
+                       // create all subsections
+                       // create all items
+                   }
+                   else {
+                       updateStatus("Menus were not loaded!");
+                   }
+                }
+                else {
+                    updateStatus("Authentication Failed! Please verify email/password and try again.");
+                }
+                    
+                
+            }
+            else {
+                updateStatus("Server is down!");
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        } catch (IOException ex) {
+            Logger.getLogger(JPanelConfigServer.class.getName()).log(Level.SEVERE, null, ex);
         }
         catch(ClientHandlerException e){
             this.jLabelStatus.setText("Error connecting to server: "+e.getMessage());
@@ -234,18 +291,16 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonImportMenu;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabelStatus;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField jtxtMwEmail;
     private javax.swing.JTextField jtxtMwLocalIP;
     private javax.swing.JPasswordField jtxtMwPassword;
-    private javax.swing.JTextField jtxtMwRestaurantID;
     private javax.swing.JTextField jtxtMwURL;
-    private javax.swing.JTextField jtxtMwUsername;
     // End of variables declaration//GEN-END:variables
     
 }

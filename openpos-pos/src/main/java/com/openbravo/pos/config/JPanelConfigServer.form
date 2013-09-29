@@ -54,7 +54,6 @@
                       <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="jButtonImportMenu" min="-2" pref="133" max="-2" attributes="0"/>
                       <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -65,8 +64,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jtxtMwLocalIP" min="-2" pref="165" max="-2" attributes="1"/>
                               <Component id="jtxtMwURL" min="-2" pref="336" max="-2" attributes="1"/>
-                              <Component id="jtxtMwUsername" alignment="0" min="-2" pref="165" max="-2" attributes="1"/>
-                              <Component id="jtxtMwRestaurantID" alignment="0" min="-2" pref="165" max="-2" attributes="1"/>
+                              <Component id="jtxtMwEmail" alignment="0" min="-2" pref="165" max="-2" attributes="1"/>
                               <Component id="jtxtMwPassword" alignment="0" min="-2" pref="165" max="-2" attributes="1"/>
                           </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -92,19 +90,14 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jtxtMwUsername" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jtxtMwEmail" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jtxtMwPassword" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jtxtMwRestaurantID" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jButtonImportMenu" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                       <Component id="jLabelStatus" alignment="3" max="32767" attributes="0"/>
@@ -127,11 +120,11 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="pos_messages.properties" key="label.mwUsername" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="pos_messages.properties" key="label.mwEmail" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jtxtMwUsername">
+        <Component class="javax.swing.JTextField" name="jtxtMwEmail">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
@@ -141,15 +134,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JPasswordField" name="jtxtMwPassword">
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabel1">
-          <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="pos_messages.properties" key="label.mwRestaurantId" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-            </Property>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="jtxtMwRestaurantID">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelStatus">
           <Properties>

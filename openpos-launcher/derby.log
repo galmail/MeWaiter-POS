@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Sun Sep 29 02:59:31 CEST 2013:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.1.1 - (1458268): instance a816c00e-0141-673a-3925-0000032a04f0 
-on database directory /Users/gal/openbravopos-database2 with class loader sun.misc.Launcher$AppClassLoader@6a39d072 
+Sun Sep 29 18:07:10 CEST 2013:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.1.1 - (1458268): instance a816c00e-0141-6a79-3374-000003138de0 
+on database directory /Users/gal/openbravopos-database2 with class loader sun.misc.Launcher$AppClassLoader@658ba380 
 Loaded from file:/Users/gal/.m2/repository/org/apache/derby/derby/10.10.1.1/derby-10.10.1.1.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.7.0_40-b43
