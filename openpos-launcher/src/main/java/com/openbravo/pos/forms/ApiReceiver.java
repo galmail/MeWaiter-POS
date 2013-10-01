@@ -24,6 +24,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.QueueingConsumer;
+import com.tocarta.App;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.text.SimpleDateFormat;
@@ -66,7 +67,7 @@ public class ApiReceiver {
             System.out.println(" [x] Received '" + newticket.toString() + "'");
 
             // update ticket and insert new ticket lines
-            AppView m_App = OpenPOS.appView;
+            AppView m_App = App.appView;
             DataLogicReceipts dlReceipts = (DataLogicReceipts) m_App.getBean("com.openbravo.pos.sales.DataLogicReceipts");
             String ticketId = new Integer(newticket.getTableNumber()).toString();
             TicketInfo ticket = dlReceipts.getSharedTicket(ticketId);

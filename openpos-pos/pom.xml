@@ -98,11 +98,5 @@
             <version>1.9.13</version>
             <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>org.openpos</groupId>
-            <artifactId>openpos-launcher</artifactId>
-            <version>2.5-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
     </dependencies>
 </project>

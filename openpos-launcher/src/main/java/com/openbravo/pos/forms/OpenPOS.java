@@ -5,6 +5,7 @@
 package com.openbravo.pos.forms;
 
 import com.openbravo.format.Formats;
+import com.tocarta.App;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +21,6 @@ import org.jvnet.substance.api.SubstanceSkin;
 public class OpenPOS implements Runnable {
     
         private static Logger logger = Logger.getLogger("com.openbravo.pos.forms.OpenPOS");
-        public static AppView appView = null;
 
         private String[] initArgs = null;
 
@@ -72,11 +72,11 @@ public class OpenPOS implements Runnable {
             String screenmode = config.getProperty("machine.screenmode");
             if ("fullscreen".equals(screenmode)) {
                 JRootKiosk rootkiosk = new JRootKiosk();
-                appView = rootkiosk.initFrame(config);
+                App.appView = rootkiosk.initFrame(config);
+                
             } else {
                 JRootFrame rootframe = new JRootFrame();
-                appView = rootframe.initFrame(config);
-                String a = "debugging";
+                App.appView = rootframe.initFrame(config);
             }
         }
     }

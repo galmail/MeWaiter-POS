@@ -11,7 +11,6 @@ import com.openbravo.data.loader.LocalRes;
 import com.openbravo.data.loader.PreparedSentence;
 import com.openbravo.data.loader.SerializerWriteBasicExt;
 import com.openbravo.data.loader.Session;
-import com.openbravo.pos.forms.OpenPOS;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -90,7 +89,7 @@ public class Menu {
     
     private void insertStatement(Object params) throws BasicException{
         // insert the menu itself as a section and then insert the rest of its sections
-        Session m_s = OpenPOS.appView.getSession();
+        Session m_s = App.appView.getSession();
         String preparedSQL = "insert into CATEGORIES (ID, NAME, PARENTID, IMAGE) values (?, ?, ?, ?)";
         SerializerWriteBasicExt serWriter = new SerializerWriteBasicExt(new Datas[]{Datas.STRING,Datas.STRING,Datas.STRING,Datas.IMAGE}, new int[]{0,1,2,3});
         PreparedSentence ps = new PreparedSentence(m_s, preparedSQL, serWriter, null);

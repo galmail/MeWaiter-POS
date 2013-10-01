@@ -11,7 +11,6 @@ import com.openbravo.data.loader.LocalRes;
 import com.openbravo.data.loader.PreparedSentence;
 import com.openbravo.data.loader.SerializerWriteBasicExt;
 import com.openbravo.data.loader.Session;
-import com.openbravo.pos.forms.OpenPOS;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -91,7 +90,7 @@ public class Section {
     
     private void insertStatement(Object params) throws BasicException{
         // insert the menu itself as a section and then insert the rest of its sections
-        Session m_s = OpenPOS.appView.getSession();
+        Session m_s = App.appView.getSession();
         String preparedSQL = "INSERT INTO PRODUCTS (ID, REFERENCE, CODE, NAME, ISCOM, ISSCALE, PRICEBUY, PRICESELL, CATEGORY, TAXCAT, ATTRIBUTESET_ID, IMAGE, STOCKCOST, STOCKVOLUME, ATTRIBUTES) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         SerializerWriteBasicExt serWriter = new SerializerWriteBasicExt(new Datas[]{Datas.STRING,Datas.STRING,Datas.STRING,Datas.STRING,Datas.BOOLEAN,Datas.BOOLEAN,Datas.DOUBLE,Datas.DOUBLE,Datas.STRING,Datas.STRING,Datas.NULL,Datas.NULL,Datas.NULL,Datas.NULL,Datas.BOOLEAN,Datas.NULL,Datas.NULL}, new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16});
         PreparedSentence ps = new PreparedSentence(m_s, preparedSQL, serWriter, null);
