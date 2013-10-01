@@ -4,6 +4,7 @@
  */
 package com.tocarta;
 
+import java.util.List;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 /**
@@ -11,15 +12,13 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
  * @author gal
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Dish {
+public class Subsection {
     
     private int id;
     private String name;
-    private String price;
-    private String short_title;
-    private String description;
+    private List<Dish> dishes;
 
-    public Dish() {
+    public Subsection() {
     }
 
     public int getId() {
@@ -38,28 +37,12 @@ public class Dish {
         this.name = name;
     }
 
-    public String getPrice() {
-        return price;
+    public List<Dish> getDishes() {
+        return dishes;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public String getShort_title() {
-        return short_title;
-    }
-
-    public void setShort_title(String short_title) {
-        this.short_title = short_title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDishes(List<Dish> dishes) {
+        this.dishes = dishes;
     }
     
     public String getSID(){

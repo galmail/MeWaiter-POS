@@ -33,7 +33,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-import com.tocarta.Menu;
+import com.tocarta.*;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetAddress;
@@ -48,6 +48,7 @@ import javax.ws.rs.core.UriBuilder;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 
 /**
  *
@@ -236,22 +237,31 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
                 MultivaluedMap formData = new MultivaluedMapImpl();
                 formData.add("email", jtxtMwEmail.getText());
                 formData.add("password", new String(jtxtMwPassword.getPassword()));
-                String result = service.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(ClientResponse.class, formData).getEntity(String.class);
+                String result = service.path("/users").path("/sign_in").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(ClientResponse.class, formData).getEntity(String.class);
                 updateStatus(result);
                 map = mapper.readValue(result, HashMap.class);
                 if((Boolean)map.get("success")){
                    String token = (String)map.get("auth_token");
                    updateStatus("Login successfull... loading all menus from server...");
                    // get restaurant menu
-                   String restMenu = service.path("/cli/c").path("/get_restaurant_info?auth_token="+token).accept(MediaType.APPLICATION_JSON).get(String.class);
+                   MultivaluedMap inputData = new MultivaluedMapImpl();
+                   inputData.add("auth_token", token);
+                   String restMenu = service.path("/cli/c").path("/get_restaurant_info").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).method("GET", String.class, inputData);  //.get(String.class); //.json?auth_token=
                    map = mapper.readValue(restMenu, HashMap.class);
                    // create all sections
-                   List<Menu> menus = (List<Menu>)map.get("menus");
+                   
+                   List<Menu> menus = mapper.convertValue(map.get("menus"), new TypeReference<List<Menu>>() { });
+                   
+                   //List<Menu> menus = (List<Menu>)map.get("menus");
                    if(menus.isEmpty()==false){
-                       updateStatus("Menus loaded!!");
-                       // create all sections
-                       // create all subsections
-                       // create all items
+                       updateStatus("Menus loaded!! Inserting menus in the database...");
+                       for(Menu menu : menus){
+                           menu.insertSectionsToDB();
+                           for(Section section : menu.getSections()){
+                               section.insertDishesToDB();
+                           }
+                       }
+                       updateStatus("Menu Imported Succesfully!");
                    }
                    else {
                        updateStatus("Menus were not loaded!");
@@ -260,23 +270,10 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
                 else {
                     updateStatus("Authentication Failed! Please verify email/password and try again.");
                 }
-                    
-                
             }
             else {
                 updateStatus("Server is down!");
             }
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
         } catch (IOException ex) {
             Logger.getLogger(JPanelConfigServer.class.getName()).log(Level.SEVERE, null, ex);
         }
