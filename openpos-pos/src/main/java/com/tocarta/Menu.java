@@ -25,6 +25,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 public class Menu {
     
     private int id;
+    private String sid;
     private String name;
     private String price;
     private List<Section> sections;
@@ -63,21 +64,25 @@ public class Menu {
     public void setSections(List<Section> sections) {
         this.sections = sections;
     }
-    
-    public String getSID(){
-        return new Integer(this.getId()).toString();
+
+    public String getSid() {
+        return sid;
+    }
+
+    public void setSid(String sid) {
+        this.sid = sid;
     }
     
     public void insertSectionsToDB(){
         try {
-            Object params = new Object[]{this.getSID(),this.getName(),null,null};
+            Object params = new Object[]{this.getSid(),this.getName(),null,null};
             this.insertStatement(params);
             for(Section section : this.getSections()){
-                params = new Object[]{section.getSID(),section.getName(),this.getSID(),null};
+                params = new Object[]{section.getSid(),section.getName(),this.getSid(),null};
                 this.insertStatement(params);
                 if(!section.getSubsections().isEmpty()){
                     for(Subsection subsection : section.getSubsections()){
-                        params = new Object[]{subsection.getSID(),subsection.getName(),section.getSID(),null};
+                        params = new Object[]{subsection.getSid(),subsection.getName(),section.getSid(),null};
                         this.insertStatement(params);
                     }
                 }

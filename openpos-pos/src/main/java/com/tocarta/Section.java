@@ -24,6 +24,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 public class Section {
     
     private int id;
+    private String sid;
     private String name;
     private List<Subsection> subsections;
     private List<Dish> dishes;
@@ -62,23 +63,27 @@ public class Section {
     public void setSubsections(List<Subsection> subsections) {
         this.subsections = subsections;
     }
-    
-    public String getSID(){
-        return new Integer(this.getId()).toString();
+
+    public String getSid() {
+        return sid;
+    }
+
+    public void setSid(String sid) {
+        this.sid = sid;
     }
 
     public void insertDishesToDB() {
         try {
             if(this.getSubsections().isEmpty()){
                 for(Dish dish : this.getDishes()){
-                    Object params = new Object[]{dish.getSID(),dish.getSID(),dish.getSID(),dish.getName(),false,false,0.0,new Double(dish.getPrice()),this.getSID(),"001",null,null,null,null,true,null,null};
+                    Object params = new Object[]{dish.getSid(),dish.getSid(),dish.getSid(),dish.getName(),false,false,0.0,new Double(dish.getPrice()),this.getSid(),"001",null,null,null,null,true,null,null};
                     this.insertStatement(params);
                 }
             }
             else {
                 for(Subsection subsection : this.getSubsections()){
                     for(Dish dish : subsection.getDishes()){
-                        Object params = new Object[]{dish.getSID(),dish.getSID(),dish.getSID(),dish.getName(),false,false,0.0,new Double(dish.getPrice()),subsection.getSID(),"001",null,null,null,null,true,null,null};
+                        Object params = new Object[]{dish.getSid(),dish.getSid(),dish.getSid(),dish.getName(),false,false,0.0,new Double(dish.getPrice()),subsection.getSid(),"001",null,null,null,null,true,null,null};
                         this.insertStatement(params);
                     }
                 }
@@ -91,8 +96,8 @@ public class Section {
     private void insertStatement(Object params) throws BasicException{
         // insert the menu itself as a section and then insert the rest of its sections
         Session m_s = App.appView.getSession();
-        String preparedSQL = "INSERT INTO PRODUCTS (ID, REFERENCE, CODE, NAME, ISCOM, ISSCALE, PRICEBUY, PRICESELL, CATEGORY, TAXCAT, ATTRIBUTESET_ID, IMAGE, STOCKCOST, STOCKVOLUME, ATTRIBUTES) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        SerializerWriteBasicExt serWriter = new SerializerWriteBasicExt(new Datas[]{Datas.STRING,Datas.STRING,Datas.STRING,Datas.STRING,Datas.BOOLEAN,Datas.BOOLEAN,Datas.DOUBLE,Datas.DOUBLE,Datas.STRING,Datas.STRING,Datas.NULL,Datas.NULL,Datas.NULL,Datas.NULL,Datas.BOOLEAN,Datas.NULL,Datas.NULL}, new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16});
+        String preparedSQL = "INSERT INTO PRODUCTS (ID, REFERENCE, CODE, CODETYPE, NAME, PRICEBUY, PRICESELL, CATEGORY, TAXCAT, ATTRIBUTESET_ID, STOCKCOST, STOCKVOLUME, IMAGE, ISCOM, ISSCALE, ATTRIBUTES) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        SerializerWriteBasicExt serWriter = new SerializerWriteBasicExt(new Datas[]{Datas.STRING,Datas.STRING,Datas.STRING,Datas.STRING,Datas.STRING,Datas.DOUBLE,Datas.DOUBLE,Datas.STRING,Datas.STRING,Datas.STRING,Datas.DOUBLE,Datas.DOUBLE,Datas.IMAGE,Datas.INT,Datas.INT,Datas.NULL}, new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16});
         PreparedSentence ps = new PreparedSentence(m_s, preparedSQL, serWriter, null);
         DataResultSet SRS = ps.openExec(params);
         if (SRS == null) {

@@ -15,6 +15,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 public class Subsection {
     
     private int id;
+    private String sid;
     private String name;
     private List<Dish> dishes;
 
@@ -44,9 +45,13 @@ public class Subsection {
     public void setDishes(List<Dish> dishes) {
         this.dishes = dishes;
     }
-    
-    public String getSID(){
-        return new Integer(this.getId()).toString();
+
+    public String getSid() {
+        return sid;
+    }
+
+    public void setSid(String sid) {
+        this.sid = sid;
     }
     
 }

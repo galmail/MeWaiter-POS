@@ -14,6 +14,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 public class Dish {
     
     private int id;
+    private String sid;
     private String name;
     private String price;
     private String short_title;
@@ -61,9 +62,13 @@ public class Dish {
     public void setDescription(String description) {
         this.description = description;
     }
-    
-    public String getSID(){
-        return new Integer(this.getId()).toString();
+
+    public String getSid() {
+        return sid;
+    }
+
+    public void setSid(String sid) {
+        this.sid = sid;
     }
     
 }

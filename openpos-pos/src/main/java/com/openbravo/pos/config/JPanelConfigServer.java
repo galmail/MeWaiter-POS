@@ -242,11 +242,18 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
                 map = mapper.readValue(result, HashMap.class);
                 if((Boolean)map.get("success")){
                    String token = (String)map.get("auth_token");
-                   updateStatus("Login successfull... loading all menus from server...");
+                   updateStatus("Login successfull... setting POS IP Address...");
+                   // set POS IP Address
+                   MultivaluedMap ipData = new MultivaluedMapImpl();
+                   formData.add("auth_token", token);
+                   formData.add("ip", jtxtMwLocalIP.getText());
+                   service.path("/cli/mw").path("/load_pos_ip_address").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(ClientResponse.class, formData).getEntity(String.class);
+                   // loading menus from server
+                   updateStatus("loading menus from server...");
                    // get restaurant menu
                    MultivaluedMap inputData = new MultivaluedMapImpl();
                    inputData.add("auth_token", token);
-                   String restMenu = service.path("/cli/c").path("/get_restaurant_info").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).method("GET", String.class, inputData);  //.get(String.class); //.json?auth_token=
+                   String restMenu = service.path("/cli/c").path("/get_restaurant_info").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).method("GET", String.class, inputData);
                    map = mapper.readValue(restMenu, HashMap.class);
                    // create all sections
                    
