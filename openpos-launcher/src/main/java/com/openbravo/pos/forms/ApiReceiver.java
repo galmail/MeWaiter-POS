@@ -23,86 +23,110 @@ import com.openbravo.pos.ticket.TicketLineInfo;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.QueueingConsumer;
+import com.rabbitmq.client.ShutdownSignalException;
 import com.tocarta.App;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author gal
  */
-public class ApiReceiver {
+public class ApiReceiver implements Runnable {
 
     private final static String QUEUE_NAME = "hello";
+    
+    private String[] initArgs = null;
 
-    public static void listen() throws Exception {
+    public ApiReceiver(String[] args) {
+        initArgs = args;
+    }
 
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
-        Connection connection = factory.newConnection();
-        Channel channel = connection.createChannel();
+    public void run(){
+        try {
+            ConnectionFactory factory = new ConnectionFactory();
+            factory.setHost("localhost");
+            Connection connection = factory.newConnection();
+            Channel channel = connection.createChannel();
 
-        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-        System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
+            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+            System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
-        QueueingConsumer consumer = new QueueingConsumer(channel);
-        channel.basicConsume(QUEUE_NAME, true, consumer);
+            QueueingConsumer consumer = new QueueingConsumer(channel);
+            channel.basicConsume(QUEUE_NAME, true, consumer);
 
-        while (true) {
-            QueueingConsumer.Delivery delivery = consumer.nextDelivery();
+            while (true) {
+                QueueingConsumer.Delivery delivery = consumer.nextDelivery();
 
-            byte[] data = delivery.getBody();
-            ByteArrayInputStream in = new ByteArrayInputStream(data);
-            ObjectInputStream is = new ObjectInputStream(in);
-            String json = (String) is.readObject();
-            Gson gson = new Gson();
-            Ticket newticket = gson.fromJson(json, Ticket.class);
-            
-//            Ticket newticket = (Ticket) is.readObject();
-            System.out.println(" [x] Received '" + newticket.toString() + "'");
+                byte[] data = delivery.getBody();
+                ByteArrayInputStream in = new ByteArrayInputStream(data);
+                ObjectInputStream is = new ObjectInputStream(in);
+                String json = (String) is.readObject();
+                Gson gson = new Gson();
+                Ticket newticket = gson.fromJson(json, Ticket.class);
+                
+    //            Ticket newticket = (Ticket) is.readObject();
+                System.out.println(" [x] Received '" + newticket.toString() + "'");
 
-            // update ticket and insert new ticket lines
-            AppView m_App = App.appView;
-            DataLogicReceipts dlReceipts = (DataLogicReceipts) m_App.getBean("com.openbravo.pos.sales.DataLogicReceipts");
-            String ticketId = new Integer(newticket.getTableNumber()).toString();
-            TicketInfo ticket = dlReceipts.getSharedTicket(ticketId);
-            
-            // fixing the standard tax for now
-            Date d = null;
-            try { d = new SimpleDateFormat("yyyy-MM-dd").parse("2012-01-01"); } catch (Exception ex) {}
-            TaxInfo tax = new TaxInfo("001", "Tax Standard", "001", d, null, null, 0.1, false, null);
-            
-            for (TicketLine newticketLine : newticket.getTicketLines()){
-                String productId = newticketLine.getProductId();
-                String categoryId = newticketLine.getCategoryid();
-                String productName = newticketLine.getProductName();
-                double dMultiply = newticketLine.getMultiply();
-                double dPrice = newticketLine.getPrice();
-                Properties props = new Properties();
-                props.setProperty("product.taxcategoryid", "001");
-                props.setProperty("product.com", "false");
-                props.setProperty("product.categoryid", categoryId);
-                props.setProperty("product.name", productName);
-                if(newticketLine.hasModifiers()){
-                    props.setProperty("product.attsetid", "44b8cec9-e646-43b4-8f25-bf667e4bc36e"); // fixing this for now
-                    props.setProperty("product.attsetdesc", newticketLine.printAllModifiers());
+                // update ticket and insert new ticket lines
+                AppView m_App = App.appView;
+                DataLogicReceipts dlReceipts = (DataLogicReceipts) m_App.getBean("com.openbravo.pos.sales.DataLogicReceipts");
+                String ticketId = new Integer(newticket.getTableNumber()).toString();
+                TicketInfo ticket = dlReceipts.getSharedTicket(ticketId);
+                
+                // fixing the standard tax for now
+                Date d = null;
+                try { d = new SimpleDateFormat("yyyy-MM-dd").parse("2012-01-01"); } catch (Exception ex) {}
+                TaxInfo tax = new TaxInfo("001", "Tax Standard", "001", d, null, null, 0.1, false, null);
+                
+                for (TicketLine newticketLine : newticket.getTicketLines()){
+                    String productId = newticketLine.getProductId();
+                    String categoryId = newticketLine.getCategoryid();
+                    String productName = newticketLine.getProductName();
+                    double dMultiply = newticketLine.getMultiply();
+                    double dPrice = newticketLine.getPrice();
+                    Properties props = new Properties();
+                    props.setProperty("product.taxcategoryid", "001");
+                    props.setProperty("product.com", "false");
+                    props.setProperty("product.categoryid", categoryId);
+                    props.setProperty("product.name", productName);
+                    if(newticketLine.hasModifiers()){
+                        props.setProperty("product.attsetid", "44b8cec9-e646-43b4-8f25-bf667e4bc36e"); // fixing this for now
+                        props.setProperty("product.attsetdesc", newticketLine.printAllModifiers());
+                    }
+                    TicketLineInfo ticketline = new TicketLineInfo(productId, dMultiply, dPrice, tax, props);
+                    ticket.insertLine(ticket.getLinesCount(), ticketline);
                 }
-                TicketLineInfo ticketline = new TicketLineInfo(productId, dMultiply, dPrice, tax, props);
-                ticket.insertLine(ticket.getLinesCount(), ticketline);
-            }
-            
-            // save ticket in database
-            dlReceipts.updateSharedTicket(ticketId, ticket);
+                
+                // save ticket in database
+                dlReceipts.updateSharedTicket(ticketId, ticket);
 
-            // print current ticket
-            System.out.println("Table "+ ticketId +" has " + ticket.getLinesCount() + " lines");
-            String sresource = "Printer.TicketPreview";
-            ApiReceiver.printTicket(m_App, sresource, ticket, "Table "+ticketId);
+                // print current ticket
+                System.out.println("Table "+ ticketId +" has " + ticket.getLinesCount() + " lines");
+                String sresource = "Printer.TicketPreview";
+                ApiReceiver.printTicket(m_App, sresource, ticket, "Table "+ticketId);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ApiReceiver.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ApiReceiver.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ShutdownSignalException ex) {
+            Logger.getLogger(ApiReceiver.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ConsumerCancelledException ex) {
+            Logger.getLogger(ApiReceiver.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ApiReceiver.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BasicException ex) {
+            Logger.getLogger(ApiReceiver.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

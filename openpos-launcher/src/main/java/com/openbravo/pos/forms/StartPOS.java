@@ -18,16 +18,13 @@
 //    along with Openbravo POS.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.forms;
 
-import com.openbravo.data.loader.Session;
-import java.util.Locale;
-import javax.swing.UIManager;
-import com.openbravo.format.Formats;
 import com.openbravo.pos.instance.InstanceQuery;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.LookAndFeel;
-import org.jvnet.substance.SubstanceLookAndFeel;
-import org.jvnet.substance.api.SubstanceSkin;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.RetryRequest;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
 /**
  *
@@ -52,7 +49,6 @@ public class StartPOS {
 //                threadName,
 //                message);
 //    }
-
     public static boolean registerApp() {
 
         // vemos si existe alguna instancia        
@@ -72,16 +68,33 @@ public class StartPOS {
 //        threadMessage("Starting OpenPOSThread...");
 //        Thread t = new Thread(new OpenPOS(args));
 //        t.start();
-        
+
         java.awt.EventQueue.invokeLater(new OpenPOS(args));
-        
+
         try {
-            ApiReceiver.listen();
+            // start listening to RabbitMQ messages
+            new Thread(new ApiReceiver(args)).start();
+            
+            // listen to Web Services on port 8080
+            Server server = new Server(8080);
+
+            ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+            context.setContextPath("/");
+            server.setHandler(context);
+
+            context.addServlet(new ServletHolder(new HelloServlet()), "/*");
+            System.out.println("Try access: http://localhost:8080/");
+            context.addServlet(new ServletHolder(new HelloServlet("Buongiorno Mondo")), "/it/*");
+            System.out.println("Try access: http://localhost:8080/it/");
+            context.addServlet(new ServletHolder(new HelloServlet("Bonjour le Monde")), "/fr/*");
+            System.out.println("Try access: http://localhost:8080/fr/");
+
+            server.start();
+            server.join();
+
         } catch (Exception ex) {
             Logger.getLogger(OpenPOS.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
-
-    
 }
