@@ -76,15 +76,15 @@ public class Section {
         try {
             if(this.getSubsections().isEmpty()){
                 for(Dish dish : this.getDishes()){
-                    Object params = new Object[]{dish.getSid(),dish.getSid(),dish.getSid(),dish.getName(),false,false,0.0,new Double(dish.getPrice()),this.getSid(),"001",null,null,null,null,true,null,null};
-                    this.insertStatement(params);
+                    this.insertShortStatement(dish,this.getSid());
+                    this.setPositionStatement(new Object[]{dish.getSid(),dish.getPosition()});
                 }
             }
             else {
                 for(Subsection subsection : this.getSubsections()){
                     for(Dish dish : subsection.getDishes()){
-                        Object params = new Object[]{dish.getSid(),dish.getSid(),dish.getSid(),dish.getName(),false,false,0.0,new Double(dish.getPrice()),subsection.getSid(),"001",null,null,null,null,true,null,null};
-                        this.insertStatement(params);
+                        this.insertShortStatement(dish,subsection.getSid());
+                        this.setPositionStatement(new Object[]{dish.getSid(),dish.getPosition()});
                     }
                 }
             }
@@ -93,11 +93,15 @@ public class Section {
         }
     }
     
-    private void insertStatement(Object params) throws BasicException{
+    private void insertShortStatement(Dish dish, String parentSid) throws BasicException{
+        String attributesSetId = null;
+        double dishPrice = new Double(dish.getPrice()).doubleValue();
+        Object params = new Object[]{dish.getSid(),dish.getSid(),dish.getSid(),dish.getName(),0.0,dishPrice,parentSid,"001",0,0};
+        
         // insert the menu itself as a section and then insert the rest of its sections
         Session m_s = App.appView.getSession();
-        String preparedSQL = "INSERT INTO PRODUCTS (ID, REFERENCE, CODE, CODETYPE, NAME, PRICEBUY, PRICESELL, CATEGORY, TAXCAT, ATTRIBUTESET_ID, STOCKCOST, STOCKVOLUME, IMAGE, ISCOM, ISSCALE, ATTRIBUTES) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        SerializerWriteBasicExt serWriter = new SerializerWriteBasicExt(new Datas[]{Datas.STRING,Datas.STRING,Datas.STRING,Datas.STRING,Datas.STRING,Datas.DOUBLE,Datas.DOUBLE,Datas.STRING,Datas.STRING,Datas.STRING,Datas.DOUBLE,Datas.DOUBLE,Datas.IMAGE,Datas.INT,Datas.INT,Datas.NULL}, new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16});
+        String preparedSQL = "INSERT INTO PRODUCTS (ID, REFERENCE, CODE, NAME, PRICEBUY, PRICESELL, CATEGORY, TAXCAT, ISCOM, ISSCALE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        SerializerWriteBasicExt serWriter = new SerializerWriteBasicExt(new Datas[]{Datas.STRING,Datas.STRING,Datas.STRING,Datas.STRING,Datas.DOUBLE,Datas.DOUBLE,Datas.STRING,Datas.STRING,Datas.INT,Datas.INT}, new int[]{0,1,2,3,4,5,6,7,8,9});
         PreparedSentence ps = new PreparedSentence(m_s, preparedSQL, serWriter, null);
         DataResultSet SRS = ps.openExec(params);
         if (SRS == null) {
@@ -108,5 +112,24 @@ public class Section {
             SRS.close();
         }
     }
+    
+    private void setPositionStatement(Object params) throws BasicException{
+        Session m_s = App.appView.getSession();
+        String preparedSQL = "INSERT INTO PRODUCTS_CAT (PRODUCT, CATORDER) VALUES (?, ?)";
+        SerializerWriteBasicExt serWriter = new SerializerWriteBasicExt(new Datas[]{Datas.STRING,Datas.INT}, new int[]{0,1});
+        PreparedSentence ps = new PreparedSentence(m_s, preparedSQL, serWriter, null);
+        DataResultSet SRS = ps.openExec(params);
+        if (SRS == null) {
+            throw new BasicException(LocalRes.getIntString("exception.noupdatecount"));
+        }
+        else {
+            int iResult = SRS.updateCount();
+            SRS.close();
+        }
+    }
+    
+    
+    
+    
     
 }

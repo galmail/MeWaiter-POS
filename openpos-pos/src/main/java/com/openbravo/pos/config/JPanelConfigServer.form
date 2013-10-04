@@ -137,14 +137,12 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelStatus">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Press &quot;Import Menu&quot; button to load menu from server"/>
+            <Property name="text" type="java.lang.String" value="Press &quot;Load Menu&quot; button to load menu from server"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="jButtonImportMenu">
           <Properties>
-            <Property name="label" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="pos_messages.properties" key="button.mwImportMenu" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Load Menu"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonImportMenuActionPerformed"/>
