@@ -2,10 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.openbravo.pos.forms;
+package com.tocarta;
 
+import com.openbravo.pos.ticket.TicketInfo;
+import com.openbravo.pos.ticket.TicketLineInfo;
 import java.io.Serializable;
 import java.util.List;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  *
@@ -13,7 +16,9 @@ import java.util.List;
  */
 public class Ticket implements Serializable {
     
+    @JsonProperty("table_number")
     private int tableNumber;
+    @JsonProperty("ticket_lines")
     private List<TicketLine> ticketLines;
 
     public Ticket() {

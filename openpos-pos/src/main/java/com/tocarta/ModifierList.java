@@ -14,6 +14,7 @@ import com.openbravo.data.loader.Session;
 import java.util.List;
 import java.util.UUID;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  *
@@ -27,6 +28,8 @@ class ModifierList {
     private String sid;
     private String name;
     private List<Modifier> modifiers;
+    @JsonProperty("selected_modifiers")
+    private List<Modifier> selectedModifiers;
 
     public ModifierList() {
     }
@@ -69,7 +72,15 @@ class ModifierList {
 
     public void setModifiers(List<Modifier> modifiers) {
         this.modifiers = modifiers;
-    }    
+    }
+
+    public List<Modifier> getSelectedModifiers() {
+        return selectedModifiers;
+    }
+
+    public void setSelectedModifiers(List<Modifier> selectedModifiers) {
+        this.selectedModifiers = selectedModifiers;
+    }
     
     public void insertAttr() throws BasicException {
         Object params = new Object[]{this.getSid(),this.getName()};

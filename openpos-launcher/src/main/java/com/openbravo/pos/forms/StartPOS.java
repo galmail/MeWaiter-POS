@@ -19,10 +19,13 @@
 package com.openbravo.pos.forms;
 
 import com.openbravo.pos.instance.InstanceQuery;
+import com.tocarta.servlets.HelloServlet;
+import com.tocarta.servlets.OrderServlet;
+import com.tocarta.servlets.TableServlet;
+import com.tocarta.servlets.TicketServlet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.RetryRequest;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
@@ -33,6 +36,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 public class StartPOS {
 
     private static Logger logger = Logger.getLogger("com.openbravo.pos.forms.StartPOS");
+    private static int port = 8080;
 
     /**
      * Creates a new instance of StartPOS
@@ -40,17 +44,7 @@ public class StartPOS {
     public StartPOS() {
     }
 
-    // Display a message, preceded by
-    // the name of the current thread
-//    static void threadMessage(String message) {
-//        String threadName =
-//                Thread.currentThread().getName();
-//        System.out.format("%s: %s%n",
-//                threadName,
-//                message);
-//    }
     public static boolean registerApp() {
-
         // vemos si existe alguna instancia        
         InstanceQuery i = null;
         try {
@@ -63,38 +57,45 @@ public class StartPOS {
     }
 
     public static void main(final String args[]) throws InterruptedException {
-//        java.awt.EventQueue.invokeLater(new Runnable() {});
-
-//        threadMessage("Starting OpenPOSThread...");
-//        Thread t = new Thread(new OpenPOS(args));
-//        t.start();
 
         java.awt.EventQueue.invokeLater(new OpenPOS(args));
 
         try {
             // start listening to RabbitMQ messages
-            new Thread(new ApiReceiver(args)).start();
-            
+            //new Thread(new ApiReceiver(args)).start();
+            // start web server
+            startWebServer();
+        } catch (Exception ex) {
+            Logger.getLogger(OpenPOS.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
+    private static void startWebServer(){
+        try {
             // listen to Web Services on port 8080
-            Server server = new Server(8080);
+            Server server = new Server(port);
 
             ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
             context.setContextPath("/");
             server.setHandler(context);
 
-            context.addServlet(new ServletHolder(new HelloServlet()), "/*");
-            System.out.println("Try access: http://localhost:8080/");
-            context.addServlet(new ServletHolder(new HelloServlet("Buongiorno Mondo")), "/it/*");
-            System.out.println("Try access: http://localhost:8080/it/");
-            context.addServlet(new ServletHolder(new HelloServlet("Bonjour le Monde")), "/fr/*");
-            System.out.println("Try access: http://localhost:8080/fr/");
+            context.addServlet(new ServletHolder(new HelloServlet()), "/");
+            System.out.println("Try http://localhost:8080 to make sure server is up");
+            
+            context.addServlet(new ServletHolder(new TableServlet()), "/table");
+            System.out.println("Try to POST an Order to http://localhost:8080/table");
+
+            context.addServlet(new ServletHolder(new OrderServlet()), "/order");
+            System.out.println("Try to POST an Order to http://localhost:8080/order");
+
+            context.addServlet(new ServletHolder(new TicketServlet()), "/ticket");
+            System.out.println("Try to GET Ticket from http://localhost:8080/ticket");
 
             server.start();
             server.join();
-
         } catch (Exception ex) {
-            Logger.getLogger(OpenPOS.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StartPOS.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 }
