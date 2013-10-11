@@ -18,6 +18,7 @@
 //    along with Openbravo POS.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.config;
 
+import com.openbravo.data.loader.LocalRes;
 import com.openbravo.data.user.DirtyManager;
 import java.awt.Component;
 import com.openbravo.pos.forms.AppConfig;
@@ -54,7 +55,8 @@ import org.codehaus.jackson.type.TypeReference;
  * @author adrianromero
  */
 public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfig {
-
+    
+    private static Logger logger = Logger.getLogger("com.openbravo.pos.config.JPanelConfigServer");
     private DirtyManager dirty = new DirtyManager();
 
     /**
@@ -108,6 +110,7 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
     }
 
     private void updateStatus(String msg) {
+        logger.log(Level.INFO,msg);
         this.jLabelStatus.setText(msg);
     }
 
@@ -219,7 +222,7 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonImportMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImportMenuActionPerformed
-        System.out.println("Load Menu Now");
+        updateStatus("loading menu...");
         // connect to server
         ClientConfig config = new DefaultClientConfig();
         Client client = Client.create(config);
@@ -274,6 +277,27 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
                                 modifierListSet.insertModifiersToDB();
                             }
                         }
+                        updateStatus("Modifiers created!! Loading tables in the database...");
+                        // load tables
+                        String restTables = service.path("/cli/mw").path("/tables").queryParam("auth_token", token).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).get(String.class);
+                        map = mapper.readValue(restTables, HashMap.class);
+                        List<Floor> floors = mapper.convertValue(map.get("floors"), new TypeReference<List<Floor>>() {});
+                        if(floors!=null && floors.isEmpty()==false){
+                            for (Floor floor : floors) {
+                                floor.insertTablestoDB();
+                            }
+                        }
+                        updateStatus("Tables created!! Loading payment options in the database...");
+                        // load payment options
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         updateStatus("Menu Imported Succesfully!");
                     } else {
                         updateStatus("Menus were not loaded!");

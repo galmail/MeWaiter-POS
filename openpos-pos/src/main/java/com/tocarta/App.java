@@ -28,20 +28,28 @@ public class App {
     }
     
     public static void cleanDB() {
+        deleteTable("PRODUCTS_CAT");
+        deleteTable("PRODUCTS");
+        deleteTable("CATEGORIES");
+        
+        deleteTable("ATTRIBUTEVALUE");
+        deleteTable("ATTRIBUTEUSE");
+        deleteTable("ATTRIBUTEINSTANCE");
+        deleteTable("ATTRIBUTE");
+        deleteTable("ATTRIBUTESETINSTANCE");
+        deleteTable("ATTRIBUTESET");
+        
+        deleteTable("PLACES");
+        deleteTable("FLOORS");
+        
+    }
+    
+    private static void deleteTable(String table){
         try {
             Session m_s = appView.getSession();
-            new PreparedSentence(m_s, "DELETE FROM PRODUCTS_CAT", new SerializerWriteBasicExt(null, new int[]{})).exec(null);
-            new PreparedSentence(m_s, "DELETE FROM PRODUCTS", new SerializerWriteBasicExt(null, new int[]{})).exec(null);
-            new PreparedSentence(m_s, "DELETE FROM CATEGORIES", new SerializerWriteBasicExt(null, new int[]{})).exec(null);
-            
-            new PreparedSentence(m_s, "DELETE FROM ATTRIBUTEVALUE", new SerializerWriteBasicExt(null, new int[]{})).exec(null);
-            new PreparedSentence(m_s, "DELETE FROM ATTRIBUTEUSE", new SerializerWriteBasicExt(null, new int[]{})).exec(null);
-            new PreparedSentence(m_s, "DELETE FROM ATTRIBUTEINSTANCE", new SerializerWriteBasicExt(null, new int[]{})).exec(null);
-            new PreparedSentence(m_s, "DELETE FROM ATTRIBUTE", new SerializerWriteBasicExt(null, new int[]{})).exec(null);
-            new PreparedSentence(m_s, "DELETE FROM ATTRIBUTESETINSTANCE", new SerializerWriteBasicExt(null, new int[]{})).exec(null);
-            new PreparedSentence(m_s, "DELETE FROM ATTRIBUTESET", new SerializerWriteBasicExt(null, new int[]{})).exec(null);
-            
-        } catch (BasicException ex) {
+            new PreparedSentence(m_s, "DELETE FROM "+table, new SerializerWriteBasicExt(null, new int[]{})).exec(null);            
+        }
+        catch (BasicException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
