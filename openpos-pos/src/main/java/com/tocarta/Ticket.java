@@ -16,20 +16,20 @@ import org.codehaus.jackson.annotate.JsonProperty;
  */
 public class Ticket implements Serializable {
     
-    @JsonProperty("table_number")
-    private int tableNumber;
+    @JsonProperty("table_sid")
+    private String tableSid;
     @JsonProperty("ticket_lines")
     private List<TicketLine> ticketLines;
 
     public Ticket() {
     }
     
-    public int getTableNumber() {
-        return tableNumber;
+    public String getTableSid() {
+        return tableSid;
     }
 
-    public void setTableNumber(int tableNumber) {
-        this.tableNumber = tableNumber;
+    public void setTableSid(String sid) {
+        this.tableSid = sid;
     }
 
     public List<TicketLine> getTicketLines() {

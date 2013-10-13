@@ -50,7 +50,9 @@ class Table {
     public int getPositionX() {
         if(this.positionX>0) return positionX;
         else {
-            return (((this.number-1)%4)+1)*133;
+            int leftMargin = 80;
+            int res = ((this.number-1)%4)*143;
+            return res+leftMargin;
         }
     }
 
@@ -61,17 +63,21 @@ class Table {
     public int getPositionY() {
         if(this.positionY>0) return positionY;
         else {
-            return (((this.number-1)%4)+1)*113;
+            int factor = (int) Math.ceil(this.number / 4.0);
+            return (factor*113);
         }
     }
 
     public void setPositionY(int positionY) {
         this.positionY = positionY;
     }
+    
+    public String getName(String floor){
+        return floor + " Mesa " + this.number;
+    }
 
     public String getName(){
-        if(this.name!=null && this.name.length()>0) return this.name;
-        else return "Mesa " + this.getNumber();
+        return name;
     }
 
     public void setName(String name) {

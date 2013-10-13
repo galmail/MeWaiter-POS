@@ -73,7 +73,7 @@ public class Floor {
             Object params = new Object[]{this.getSid(),this.getName(),in};
             this.insertFloorStatement(params);
             for(Table table : this.getTables()){
-                params = new Object[]{table.getSid(),table.getName(),table.getPositionX(),table.getPositionY(),this.getSid()};
+                params = new Object[]{table.getSid(),table.getName(this.getName()),table.getPositionX(),table.getPositionY(),this.getSid()};
                 this.insertTableStatement(params);
             }
         } catch (BasicException ex) {

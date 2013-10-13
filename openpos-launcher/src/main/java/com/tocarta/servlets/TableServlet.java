@@ -33,9 +33,10 @@ public class TableServlet extends HttpServlet
     }
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        boolean resp = false;
         try {
             // 1. Get received params from request
-            String tCode = request.getParameter("table");
+            String tSid = request.getParameter("table");
             String tPax = request.getParameter("pax");
             String tReservation = request.getParameter("reservation");
             String tMethod = request.getParameter("method");
@@ -45,17 +46,18 @@ public class TableServlet extends HttpServlet
             if(tMethod!=null && tMethod.equals("open")){
                 TicketInfo ticket = new TicketInfo();
                 //ticket.setTicketId(new Integer(tCode).intValue());
-                dlReceipts.insertSharedTicket(tCode, ticket);
+                dlReceipts.insertSharedTicket(tSid, ticket);
             }
             else if(tMethod!=null && tMethod.equals("close")){
-                dlReceipts.deleteSharedTicket(tCode);
+                dlReceipts.deleteSharedTicket(tSid);
             }
-            // 3. Send result OK
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().print("{ \"success\": true }");
+            resp = true;
         } catch (BasicException ex) {
             Logger.getLogger(TableServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+        // 3. Send result OK
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().print("{ \"success\": "+ resp +" }");
     }
 }

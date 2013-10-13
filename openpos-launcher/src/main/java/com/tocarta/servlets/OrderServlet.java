@@ -69,21 +69,21 @@ public class OrderServlet extends HttpServlet
         // 2. Process JSON to Ticket Object
         ObjectMapper mapper = new ObjectMapper();
         Ticket ticket = mapper.readValue(jsonStr,Ticket.class);
-        this.processOrder(ticket);
+        boolean resp = this.processOrder(ticket);
         // 3. Send result OK
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().print("{ \"success\": true }");
+        response.getWriter().print("{ \"success\": "+ resp +" }");
     }
     
-    private void processOrder(Ticket newticket){
+    private boolean processOrder(Ticket newticket){
         try {
             System.out.println(" [x] Received '" + newticket.toString() + "'");
 
             // update ticket and insert new ticket lines
             AppView m_App = App.appView;
             DataLogicReceipts dlReceipts = (DataLogicReceipts) m_App.getBean("com.openbravo.pos.sales.DataLogicReceipts");
-            String ticketId = new Integer(newticket.getTableNumber()).toString();
+            String ticketId = newticket.getTableSid();
             TicketInfo ticket = dlReceipts.getSharedTicket(ticketId);
             
             // fixing the standard tax for now
@@ -117,10 +117,13 @@ public class OrderServlet extends HttpServlet
             System.out.println("Table "+ ticketId +" has " + ticket.getLinesCount() + " lines");
             String sresource = "Printer.TicketPreview";
             this.printTicket(m_App, sresource, ticket, "Table "+ticketId);
+            return true;
         } catch (BasicException ex) {
             Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         } catch (NullPointerException ex) {
             Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
         
     }
@@ -165,8 +168,10 @@ public class OrderServlet extends HttpServlet
 
 /*
 
+* de43c472-ea7a-4063-a1a7-6dc98108cf0c // comedor mesa 2
+
 {
-    "table_number": 1,
+    "table_sid": "629a322a-6416-4a50-827c-83ab911d94b5",
     "ticket_lines": [
         {
             "product_sid": "5d004328-aa99-4666-8241-73e9a4f2e8ea",
