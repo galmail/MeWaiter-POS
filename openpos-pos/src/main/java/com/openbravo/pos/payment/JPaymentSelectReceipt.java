@@ -19,6 +19,7 @@
 
 package com.openbravo.pos.payment;
 
+import com.tocarta.App;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Dialog;
@@ -43,12 +44,16 @@ public class JPaymentSelectReceipt extends JPaymentSelect {
     public static JPaymentSelect getDialog(Component parent) {
          
         Window window = getWindow(parent);
+        JPaymentSelect jpaymentView = null;
         
-        if (window instanceof Frame) { 
-            return new JPaymentSelectReceipt((Frame) window, true, parent.getComponentOrientation());
+        if (window instanceof Frame) {
+            jpaymentView = new JPaymentSelectReceipt((Frame) window, true, parent.getComponentOrientation());
         } else {
-            return new JPaymentSelectReceipt((Dialog) window, true, parent.getComponentOrientation());
+            jpaymentView = new JPaymentSelectReceipt((Dialog) window, true, parent.getComponentOrientation());
         }
+        
+        App.jpaymentView = jpaymentView;
+        return jpaymentView;
     } 
     
     protected void addTabs() {

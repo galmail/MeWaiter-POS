@@ -32,6 +32,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -85,6 +86,8 @@ public class OrderServlet extends HttpServlet
             DataLogicReceipts dlReceipts = (DataLogicReceipts) m_App.getBean("com.openbravo.pos.sales.DataLogicReceipts");
             String ticketId = newticket.getTableSid();
             TicketInfo ticket = dlReceipts.getSharedTicket(ticketId);
+            TicketInfo printedTicket = ticket.copyTicket();
+            printedTicket.setLines(new ArrayList<TicketLineInfo>());
             
             // fixing the standard tax for now
             Date d = null;
@@ -108,6 +111,7 @@ public class OrderServlet extends HttpServlet
                 }
                 TicketLineInfo ticketline = new TicketLineInfo(productId, dMultiply, dPrice, tax, props);
                 ticket.insertLine(ticket.getLinesCount(), ticketline);
+                printedTicket.insertLine(printedTicket.getLinesCount(), ticketline.copyTicketLine());
             }
             
             // save ticket in database
@@ -116,7 +120,7 @@ public class OrderServlet extends HttpServlet
             // print current ticket
             System.out.println("Table "+ ticketId +" has " + ticket.getLinesCount() + " lines");
             String sresource = "Printer.TicketPreview";
-            this.printTicket(m_App, sresource, ticket, "Table "+ticketId);
+            App.printTicket(sresource, printedTicket, newticket.getTableName());
             return true;
         } catch (BasicException ex) {
             Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);
@@ -128,33 +132,7 @@ public class OrderServlet extends HttpServlet
         
     }
     
-    private void printTicket(AppView m_App, String sresourcename, TicketInfo ticket, Object ticketext) throws BasicException {
-        DataLogicSystem dlSystem = (DataLogicSystem) m_App.getBean("com.openbravo.pos.forms.DataLogicSystem");
-        DataLogicSales dlSales = (DataLogicSales) m_App.getBean("com.openbravo.pos.forms.DataLogicSales");
-        SentenceList senttax = dlSales.getTaxList();
-        java.util.List<TaxInfo> taxlist = senttax.list();
-        ListKeyed taxcollection = new ListKeyed<TaxInfo>(taxlist);
-        TaxesLogic taxeslogic = new TaxesLogic(taxlist);
-        TicketParser m_TTP = new TicketParser(m_App.getDeviceTicket(), dlSystem);
-
-        String sresource = dlSystem.getResourceAsXML(sresourcename);
-        if (sresource == null) {
-            System.out.println("ERROR: sresource = null");
-        } else {
-            try {
-                ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
-                script.put("taxes", taxcollection);
-                script.put("taxeslogic", taxeslogic);
-                script.put("ticket", ticket);
-                script.put("place", ticketext);
-                m_TTP.printTicket(script.eval(sresource).toString());
-            } catch (ScriptException e) {
-                System.out.println("ERROR: ScriptException = " + e.toString());
-            } catch (TicketPrinterException e) {
-                System.out.println("ERROR: TicketPrinterException = " + e.toString());
-            }
-        }
-    }
+    
     
     
     
@@ -172,6 +150,7 @@ public class OrderServlet extends HttpServlet
 
 {
     "table_sid": "629a322a-6416-4a50-827c-83ab911d94b5",
+    "table_name": "Terraza Mesa 1",
     "ticket_lines": [
         {
             "product_sid": "5d004328-aa99-4666-8241-73e9a4f2e8ea",

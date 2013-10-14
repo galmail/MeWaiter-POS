@@ -4,7 +4,7 @@ import java.awt.EventQueue;
 
 public class OpenPosLauncher {
 
-	public static void main(String[] args) {
+	public static void oldmain(String[] args) {
 		OpenPos.initApplicationContext("org.openpos","com.openbravo");
 		StartPOS startPOS = OpenPos.getApplicationContext().getBean(StartPOS.class);
 		EventQueue.invokeLater(startPOS);
