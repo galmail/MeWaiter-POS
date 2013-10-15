@@ -72,6 +72,7 @@ public class TicketServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         boolean resp = false;
+        boolean closeTable = Boolean.parseBoolean(request.getParameter("close_table"));
         // 1. Get received JSON data from request
         BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
         String jsonStr = "";
@@ -86,7 +87,7 @@ public class TicketServlet extends HttpServlet {
         // 2. Process JSON to Ticket Object
         ObjectMapper mapper = new ObjectMapper();
         Payment payment = mapper.readValue(jsonStr, Payment.class);
-        resp = this.printBill(payment);
+        resp = this.printBill(payment,closeTable);
         // 3. Send result OK
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
@@ -106,7 +107,7 @@ public class TicketServlet extends HttpServlet {
         return pList;
     }
 
-    private boolean printBill(Payment payment) {
+    private boolean printBill(Payment payment, boolean closeTable) {
         try {
             // 1. Get Ticket
             AppView m_App = App.appView;
@@ -134,15 +135,20 @@ public class TicketServlet extends HttpServlet {
             ticket.setDate(new Date()); // Le pongo la fecha de cobro
 
             // Save the receipt and assign a receipt number
-            dlSales.saveTicket(ticket, m_App.getInventoryLocation());
+            if(closeTable){
+                dlSales.saveTicket(ticket, m_App.getInventoryLocation());
+            }
 
             // Print receipt.
             App.printTicket("Printer.Ticket", ticket, payment.getTableName());
             
-            // reset the payment info and close table
-            ticket.resetTaxes();
-            ticket.resetPayments();
-            dlReceipts.deleteSharedTicket(payment.getTableSid());
+            if(closeTable){
+                // reset the payment info and close table
+                ticket.resetTaxes();
+                ticket.resetPayments();
+                dlReceipts.deleteSharedTicket(payment.getTableSid());
+            }
+            
         } catch (TaxesException ex) {
             Logger.getLogger(TicketServlet.class.getName()).log(Level.SEVERE, null, ex);
             return false;
