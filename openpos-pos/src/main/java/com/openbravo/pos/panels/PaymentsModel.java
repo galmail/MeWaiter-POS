@@ -241,7 +241,7 @@ public class PaymentsModel {
 
 		List<SalesLine> asales = new StaticSentence(
 				session,
-				"SELECT TAXCATEGORIES.NAME, SUM(TAXLINES.AMOUNT), TAXES.RATE "
+				"SELECT TAXCATEGORIES.NAME, SUM(TAXLINES.AMOUNT), AVG(TAXES.RATE) "
 						+ "FROM RECEIPTS, TAXLINES, TAXES, TAXCATEGORIES WHERE RECEIPTS.ID = TAXLINES.RECEIPT AND TAXLINES.TAXID = TAXES.ID AND TAXES.CATEGORY = TAXCATEGORIES.ID "
 						+ "AND RECEIPTS.MONEY = ?" + " GROUP BY TAXCATEGORIES.NAME", SerializerWriteString.INSTANCE,
 				new SerializerReadClass(PaymentsModel.SalesLine.class)).list(activeCashIndex);

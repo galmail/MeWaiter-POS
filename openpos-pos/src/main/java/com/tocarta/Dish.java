@@ -12,6 +12,7 @@ import com.openbravo.data.loader.PreparedSentence;
 import com.openbravo.data.loader.SerializerWriteBasicExt;
 import com.openbravo.data.loader.Session;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  *
@@ -25,10 +26,16 @@ public class Dish {
     private String name;
     private int position;
     private String price;
-    private String short_title;
+    @JsonProperty("short_title")
+    private String shortTitle;
     private String description;
+    @JsonProperty("tax_included")
+    private boolean taxIncluded;
+    private double standardTaxRate;
 
     public Dish() {
+        taxIncluded = true;
+        standardTaxRate = 0.10;
     }
 
     public int getId() {
@@ -52,15 +59,26 @@ public class Dish {
     }
 
     public void setPrice(String price) {
-        this.price = price;
+        try {
+            if(this.taxIncluded){
+                double dPrice = Double.parseDouble(price);
+                String priceWithoutTax = new Double(dPrice / (1+this.standardTaxRate)).toString();
+                this.price = priceWithoutTax;
+            }
+            else {
+                this.price = price;
+            }
+        } catch (Exception ex){
+            this.price = "0";
+        }
     }
 
-    public String getShort_title() {
-        return short_title;
+    public String getShortTitle() {
+        return shortTitle;
     }
 
-    public void setShort_title(String short_title) {
-        this.short_title = short_title;
+    public void setShortTitle(String shortTitle) {
+        this.shortTitle = shortTitle;
     }
 
     public String getDescription() {
@@ -85,6 +103,14 @@ public class Dish {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public boolean isTaxIncluded() {
+        return taxIncluded;
+    }
+
+    public void setTaxIncluded(boolean taxIncluded) {
+        this.taxIncluded = taxIncluded;
     }
 
     void updateAttributes(String attrSetId) throws BasicException {

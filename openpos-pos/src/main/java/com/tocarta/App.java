@@ -42,10 +42,22 @@ public class App {
     }
     
     public static void cleanDB() {
+        // delete stock
+        deleteTable("STOCKDIARY");
+        deleteTable("STOCKLEVEL");
+        deleteTable("STOCKCURRENT");
+        
+        // delete tickets
+        deleteTable("SHAREDTICKETS");
+        deleteTable("TICKETLINES");
+        deleteTable("TICKETS");
+        
+        // delete products and categories
         deleteTable("PRODUCTS_CAT");
         deleteTable("PRODUCTS");
         deleteTable("CATEGORIES");
         
+        // delete product attributes
         deleteTable("ATTRIBUTEVALUE");
         deleteTable("ATTRIBUTEUSE");
         deleteTable("ATTRIBUTEINSTANCE");
@@ -53,6 +65,7 @@ public class App {
         deleteTable("ATTRIBUTESETINSTANCE");
         deleteTable("ATTRIBUTESET");
         
+        // delete tables and floors
         deleteTable("PLACES");
         deleteTable("FLOORS");    
     }

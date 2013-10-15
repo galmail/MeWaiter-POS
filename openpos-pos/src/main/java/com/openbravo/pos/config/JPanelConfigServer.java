@@ -287,9 +287,17 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
                                 floor.insertTablestoDB();
                             }
                         }
-                        updateStatus("Tables created!! Loading payment options in the database...");
-                        // load payment options
-                        
+                        updateStatus("Tables created!! Loading POS Resources in the database...");
+                        // load POS resources
+                        String posResources = service.path("/cli/mw").path("/pos_resources").queryParam("auth_token", token).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).get(String.class);
+                        map = mapper.readValue(posResources, HashMap.class);
+                        List<Resource> resources = mapper.convertValue(map.get("resources"), new TypeReference<List<Resource>>() {});
+                        if(resources!=null && resources.isEmpty()==false){
+                            for (Resource resource : resources) {
+                                resource.updateOnDB();
+                            }
+                        }
+                        updateStatus("Resources updated!!");
                         
                         
                         
