@@ -78,14 +78,15 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
     }
 
     public void loadProperties(AppConfig config) {
-        if (config.getProperty("mw.localIP") == null || config.getProperty("mw.localIP") == "") {
+        String localIP = config.getProperty("mw.localIP");
+        if (localIP == null || localIP.length()<7) {
             try {
                 jtxtMwLocalIP.setText(InetAddress.getLocalHost().getHostAddress());
             } catch (UnknownHostException ex) {
                 Logger.getLogger(JPanelConfigServer.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            jtxtMwLocalIP.setText(config.getProperty("mw.localIP"));
+            jtxtMwLocalIP.setText(localIP);
         }
         jtxtMwURL.setText(config.getProperty("mw.url"));
         String sMWemail = config.getProperty("mw.email");
