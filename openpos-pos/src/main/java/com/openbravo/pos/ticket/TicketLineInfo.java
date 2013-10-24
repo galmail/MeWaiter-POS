@@ -28,7 +28,9 @@ import com.openbravo.format.Formats;
 import com.openbravo.data.loader.SerializableWrite;
 import com.openbravo.basic.BasicException;
 import com.openbravo.pos.forms.AppLocal;
+import java.util.List;
 import java.util.Properties;
+import com.tocarta.Modifier;
 
 /**
  *
@@ -45,21 +47,26 @@ public class TicketLineInfo implements SerializableWrite, SerializableRead, Seri
     private Properties attributes;
     private String productid;
     private String attsetinstid;
+    private List<Modifier> modifiers;
 
     /** Creates new TicketLineInfo */
+    public TicketLineInfo(String productid, double dMultiply, double dPrice, TaxInfo tax, Properties props, List<Modifier> modifiers) {
+        init(productid, null, dMultiply, dPrice, tax, props, modifiers);
+    }
+    
     public TicketLineInfo(String productid, double dMultiply, double dPrice, TaxInfo tax, Properties props) {
-        init(productid, null, dMultiply, dPrice, tax, props);
+        init(productid, null, dMultiply, dPrice, tax, props, null);
     }
 
     public TicketLineInfo(String productid, double dMultiply, double dPrice, TaxInfo tax) {
-        init(productid, null, dMultiply, dPrice, tax, new Properties());
+        init(productid, null, dMultiply, dPrice, tax, new Properties(), null);
     }
 
     public TicketLineInfo(String productid, String productname, String producttaxcategory, double dMultiply, double dPrice, TaxInfo tax) {
         Properties props = new Properties();
         props.setProperty("product.name", productname);
         props.setProperty("product.taxcategoryid", producttaxcategory);
-        init(productid, null, dMultiply, dPrice, tax, props);
+        init(productid, null, dMultiply, dPrice, tax, props, null);
     }
 
     public TicketLineInfo(String productname, String producttaxcategory, double dMultiply, double dPrice, TaxInfo tax) {
@@ -67,11 +74,11 @@ public class TicketLineInfo implements SerializableWrite, SerializableRead, Seri
         Properties props = new Properties();
         props.setProperty("product.name", productname);
         props.setProperty("product.taxcategoryid", producttaxcategory);
-        init(null, null, dMultiply, dPrice, tax, props);
+        init(null, null, dMultiply, dPrice, tax, props, null);
     }
 
     public TicketLineInfo() {
-        init(null, null, 0.0, 0.0, null, new Properties());
+        init(null, null, 0.0, 0.0, null, new Properties(), null);
     }
 
     public TicketLineInfo(ProductInfoExt product, double dMultiply, double dPrice, TaxInfo tax, Properties attributes) {
@@ -92,7 +99,7 @@ public class TicketLineInfo implements SerializableWrite, SerializableRead, Seri
                 attributes.setProperty("product.categoryid", product.getCategoryID());
             }
         }
-        init(pid, null, dMultiply, dPrice, tax, attributes);
+        init(pid, null, dMultiply, dPrice, tax, attributes, null);
     }
 
     public TicketLineInfo(ProductInfoExt oProduct, double dPrice, TaxInfo tax, Properties attributes) {
@@ -100,10 +107,10 @@ public class TicketLineInfo implements SerializableWrite, SerializableRead, Seri
     }
 
     public TicketLineInfo(TicketLineInfo line) {
-        init(line.productid, line.attsetinstid, line.multiply, line.price, line.tax, (Properties) line.attributes.clone());
+        init(line.productid, line.attsetinstid, line.multiply, line.price, line.tax, (Properties) line.attributes.clone(), null);
     }
 
-    private void init(String productid, String attsetinstid, double dMultiply, double dPrice, TaxInfo tax, Properties attributes) {
+    private void init(String productid, String attsetinstid, double dMultiply, double dPrice, TaxInfo tax, Properties attributes, List<Modifier> modifiers) {
 
         this.productid = productid;
         this.attsetinstid = attsetinstid;
@@ -111,6 +118,7 @@ public class TicketLineInfo implements SerializableWrite, SerializableRead, Seri
         price = dPrice;
         this.tax = tax;
         this.attributes = attributes;
+        this.modifiers = modifiers;
 
         m_sTicket = null;
         m_iLine = -1;
@@ -316,4 +324,21 @@ public class TicketLineInfo implements SerializableWrite, SerializableRead, Seri
     public String printValue() {
         return Formats.CURRENCY.formatValue(getValue());
     }
+
+    public List<Modifier> getModifiers() {
+        return modifiers;
+    }
+
+    public void setModifiers(List<Modifier> modifiers) {
+        this.modifiers = modifiers;
+    }
+    
+    public String[] splitAttrs(){
+        return getProductAttSetInstDesc().split(",");
+    }
+    
+    public String encodeName(String name) {
+        return StringUtils.encodeXML(name);
+    }
+    
 }

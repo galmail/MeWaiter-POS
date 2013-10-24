@@ -21,7 +21,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * @author gal
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-class ModifierList {
+public class ModifierList {
     
     private int id;
     private int position;

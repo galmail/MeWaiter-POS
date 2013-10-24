@@ -21,6 +21,7 @@ public class Payment {
     private String tableName;
     @JsonProperty("payment_lines")
     private List<PaymentLine> paymentLines;
+    private List<Discount> discounts;
 
     public Payment() {
     }
@@ -49,4 +50,12 @@ public class Payment {
         this.paymentLines = paymentLines;
     }
 
+    public List<Discount> getDiscounts() {
+        return discounts;
+    }
+
+    public void setDiscounts(List<Discount> discounts) {
+        this.discounts = discounts;
+    }
+    
 }

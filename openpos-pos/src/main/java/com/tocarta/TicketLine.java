@@ -5,6 +5,8 @@
 package com.tocarta;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
@@ -98,6 +100,19 @@ public class TicketLine implements Serializable {
             result = result.substring(0,result.length()-separator.length());
         }
         return result;
+    }
+    
+    public List<Modifier> getAllModifiers(){
+        List<Modifier> modifs = new ArrayList<Modifier>();
+        for(ModifierList mList : this.getModifierListSet().getModifierLists()){
+            for(Modifier modif : mList.getSelectedModifiers()){
+                modifs.add(modif);
+            }
+        }
+        if(this.note!=null){
+            modifs.add(new Modifier(this.note));
+        }
+        return modifs;
     }
     
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Copyright (C) 2013 Tocarta International, S.L.
+    
+    This file matches the resource: Printer.TicketSimplified
+ -->
+<output>
+    <display>
+        <line>
+            <text align="left" length="10">Total.</text>
+            <text align="right" length="10">${ticket.printTotal()}</text>
+        </line>
+        <line>
+           <text align="center" length="20">Gracias.</text>
+        </line>
+    </display>
+    <ticket>
+        <line></line>
+        <image>Printer.Ticket.Logo</image>
+        <line></line>
+        <line>
+             <text>----------------------------------------</text>
+        </line>
+        #if ($place != "")
+        <line>
+            <text align="left" length="15">Mesa:</text>
+            <text>${place}</text>
+        </line>  
+        #end
+        <line>
+            <text align="left" length="15">Fecha:</text>
+            <text>${ticket.printDate()}</text>
+        </line>
+        <line>
+             <text>----------------------------------------</text>
+        </line>
+        #foreach ($ticketline in $ticket.getLines())
+        <line>
+            <text align ="right" length="3">${ticketline.printMultiply()}</text>
+            <text length="2">  </text>
+            <text align ="left" length="25">${ticketline.printName()}</text>
+            <text align ="right" length="10">${ticketline.printSubValue()}</text>
+        </line>
+        #end
+        <line>
+             <text>----------------------------------------</text>
+        </line>
+        <line>
+            <text align ="left" length="16">Subtotal</text>
+            <text align ="right" length="24">${ticket.printSubTotal()}</text>
+        </line> 
+        <line>
+            <text align ="left" length="16">IVA 10%</text>
+            <text align ="right" length="24">${ticket.printTax()}</text>
+        </line>
+        <line>
+            <text align ="left" length="16" bold="true">Total</text>
+            <text align ="right" length="24" bold="true">${ticket.printTotal()}</text>
+        </line>
+    </ticket>
+</output>

@@ -11,6 +11,7 @@ import com.openbravo.data.loader.LocalRes;
 import com.openbravo.data.loader.PreparedSentence;
 import com.openbravo.data.loader.SerializerWriteBasicExt;
 import com.openbravo.data.loader.Session;
+import java.io.Serializable;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 /**
@@ -18,7 +19,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
  * @author gal
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-class Modifier {
+public class Modifier implements Serializable {
     
     private int id;
     private int position;
@@ -26,6 +27,11 @@ class Modifier {
     private String name;
 
     public Modifier() {
+    }
+    
+    public Modifier(String name) {
+        this.sid = "";
+        this.name = name;
     }
 
     public int getId() {

@@ -91,7 +91,7 @@ public class TicketServlet extends HttpServlet {
         // 3. Send result OK
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().print("{ \"success\": " + resp + " }");
+        response.getWriter().print("{ \"success\": " + resp + ", \"total\": 25.80 }");
     }
 
     private List<PaymentInfo> setupPayments(double total, List<PaymentLine> paymentLines) {
@@ -126,9 +126,10 @@ public class TicketServlet extends HttpServlet {
                 ticket.resetPayments(); //Only reset if is sale
             }
 
-            // assign the payments selected and calculate taxes.         
-            ticket.setPayments(setupPayments(ticket.getTotal(),payment.getPaymentLines()));
-
+            // assign the payments selected and calculate taxes.
+            if(payment.getPaymentLines()!=null && payment.getPaymentLines().isEmpty()==false){
+                ticket.setPayments(setupPayments(ticket.getTotal(),payment.getPaymentLines()));
+            }
             // Asigno los valores definitivos del ticket...
             ticket.setUser(m_App.getAppUserView().getUser().getUserInfo()); // El usuario que lo cobra
             ticket.setActiveCash(m_App.getActiveCashIndex());
@@ -138,9 +139,15 @@ public class TicketServlet extends HttpServlet {
             if(closeTable){
                 dlSales.saveTicket(ticket, m_App.getInventoryLocation());
             }
-
-            // Print receipt.
-            App.printTicket("Printer.Ticket", ticket, payment.getTableName());
+            
+            if(payment.getPaymentLines()!=null && payment.getPaymentLines().isEmpty()==false){
+                // Print Complete Ticket.
+                App.printTicket("Printer.Ticket", ticket, payment.getTableName());
+            }
+            else {
+                // Print Simplified Ticket.
+                App.printTicket("Printer.TicketSimplified", ticket, payment.getTableName());
+            }
             
             if(closeTable){
                 // reset the payment info and close table
