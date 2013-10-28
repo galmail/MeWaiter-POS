@@ -118,7 +118,7 @@ public class OrderServlet extends HttpServlet
             dlReceipts.updateSharedTicket(ticketId, ticket);
 
             // print current ticket
-            System.out.println("Table "+ ticketId +" has " + ticket.getLinesCount() + " lines");
+            Logger.getLogger(OrderServlet.class.getName()).log(Level.INFO, null, "Table "+ ticketId +" has " + ticket.getLinesCount() + " lines");
             String sresource = "Printer.TicketPreview";
             App.printTicket(sresource, printedTicket, newticket.getTableName());
             return true;

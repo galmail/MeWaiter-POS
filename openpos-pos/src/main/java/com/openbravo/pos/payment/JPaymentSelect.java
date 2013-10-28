@@ -186,6 +186,64 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
         public String getLabelKey() { return "tab.paper"; }
         public String getIconKey() { return "/com/openbravo/images/knotes.png"; }
     }
+    
+    /**********************************************************/
+    
+    public class JPaymentVisaCreator implements JPaymentCreator {
+        public JPaymentInterface createJPayment() {
+            return new JPaymentVisa(JPaymentSelect.this, "visa");
+        }
+        public String getKey() { return "payment.visa"; }
+        public String getLabelKey() { return "tab.visa"; }
+        public String getIconKey() { return "/com/openbravo/images/knotes.png"; }
+    }
+    
+    public class JPaymentOtherCreditCardsCreator implements JPaymentCreator {
+        public JPaymentInterface createJPayment() {
+            return new JPaymentOtherCreditCards(JPaymentSelect.this, "other_credit_cards");
+        }
+        public String getKey() { return "payment.other_credit_cards"; }
+        public String getLabelKey() { return "tab.other_credit_cards"; }
+        public String getIconKey() { return "/com/openbravo/images/knotes.png"; }
+    }
+    
+    public class JPaymentFoodTicketsCreator implements JPaymentCreator {
+        public JPaymentInterface createJPayment() {
+            return new JPaymentFoodTickets(JPaymentSelect.this, "food_tickets");
+        }
+        public String getKey() { return "payment.food_tickets"; }
+        public String getLabelKey() { return "tab.food_tickets"; }
+        public String getIconKey() { return "/com/openbravo/images/knotes.png"; }
+    }
+    
+    public class JPaymentDiscountCouponsCreator implements JPaymentCreator {
+        public JPaymentInterface createJPayment() {
+            return new JPaymentDiscountCoupons(JPaymentSelect.this, "coupons");
+        }
+        public String getKey() { return "payment.coupons"; }
+        public String getLabelKey() { return "tab.coupons"; }
+        public String getIconKey() { return "/com/openbravo/images/knotes.png"; }
+    }
+    
+    public class JPaymentCreditCreator implements JPaymentCreator {
+        public JPaymentInterface createJPayment() {
+            return new JPaymentCredit(JPaymentSelect.this, "credit");
+        }
+        public String getKey() { return "payment.credit"; }
+        public String getLabelKey() { return "tab.credit"; }
+        public String getIconKey() { return "/com/openbravo/images/knotes.png"; }
+    }
+    
+    public class JPaymentOtherCreator implements JPaymentCreator {
+        public JPaymentInterface createJPayment() {
+            return new JPaymentOther(JPaymentSelect.this, "other");
+        }
+        public String getKey() { return "payment.other"; }
+        public String getLabelKey() { return "tab.other"; }
+        public String getIconKey() { return "/com/openbravo/images/knotes.png"; }
+    }
+    
+    /**********************************************************/
    
     public class JPaymentMagcardCreator implements JPaymentCreator {
         public JPaymentInterface createJPayment() {

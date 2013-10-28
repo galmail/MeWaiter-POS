@@ -54,10 +54,21 @@ public class JPaymentSelectReceipt extends JPaymentSelect {
         
         App.jpaymentView = jpaymentView;
         return jpaymentView;
-    } 
+    }
     
     protected void addTabs() {
-        
+        addTabPayment(new JPaymentSelect.JPaymentCashCreator());
+        addTabPayment(new JPaymentSelect.JPaymentVisaCreator());
+        addTabPayment(new JPaymentSelect.JPaymentOtherCreditCardsCreator());
+        addTabPayment(new JPaymentSelect.JPaymentFoodTicketsCreator());
+        addTabPayment(new JPaymentSelect.JPaymentDiscountCouponsCreator());
+        addTabPayment(new JPaymentSelect.JPaymentCreditCreator());
+        addTabPayment(new JPaymentSelect.JPaymentOtherCreator());
+        addTabPayment(new JPaymentSelect.JPaymentFreeCreator());
+        setHeaderVisible(true);
+    }
+    
+    protected void addTabsOld() { 
         addTabPayment(new JPaymentSelect.JPaymentCashCreator());
         addTabPayment(new JPaymentSelect.JPaymentChequeCreator());
         addTabPayment(new JPaymentSelect.JPaymentPaperCreator());            

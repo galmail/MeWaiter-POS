@@ -19,7 +19,13 @@ import com.openbravo.pos.payment.JPaymentInterface;
 import com.openbravo.pos.payment.JPaymentSelect;
 import com.openbravo.pos.payment.PaymentInfo;
 import com.openbravo.pos.payment.PaymentInfoCash;
+import com.openbravo.pos.payment.PaymentInfoCoupons;
+import com.openbravo.pos.payment.PaymentInfoCredit;
+import com.openbravo.pos.payment.PaymentInfoFoodTickets;
 import com.openbravo.pos.payment.PaymentInfoFree;
+import com.openbravo.pos.payment.PaymentInfoOther;
+import com.openbravo.pos.payment.PaymentInfoOtherCreditCards;
+import com.openbravo.pos.payment.PaymentInfoVisa;
 import com.openbravo.pos.sales.DataLogicReceipts;
 import com.openbravo.pos.sales.JPanelTicket;
 import com.openbravo.pos.sales.TaxesException;
@@ -49,7 +55,8 @@ public class TicketServlet extends HttpServlet {
 
     public TicketServlet() {
     }
-
+    
+    // HTTP GET NOT AVAILABLE YET
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             // get table number
@@ -99,6 +106,24 @@ public class TicketServlet extends HttpServlet {
         for(PaymentLine paymentLine : paymentLines){
             if(paymentLine.getName().matches("cash")){
                 pList.add(new PaymentInfoCash(total,paymentLine.getAmount()));
+            }
+            else if(paymentLine.getName().matches("visa")){
+                pList.add(new PaymentInfoVisa(total,paymentLine.getAmount()));
+            }
+            else if(paymentLine.getName().matches("other_credit_cards")){
+                pList.add(new PaymentInfoOtherCreditCards(total,paymentLine.getAmount()));
+            }
+            else if(paymentLine.getName().matches("food_tickets")){
+                pList.add(new PaymentInfoFoodTickets(total,paymentLine.getAmount()));
+            }
+            else if(paymentLine.getName().matches("coupons")){
+                pList.add(new PaymentInfoCoupons(total,paymentLine.getAmount()));
+            }
+            else if(paymentLine.getName().matches("credit")){
+                pList.add(new PaymentInfoCredit(total,paymentLine.getAmount()));
+            }
+            else if(paymentLine.getName().matches("other")){
+                pList.add(new PaymentInfoOther(total,paymentLine.getAmount()));
             }
             else if(paymentLine.getName().matches("free")){
                 pList.add(new PaymentInfoFree(total));

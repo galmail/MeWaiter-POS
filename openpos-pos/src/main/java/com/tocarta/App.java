@@ -25,6 +25,10 @@ import com.openbravo.pos.scripting.ScriptException;
 import com.openbravo.pos.scripting.ScriptFactory;
 import com.openbravo.pos.ticket.TaxInfo;
 import com.openbravo.pos.ticket.TicketInfo;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -108,6 +112,24 @@ public class App {
                 System.out.println("ERROR: TicketPrinterException = " + e.toString());
             }
         }
+    }
+    
+    
+    public static void restartApp(String os){
+        //final String cmdLine = "java -jar C:\\meWaiter.jar";
+        final String cmdLine = "java -jar /Users/gal/Dropbox/meWaiter/meWaiterPOS_1_0_4.jar";
+        //final String cmdLine = "cmd /c start /b java -jar D:\\MovieLibrary.jar";
+        ScheduledExecutorService schedulerExecutor = Executors.newScheduledThreadPool(2);
+        Callable<Process> callable = new Callable<Process>() {
+            @Override
+            public Process call() throws Exception {
+                Process p = Runtime.getRuntime().exec(cmdLine);
+                return p;
+            }
+        };
+        FutureTask<Process> futureTask = new FutureTask<Process>(callable);
+        schedulerExecutor.submit(futureTask);
+        System.exit(0);
     }
     
     

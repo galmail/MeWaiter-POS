@@ -18,13 +18,11 @@
 //    along with Openbravo POS.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.config;
 
-import com.openbravo.data.loader.LocalRes;
 import com.openbravo.data.user.DirtyManager;
 import java.awt.Component;
 import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.util.AltEncrypter;
-import com.openbravo.pos.util.DirectoryEvent;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
@@ -35,18 +33,16 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import com.tocarta.*;
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
@@ -307,7 +303,15 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
                         
                         
                         
+                        
+                        
                         updateStatus("Menu Imported Succesfully!");
+                        // show popup if user wants to restart the app
+                        int res = JOptionPane.showConfirmDialog(this, AppLocal.getIntString("message.restartApp"), AppLocal.getIntString("title.editor"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+                        if (res == JOptionPane.YES_OPTION) {
+                            App.restartApp("unix");
+                        }
+                        
                     } else {
                         updateStatus("Menus were not loaded!");
                     }
