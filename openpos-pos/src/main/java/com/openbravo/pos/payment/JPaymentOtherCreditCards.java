@@ -34,16 +34,17 @@ public class JPaymentOtherCreditCards extends javax.swing.JPanel implements JPay
     
     private double m_dTicket;
     private double m_dTotal;    
-    
+    private String m_note;
     private String m_sPaper; // "visain", "visaout"
     // private String m_sCustomer; 
     
     
     /** Creates new form JPaymentTicket */
-    public JPaymentOtherCreditCards(JPaymentNotifier notifier, String sPaper) {
+    public JPaymentOtherCreditCards(JPaymentNotifier notifier, String sPaper, String note) {
         
         m_notifier = notifier;
         m_sPaper = sPaper;
+        m_note = note;
         
         initComponents();
         
@@ -51,9 +52,10 @@ public class JPaymentOtherCreditCards extends javax.swing.JPanel implements JPay
         m_jTendered.addEditorKeys(m_jKeys);
     }
     
-    public void activate(CustomerInfoExt customerext, double dTotal, String transID) {
+    public void activate(CustomerInfoExt customerext, double dTotal, String transID, String note) {
         
         m_dTotal = dTotal;
+        if(note!=null) m_note = note;
         
         m_jTendered.reset();
         m_jTendered.activate();
@@ -67,7 +69,7 @@ public class JPaymentOtherCreditCards extends javax.swing.JPanel implements JPay
     
     public PaymentInfo executePayment() {
 
-        return new PaymentInfoTicket(m_dTicket, m_sPaper);
+        return new PaymentInfoTicket(m_dTicket, m_sPaper, null, m_note);
     }    
     
     private void printState() {

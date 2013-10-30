@@ -24,6 +24,7 @@ import com.openbravo.format.Formats;
 public abstract class PaymentInfo {
     
     public abstract String getName();
+    public abstract String getNote();
     public abstract double getTotal();
     public abstract PaymentInfo copyPayment();
     public abstract String getTransactionID();

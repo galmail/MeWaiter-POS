@@ -191,7 +191,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
     
     public class JPaymentVisaCreator implements JPaymentCreator {
         public JPaymentInterface createJPayment() {
-            return new JPaymentVisa(JPaymentSelect.this, "visa");
+            return new JPaymentVisa(JPaymentSelect.this, "visa", null);
         }
         public String getKey() { return "payment.visa"; }
         public String getLabelKey() { return "tab.visa"; }
@@ -200,7 +200,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
     
     public class JPaymentOtherCreditCardsCreator implements JPaymentCreator {
         public JPaymentInterface createJPayment() {
-            return new JPaymentOtherCreditCards(JPaymentSelect.this, "other_credit_cards");
+            return new JPaymentOtherCreditCards(JPaymentSelect.this, "other_credit_cards",null);
         }
         public String getKey() { return "payment.other_credit_cards"; }
         public String getLabelKey() { return "tab.other_credit_cards"; }
@@ -209,7 +209,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
     
     public class JPaymentFoodTicketsCreator implements JPaymentCreator {
         public JPaymentInterface createJPayment() {
-            return new JPaymentFoodTickets(JPaymentSelect.this, "food_tickets");
+            return new JPaymentFoodTickets(JPaymentSelect.this, "food_tickets",null);
         }
         public String getKey() { return "payment.food_tickets"; }
         public String getLabelKey() { return "tab.food_tickets"; }
@@ -218,7 +218,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
     
     public class JPaymentDiscountCouponsCreator implements JPaymentCreator {
         public JPaymentInterface createJPayment() {
-            return new JPaymentDiscountCoupons(JPaymentSelect.this, "coupons");
+            return new JPaymentDiscountCoupons(JPaymentSelect.this, "coupons",null);
         }
         public String getKey() { return "payment.coupons"; }
         public String getLabelKey() { return "tab.coupons"; }
@@ -227,7 +227,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
     
     public class JPaymentCreditCreator implements JPaymentCreator {
         public JPaymentInterface createJPayment() {
-            return new JPaymentCredit(JPaymentSelect.this, "credit");
+            return new JPaymentCredit(JPaymentSelect.this, "credit",null);
         }
         public String getKey() { return "payment.credit"; }
         public String getLabelKey() { return "tab.credit"; }
@@ -236,7 +236,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
     
     public class JPaymentOtherCreator implements JPaymentCreator {
         public JPaymentInterface createJPayment() {
-            return new JPaymentOther(JPaymentSelect.this, "other");
+            return new JPaymentOther(JPaymentSelect.this, "other",null);
         }
         public String getKey() { return "payment.other"; }
         public String getLabelKey() { return "tab.other"; }
@@ -256,7 +256,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
         
     public class JPaymentFreeCreator implements JPaymentCreator {
         public JPaymentInterface createJPayment() {
-            return new JPaymentFree(JPaymentSelect.this);
+            return new JPaymentFree(JPaymentSelect.this,null);
         }
         public String getKey() { return "payment.free"; }
         public String getLabelKey() { return "tab.free"; }
@@ -317,7 +317,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
         m_jRemaininglEuros.setText(Formats.CURRENCY.formatValue(new Double(m_dTotal - m_aPaymentInfo.getTotal())));
         m_jButtonRemove.setEnabled(!m_aPaymentInfo.isEmpty());
         m_jTabPayment.setSelectedIndex(0); // selecciono el primero
-        ((JPaymentInterface) m_jTabPayment.getSelectedComponent()).activate(customerext, m_dTotal - m_aPaymentInfo.getTotal(), m_sTransactionID);
+        ((JPaymentInterface) m_jTabPayment.getSelectedComponent()).activate(customerext, m_dTotal - m_aPaymentInfo.getTotal(), m_sTransactionID, null);
     }
     
     protected static Window getWindow(Component parent) {
@@ -494,7 +494,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
     private void m_jTabPaymentStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_jTabPaymentStateChanged
 
         if (m_jTabPayment.getSelectedComponent() != null) {
-            ((JPaymentInterface) m_jTabPayment.getSelectedComponent()).activate(customerext, m_dTotal - m_aPaymentInfo.getTotal(), m_sTransactionID);
+            ((JPaymentInterface) m_jTabPayment.getSelectedComponent()).activate(customerext, m_dTotal - m_aPaymentInfo.getTotal(), m_sTransactionID, null);
         }
         
     }//GEN-LAST:event_m_jTabPaymentStateChanged

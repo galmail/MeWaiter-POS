@@ -25,19 +25,21 @@ public class PaymentInfoCoupons extends PaymentInfo {
     
     private double m_dPaid;
     private double m_dTotal;
+    private String m_note;
     
     /** Creates a new instance of PaymentInfoCash */
-    public PaymentInfoCoupons(double dTotal, double dPaid) {
+    public PaymentInfoCoupons(double dTotal, double dPaid, String note) {
         m_dTotal = dTotal;
         m_dPaid = dPaid;
+        m_note = note;
     }
     
     public PaymentInfo copyPayment(){
-        return new PaymentInfoCoupons(m_dTotal, m_dPaid);
+        return new PaymentInfoCoupons(m_dTotal, m_dPaid, m_note);
     }
     
     public String getName() {
-        return "visa";
+        return "coupons";
     }   
     public double getTotal() {
         return m_dTotal;
@@ -55,4 +57,8 @@ public class PaymentInfoCoupons extends PaymentInfo {
     public String printChange() {
         return Formats.CURRENCY.formatValue(new Double(m_dPaid - m_dTotal));
     }    
+
+    public String getNote() {
+        return m_note;
+    }
 }

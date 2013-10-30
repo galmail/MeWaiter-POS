@@ -316,7 +316,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 , SerializerWriteString.INSTANCE
                 , new SerializerReadClass(TicketLineInfo.class)).list(ticket.getId()));
             ticket.setPayments(new PreparedSentence(s
-                , "SELECT PAYMENT, TOTAL, TRANSID FROM PAYMENTS WHERE RECEIPT = ?"
+                , "SELECT PAYMENT, TOTAL, TRANSID, NOTE FROM PAYMENTS WHERE RECEIPT = ?"
                 , SerializerWriteString.INSTANCE
                 , new SerializerReadClass(PaymentInfoTicket.class)).list(ticket.getId()));
         }
@@ -398,7 +398,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 }
 
                 SentenceExec paymentinsert = new PreparedSentence(s
-                    , "INSERT INTO PAYMENTS (ID, RECEIPT, PAYMENT, TOTAL, TRANSID, RETURNMSG) VALUES (?, ?, ?, ?, ?, ?)"
+                    , "INSERT INTO PAYMENTS (ID, RECEIPT, PAYMENT, TOTAL, TRANSID, NOTE, RETURNMSG) VALUES (?, ?, ?, ?, ?, ?, ?)"
                     , SerializerWriteParams.INSTANCE);
                 for (final PaymentInfo p : ticket.getPayments()) {
                     paymentinsert.exec(new DataParams() { public void writeValues() throws BasicException {
@@ -407,7 +407,8 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                         setString(3, p.getName());
                         setDouble(4, p.getTotal());
                         setString(5, ticket.getTransactionID());
-                        setBytes(6, (byte[]) Formats.BYTEA.parseValue(ticket.getReturnMessage()));
+                        setString(6, p.getNote());
+                        setBytes(7, (byte[]) Formats.BYTEA.parseValue(ticket.getReturnMessage()));
                     }});
 
                     if ("debt".equals(p.getName()) || "debtpaid".equals(p.getName())) {

@@ -51,7 +51,7 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
         m_jTendered.addEditorKeys(m_jKeys);
     }
     
-    public void activate(CustomerInfoExt customerext, double dTotal, String transID) {
+    public void activate(CustomerInfoExt customerext, double dTotal, String transID, String note) {
         
         m_dTotal = dTotal;
         
@@ -67,7 +67,7 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
     
     public PaymentInfo executePayment() {
 
-        return new PaymentInfoTicket(m_dTicket, m_sPaper);
+        return new PaymentInfoTicket(m_dTicket, m_sPaper, null);
     }    
     
     private void printState() {

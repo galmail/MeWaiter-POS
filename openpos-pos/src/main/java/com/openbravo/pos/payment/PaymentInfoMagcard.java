@@ -161,4 +161,8 @@ public class PaymentInfoMagcard extends PaymentInfo {
     public String printTransactionID() {
         return m_sTransactionID;
     }
+
+    public String getNote() {
+        return null;
+    }
 }

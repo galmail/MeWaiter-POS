@@ -94,11 +94,12 @@ public class TicketServlet extends HttpServlet {
         // 2. Process JSON to Ticket Object
         ObjectMapper mapper = new ObjectMapper();
         Payment payment = mapper.readValue(jsonStr, Payment.class);
-        resp = this.printBill(payment,closeTable);
+        double totalBill = this.printBill(payment,closeTable);
+        resp = (totalBill >= 0);
         // 3. Send result OK
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().print("{ \"success\": " + resp + ", \"total\": 25.80 }");
+        response.getWriter().print("{ \"success\": " + resp + ", \"total\": "+ totalBill +" }");
     }
 
     private List<PaymentInfo> setupPayments(double total, List<PaymentLine> paymentLines) {
@@ -108,31 +109,32 @@ public class TicketServlet extends HttpServlet {
                 pList.add(new PaymentInfoCash(total,paymentLine.getAmount()));
             }
             else if(paymentLine.getName().matches("visa")){
-                pList.add(new PaymentInfoVisa(total,paymentLine.getAmount()));
+                pList.add(new PaymentInfoVisa(total,paymentLine.getAmount(),paymentLine.getNote()));
             }
             else if(paymentLine.getName().matches("other_credit_cards")){
-                pList.add(new PaymentInfoOtherCreditCards(total,paymentLine.getAmount()));
+                pList.add(new PaymentInfoOtherCreditCards(total,paymentLine.getAmount(),paymentLine.getNote()));
             }
             else if(paymentLine.getName().matches("food_tickets")){
-                pList.add(new PaymentInfoFoodTickets(total,paymentLine.getAmount()));
+                pList.add(new PaymentInfoFoodTickets(total,paymentLine.getAmount(),paymentLine.getNote()));
             }
             else if(paymentLine.getName().matches("coupons")){
-                pList.add(new PaymentInfoCoupons(total,paymentLine.getAmount()));
+                pList.add(new PaymentInfoCoupons(total,paymentLine.getAmount(),paymentLine.getNote()));
             }
             else if(paymentLine.getName().matches("credit")){
-                pList.add(new PaymentInfoCredit(total,paymentLine.getAmount()));
+                pList.add(new PaymentInfoCredit(total,paymentLine.getAmount(),paymentLine.getNote()));
             }
             else if(paymentLine.getName().matches("other")){
-                pList.add(new PaymentInfoOther(total,paymentLine.getAmount()));
+                pList.add(new PaymentInfoOther(total,paymentLine.getAmount(),paymentLine.getNote()));
             }
             else if(paymentLine.getName().matches("free")){
-                pList.add(new PaymentInfoFree(total));
+                pList.add(new PaymentInfoFree(total,paymentLine.getNote()));
             }
         }
         return pList;
     }
 
-    private boolean printBill(Payment payment, boolean closeTable) {
+    private double printBill(Payment payment, boolean closeTable) {
+        double totalBill = -1;
         try {
             // 1. Get Ticket
             AppView m_App = App.appView;
@@ -159,6 +161,7 @@ public class TicketServlet extends HttpServlet {
             ticket.setUser(m_App.getAppUserView().getUser().getUserInfo()); // El usuario que lo cobra
             ticket.setActiveCash(m_App.getActiveCashIndex());
             ticket.setDate(new Date()); // Le pongo la fecha de cobro
+            totalBill = ticket.getTotal();
 
             // Save the receipt and assign a receipt number
             if(closeTable){
@@ -180,15 +183,12 @@ public class TicketServlet extends HttpServlet {
                 ticket.resetPayments();
                 dlReceipts.deleteSharedTicket(payment.getTableSid());
             }
-            
         } catch (TaxesException ex) {
             Logger.getLogger(TicketServlet.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
         } catch (BasicException ex) {
             Logger.getLogger(TicketServlet.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
         }
-        return true;
+        return totalBill;
     }
     /*
      
@@ -198,8 +198,20 @@ public class TicketServlet extends HttpServlet {
         "payment_lines": [
            {
               "name": "cash",
-              "sid": "whatever...",
+              "sid": "------",
               "amount": 50.0
+           },
+           {
+              "name": "visa",
+              "sid": "------",
+              "amount": 10.0,
+              "note": "tarjeta ******8176"
+           },
+           {
+              "name": "coupons",
+              "sid": "------",
+              "amount": 2.67,
+              "note": "cupon oportunista"
            }
         ]
      }

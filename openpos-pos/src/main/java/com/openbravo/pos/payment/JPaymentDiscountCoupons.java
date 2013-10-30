@@ -33,17 +33,19 @@ public class JPaymentDiscountCoupons extends javax.swing.JPanel implements JPaym
     private JPaymentNotifier m_notifier;
     
     private double m_dTicket;
-    private double m_dTotal;    
+    private double m_dTotal;
+    private String m_note;
     
     private String m_sPaper; // "visain", "visaout"
     // private String m_sCustomer; 
     
     
     /** Creates new form JPaymentTicket */
-    public JPaymentDiscountCoupons(JPaymentNotifier notifier, String sPaper) {
+    public JPaymentDiscountCoupons(JPaymentNotifier notifier, String sPaper, String note) {
         
         m_notifier = notifier;
         m_sPaper = sPaper;
+        m_note = note;
         
         initComponents();
         
@@ -51,9 +53,10 @@ public class JPaymentDiscountCoupons extends javax.swing.JPanel implements JPaym
         m_jTendered.addEditorKeys(m_jKeys);
     }
     
-    public void activate(CustomerInfoExt customerext, double dTotal, String transID) {
+    public void activate(CustomerInfoExt customerext, double dTotal, String transID, String note) {
         
         m_dTotal = dTotal;
+        if(note!=null) m_note = note;
         
         m_jTendered.reset();
         m_jTendered.activate();
@@ -67,7 +70,7 @@ public class JPaymentDiscountCoupons extends javax.swing.JPanel implements JPaym
     
     public PaymentInfo executePayment() {
 
-        return new PaymentInfoTicket(m_dTicket, m_sPaper);
+        return new PaymentInfoTicket(m_dTicket, m_sPaper, null, m_note);
     }    
     
     private void printState() {

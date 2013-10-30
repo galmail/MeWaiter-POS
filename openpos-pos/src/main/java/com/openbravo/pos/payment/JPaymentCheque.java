@@ -44,7 +44,7 @@ public class JPaymentCheque extends javax.swing.JPanel implements JPaymentInterf
         m_jTendered.addEditorKeys(m_jKeys);
     }
     
-    public void activate(CustomerInfoExt customerext, double dTotal, String transID) {
+    public void activate(CustomerInfoExt customerext, double dTotal, String transID, String note) {
         
         m_dTotal = dTotal;
         
@@ -56,7 +56,7 @@ public class JPaymentCheque extends javax.swing.JPanel implements JPaymentInterf
         
     }
     public PaymentInfo executePayment() {
-        return new PaymentInfoTicket(m_dPaid, "cheque");      
+        return new PaymentInfoTicket(m_dPaid, "cheque", null);      
     }
     public Component getComponent() {
         return this;

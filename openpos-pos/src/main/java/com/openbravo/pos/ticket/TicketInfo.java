@@ -372,6 +372,13 @@ public class TicketInfo implements SerializableRead, Externalizable {
 		}
 		return sum;
 	}
+        
+        public String printChange(){
+            String change = "";
+            if(getTotalPaid()-getTotal() > 0)
+                change = Formats.CURRENCY.formatValue(new Double(getTotalPaid()-getTotal()));
+            return change;
+        }
 
 	public List<TicketLineInfo> getLines() {
 		return m_aLines;

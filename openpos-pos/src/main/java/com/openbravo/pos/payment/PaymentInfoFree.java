@@ -22,14 +22,16 @@ package com.openbravo.pos.payment;
 public class PaymentInfoFree extends PaymentInfo {
     
     private double m_dTotal;
+    private String m_note;
    
     /** Creates a new instance of PaymentInfoFree */
-    public PaymentInfoFree(double dTotal) {
+    public PaymentInfoFree(double dTotal, String note) {
         m_dTotal = dTotal;
+        m_note = note;
     }
     
     public PaymentInfo copyPayment(){
-        return new PaymentInfoFree(m_dTotal);
+        return new PaymentInfoFree(m_dTotal, m_note);
     }    
     public String getName() {
         return "free";
@@ -39,5 +41,9 @@ public class PaymentInfoFree extends PaymentInfo {
     }
     public String getTransactionID(){
         return "no ID";
+    }
+
+    public String getNote() {
+        return m_note;
     }
 }

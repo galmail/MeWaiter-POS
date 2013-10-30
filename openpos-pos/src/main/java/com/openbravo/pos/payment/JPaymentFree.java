@@ -26,16 +26,19 @@ import com.openbravo.pos.forms.AppLocal;
 public class JPaymentFree extends javax.swing.JPanel implements JPaymentInterface {
     
     private double m_dTotal;
+    private String m_note;
     private JPaymentNotifier m_notifier;
     
     /** Creates new form JPaymentFree */
-    public JPaymentFree(JPaymentNotifier notifier) {
+    public JPaymentFree(JPaymentNotifier notifier, String note) {
         m_notifier = notifier;
+        m_note = note;
         initComponents();
     }
-    public void activate(CustomerInfoExt customerext, double dTotal, String transID) {
+    public void activate(CustomerInfoExt customerext, double dTotal, String transID, String note) {
         
         m_dTotal = dTotal;
+        if(note!=null) m_note = note;
         
         // m_jTotal.setText(Formats.CURRENCY.formatValue(new Double(m_dTotal)));
         
@@ -43,7 +46,7 @@ public class JPaymentFree extends javax.swing.JPanel implements JPaymentInterfac
     }
     
     public PaymentInfo executePayment() {
-        return new PaymentInfoFree(m_dTotal);
+        return new PaymentInfoFree(m_dTotal, m_note);
     }
     public Component getComponent() {
         return this;

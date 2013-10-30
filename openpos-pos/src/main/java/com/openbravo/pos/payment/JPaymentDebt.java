@@ -51,7 +51,7 @@ public class JPaymentDebt extends javax.swing.JPanel implements JPaymentInterfac
         
     }
     
-    public void activate(CustomerInfoExt customerext, double dTotal, String transID) {
+    public void activate(CustomerInfoExt customerext, double dTotal, String transID, String note) {
         
         this.customerext = customerext;
         m_dTotal = dTotal;
@@ -91,7 +91,7 @@ public class JPaymentDebt extends javax.swing.JPanel implements JPaymentInterfac
         
     }
     public PaymentInfo executePayment() {
-        return new PaymentInfoTicket(m_dPaid, "debt");      
+        return new PaymentInfoTicket(m_dPaid, "debt", null);      
     }
     public Component getComponent() {
         return this;

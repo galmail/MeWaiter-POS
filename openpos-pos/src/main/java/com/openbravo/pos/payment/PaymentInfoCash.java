@@ -55,4 +55,8 @@ public class PaymentInfoCash extends PaymentInfo {
     public String printChange() {
         return Formats.CURRENCY.formatValue(new Double(m_dPaid - m_dTotal));
     }    
+
+    public String getNote() {
+        return null;
+    }
 }

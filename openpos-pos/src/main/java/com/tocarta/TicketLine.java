@@ -14,7 +14,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * @author gal
  */
 public class TicketLine implements Serializable {
-    
+
     @JsonProperty("product_sid")
     private String productSid;
     @JsonProperty("category_sid")
@@ -26,7 +26,7 @@ public class TicketLine implements Serializable {
     @JsonProperty("modifier_list_set")
     private ModifierListSet modifierListSet;
     private String note;
-    
+
     public TicketLine() {
     }
 
@@ -85,34 +85,38 @@ public class TicketLine implements Serializable {
     public void setNote(String note) {
         this.note = note;
     }
-    
-    public String printAllModifiers(){
+
+    public String printAllModifiers() {
         String result = "";
         String separator = ",";
-        for(ModifierList mList : this.getModifierListSet().getModifierLists()){
-            for(Modifier modif : mList.getSelectedModifiers()){
-                result += modif.getName() + separator;
+        if (this.getModifierListSet() != null) {
+            for (ModifierList mList : this.getModifierListSet().getModifierLists()) {
+                for (Modifier modif : mList.getSelectedModifiers()) {
+                    result += modif.getName() + separator;
+                }
             }
         }
-        if(this.note!=null)
+        if (this.note != null) {
             result += this.note;
-        if(result.endsWith(separator)){
-            result = result.substring(0,result.length()-separator.length());
+        }
+        if (result.endsWith(separator)) {
+            result = result.substring(0, result.length() - separator.length());
         }
         return result;
     }
-    
-    public List<Modifier> getAllModifiers(){
+
+    public List<Modifier> getAllModifiers() {
         List<Modifier> modifs = new ArrayList<Modifier>();
-        for(ModifierList mList : this.getModifierListSet().getModifierLists()){
-            for(Modifier modif : mList.getSelectedModifiers()){
-                modifs.add(modif);
+        if (this.getModifierListSet() != null) {
+            for (ModifierList mList : this.getModifierListSet().getModifierLists()) {
+                for (Modifier modif : mList.getSelectedModifiers()) {
+                    modifs.add(modif);
+                }
             }
         }
-        if(this.note!=null){
+        if (this.note != null) {
             modifs.add(new Modifier(this.note));
         }
         return modifs;
     }
-    
 }

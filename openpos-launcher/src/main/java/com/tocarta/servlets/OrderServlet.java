@@ -35,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -105,8 +106,12 @@ public class OrderServlet extends HttpServlet
                 props.setProperty("product.com", "false");
                 props.setProperty("product.categoryid", categoryId);
                 props.setProperty("product.name", productName);
-                if(newticketLine.getModifierListSet()!=null && !newticketLine.getModifierListSet().getModifierLists().isEmpty()){
-                    props.setProperty("product.attsetid", newticketLine.getModifierListSet().getSid()); // fixing this for now
+                if(newticketLine.getNote()!=null || (newticketLine.getModifierListSet()!=null && !newticketLine.getModifierListSet().getModifierLists().isEmpty())){
+                    String sid = Long.toString(UUID.randomUUID().getMostSignificantBits());
+                    if(newticketLine.getModifierListSet()!=null){
+                        sid = newticketLine.getModifierListSet().getSid();
+                    }
+                    props.setProperty("product.attsetid", sid);
                     props.setProperty("product.attsetdesc", newticketLine.printAllModifiers());
                 }
                 TicketLineInfo ticketline = new TicketLineInfo(productId, dMultiply, dPrice, tax, props);

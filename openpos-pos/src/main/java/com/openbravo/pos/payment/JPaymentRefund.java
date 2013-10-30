@@ -39,14 +39,14 @@ public class JPaymentRefund extends javax.swing.JPanel implements JPaymentInterf
         initComponents();
     }
     
-    public void activate(CustomerInfoExt customerext, double dTotal, String transID) {
+    public void activate(CustomerInfoExt customerext, double dTotal, String transID, String note) {
         m_dTotal = dTotal;
         
         m_notifier.setStatus(true, true);
     }
     
     public PaymentInfo executePayment() {
-        return new PaymentInfoTicket(m_dTotal, m_sName);
+        return new PaymentInfoTicket(m_dTotal, m_sName, null);
     }
     public Component getComponent() {
         return this;

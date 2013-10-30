@@ -15,6 +15,7 @@ public class PaymentLine {
     
     private String sid;
     private String name;
+    private String note;
     private double amount;
 
     public PaymentLine() {
@@ -42,6 +43,14 @@ public class PaymentLine {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
     
 }

@@ -286,13 +286,15 @@ public class DataLogicIntegration extends BeanFactoryDataSingle {
     }
     public List getTicketPayments(final String ticket) throws BasicException {
         return new PreparedSentence(s
-                , "SELECT TOTAL, PAYMENT FROM PAYMENTS WHERE RECEIPT = ?"
+                , "SELECT TOTAL, PAYMENT, NOTE FROM PAYMENTS WHERE RECEIPT = ?"
                 , SerializerWriteString.INSTANCE
                 , new SerializerRead() {
                     public Object readValues(DataRead dr) throws BasicException {
                         return new PaymentInfoTicket(
                                 dr.getDouble(1),
-                                dr.getString(2));
+                                dr.getString(2),
+                                null,
+                                dr.getString(3));
                     }                
                 }).list(ticket);
     }    
