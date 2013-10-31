@@ -90,4 +90,8 @@ public class PaymentInfoTicket extends PaymentInfo implements SerializableRead  
     public String getNote() {
         return m_note;
     }
+    
+    public double getPaid() {
+        return 0;
+    }
 }

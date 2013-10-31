@@ -46,4 +46,8 @@ public class PaymentInfoFree extends PaymentInfo {
     public String getNote() {
         return m_note;
     }
+
+    public double getPaid() {
+        return 0;
+    }
 }

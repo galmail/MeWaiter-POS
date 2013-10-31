@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.013" errors="0" skipped="0" tests="6" name="org.openpos.timerecording.TimeKeeperTest">
+<testsuite failures="0" time="0.011" errors="0" skipped="0" tests="6" name="org.openpos.timerecording.TimeKeeperTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Libraries"/>
@@ -64,10 +64,10 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase time="0" classname="org.openpos.timerecording.TimeKeeperTest" name="testSetTime"/>
+  <testcase time="0.001" classname="org.openpos.timerecording.TimeKeeperTest" name="testSetTime"/>
   <testcase time="0" classname="org.openpos.timerecording.TimeKeeperTest" name="testSetMinute"/>
   <testcase time="0" classname="org.openpos.timerecording.TimeKeeperTest" name="testDecMinute"/>
   <testcase time="0" classname="org.openpos.timerecording.TimeKeeperTest" name="testIncMinute"/>
   <testcase time="0" classname="org.openpos.timerecording.TimeKeeperTest" name="testDecHour"/>
-  <testcase time="0.001" classname="org.openpos.timerecording.TimeKeeperTest" name="testIncHour"/>
+  <testcase time="0" classname="org.openpos.timerecording.TimeKeeperTest" name="testIncHour"/>
 </testsuite>

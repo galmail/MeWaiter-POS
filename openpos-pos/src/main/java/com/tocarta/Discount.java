@@ -18,6 +18,7 @@ public class Discount {
     private String note;
     private String dtype;
     private double amount;
+    public static final String discountsCategoryId = "------------";
 
     public Discount() {
     }
@@ -60,6 +61,18 @@ public class Discount {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+    
+    public double calculateFixDiscount(double total){
+        if(dtype=="fixed"){
+            return amount*(-1);
+        }
+        else if (dtype=="percentage"){
+            return total*(amount/100)*(-1);
+        }
+        else {
+            return 0;
+        }
     }
     
 }

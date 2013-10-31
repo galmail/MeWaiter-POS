@@ -363,7 +363,6 @@ public class TicketInfo implements SerializableRead, Externalizable {
 	}
 
 	public double getTotalPaid() {
-
 		double sum = 0.0;
 		for (PaymentInfo p : payments) {
 			if (!"debtpaid".equals(p.getName())) {
@@ -373,11 +372,26 @@ public class TicketInfo implements SerializableRead, Externalizable {
 		return sum;
 	}
         
+        public double getPaid() {
+            double sum = 0.0;
+            for (PaymentInfo p : payments) {
+                if ("debtpaid".equals(p.getName())) continue;
+                if ("cash".equals(p.getName())){
+                    sum += p.getPaid();
+                }
+                else {
+                    sum += p.getTotal();
+                }
+            }
+            return sum;
+	}
+        
         public String printChange(){
-            String change = "";
-            if(getTotalPaid()-getTotal() > 0)
-                change = Formats.CURRENCY.formatValue(new Double(getTotalPaid()-getTotal()));
-            return change;
+            String sChange = "";
+            double change = getPaid()-getTotal();
+            if(change > 0)
+                sChange = Formats.CURRENCY.formatValue(new Double(change));
+            return sChange;
         }
 
 	public List<TicketLineInfo> getLines() {

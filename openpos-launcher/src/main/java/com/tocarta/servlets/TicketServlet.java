@@ -32,16 +32,21 @@ import com.openbravo.pos.sales.TaxesException;
 import com.openbravo.pos.sales.TaxesLogic;
 import com.openbravo.pos.ticket.TaxInfo;
 import com.openbravo.pos.ticket.TicketInfo;
+import com.openbravo.pos.ticket.TicketLineInfo;
 import com.tocarta.App;
+import com.tocarta.Discount;
 import com.tocarta.Payment;
 import com.tocarta.PaymentLine;
 import com.tocarta.Ticket;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -153,6 +158,11 @@ public class TicketServlet extends HttpServlet {
                 ticket.resetPayments(); //Only reset if is sale
             }
 
+            // process discounts
+            if(payment.getDiscounts()!=null && payment.getDiscounts().isEmpty()==false){
+                ticket = setupDiscounts(ticket,payment.getDiscounts());
+            }
+            
             // assign the payments selected and calculate taxes.
             if(payment.getPaymentLines()!=null && payment.getPaymentLines().isEmpty()==false){
                 ticket.setPayments(setupPayments(ticket.getTotal(),payment.getPaymentLines()));
@@ -190,31 +200,31 @@ public class TicketServlet extends HttpServlet {
         }
         return totalBill;
     }
-    /*
-     
-     {
-        "table_sid": "629a322a-6416-4a50-827c-83ab911d94b5",
-        "table_name": "Terraza Mesa 1",
-        "payment_lines": [
-           {
-              "name": "cash",
-              "sid": "------",
-              "amount": 50.0
-           },
-           {
-              "name": "visa",
-              "sid": "------",
-              "amount": 10.0,
-              "note": "tarjeta ******8176"
-           },
-           {
-              "name": "coupons",
-              "sid": "------",
-              "amount": 2.67,
-              "note": "cupon oportunista"
-           }
-        ]
-     }
-     
-     */
+
+    private TicketInfo setupDiscounts(TicketInfo ticket, List<Discount> discounts) {
+        for(Discount discount : discounts){
+            String productId = discount.getSid();
+            String categoryId = Discount.discountsCategoryId;
+            String productName = discount.getName();
+            double dMultiply = 1;
+            double dPrice = discount.calculateFixDiscount(ticket.getTotal());
+            Properties props = new Properties();
+            props.setProperty("product.taxcategoryid", "001");
+            props.setProperty("product.com", "false");
+            props.setProperty("product.categoryid", categoryId);
+            props.setProperty("product.name", productName);
+            if(discount.getNote()!=null){
+                String sid = Long.toString(UUID.randomUUID().getMostSignificantBits());
+                props.setProperty("product.attsetid", sid);
+                props.setProperty("product.attsetdesc", discount.getNote());
+            }
+            // fixing the standard tax for now
+            Date d = null;
+            try { d = new SimpleDateFormat("yyyy-MM-dd").parse("2012-01-01"); } catch (Exception ex) {}
+            TaxInfo tax = new TaxInfo("000", "Exempt", "000", d, null, null, 0, false, null);
+            TicketLineInfo ticketline = new TicketLineInfo(productId, dMultiply, dPrice, tax, props);
+            ticket.insertLine(ticket.getLinesCount(), ticketline);
+        }
+        return ticket;
+    }
 }

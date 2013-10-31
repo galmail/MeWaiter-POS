@@ -165,4 +165,8 @@ public class PaymentInfoMagcard extends PaymentInfo {
     public String getNote() {
         return null;
     }
+
+    public double getPaid() {
+        return 0;
+    }
 }

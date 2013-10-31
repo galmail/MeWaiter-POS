@@ -132,7 +132,7 @@
         <line></line>            
         <line>
             <text align="center" length="40">Gracias por su visita</text>
-        </line>   
+        </line>
     </ticket>
     #foreach ($paymentline in $ticket.payments)      
         #if ($paymentline.name == "cash")
