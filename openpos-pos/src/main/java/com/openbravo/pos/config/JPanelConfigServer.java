@@ -18,6 +18,7 @@
 //    along with Openbravo POS.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.config;
 
+import com.openbravo.basic.BasicException;
 import com.openbravo.data.user.DirtyManager;
 import java.awt.Component;
 import com.openbravo.pos.forms.AppConfig;
@@ -294,16 +295,18 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
                                 resource.updateOnDB();
                             }
                         }
-                        updateStatus("Resources updated!!");
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
+                        updateStatus("Resources updated!! Setting up discounts from server...");
+                        Discount.insertDiscountCategory();
+                        // setting up discounts
+                        String posDiscounts = service.path("/cli/mw").path("/discounts").queryParam("auth_token", token).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).get(String.class);
+                        map = mapper.readValue(posDiscounts, HashMap.class);
+                        List<Discount> discounts = mapper.convertValue(map.get("discounts"), new TypeReference<List<Discount>>() {});
+                        if(discounts!=null && discounts.isEmpty()==false){
+                            for (Discount discount : discounts) {
+                                discount.insertOnDB();
+                            }
+                        }
+                        updateStatus("Discounts loaded!!");
                         
                         updateStatus("Menu Imported Succesfully!");
                         // show popup if user wants to restart the app
@@ -328,6 +331,9 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
         } catch (UniformInterfaceException e) {
             this.jLabelStatus.setText("Error connecting to server: " + e.getMessage());
             System.err.println(e.getMessage());
+        } catch (BasicException ex) {
+            this.jLabelStatus.setText("Error Loading Discount: " + ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }//GEN-LAST:event_jButtonImportMenuActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables

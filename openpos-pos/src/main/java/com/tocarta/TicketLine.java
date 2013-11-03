@@ -25,6 +25,7 @@ public class TicketLine implements Serializable {
     private double price;
     @JsonProperty("modifier_list_set")
     private ModifierListSet modifierListSet;
+    private Discount discount;
     private String note;
 
     public TicketLine() {
@@ -84,6 +85,19 @@ public class TicketLine implements Serializable {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public Discount getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Discount discount) {
+        this.discount = discount;
+    }
+    
+    public double calculatePrice(){
+        double fixedDiscount = discount.calculateFixDiscount(price);
+        return price + fixedDiscount;
     }
 
     public String printAllModifiers() {

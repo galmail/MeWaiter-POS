@@ -9,7 +9,7 @@
     </parent>
     <artifactId>openpos-pos</artifactId>
     <packaging>jar</packaging>
-    <version>2.4-SNAPSHOT</version>
+    <version>2.5-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>org.openpos</groupId>

@@ -76,14 +76,14 @@ public class Menu {
     public void insertSectionsToDB(){
         try {
             Object params = new Object[]{this.getSid(),this.getName(),null,null};
-            this.insertStatement(params);
+            Menu.insertStatement(params);
             for(Section section : this.getSections()){
                 params = new Object[]{section.getSid(),section.getName(),this.getSid(),null};
-                this.insertStatement(params);
+                Menu.insertStatement(params);
                 if(!section.getSubsections().isEmpty()){
                     for(Subsection subsection : section.getSubsections()){
                         params = new Object[]{subsection.getSid(),subsection.getName(),section.getSid(),null};
-                        this.insertStatement(params);
+                        Menu.insertStatement(params);
                     }
                 }
             }
@@ -92,7 +92,7 @@ public class Menu {
         }
     }
     
-    private void insertStatement(Object params) throws BasicException{
+    public static void insertStatement(Object params) throws BasicException{
         // insert the menu itself as a section and then insert the rest of its sections
         Session m_s = App.appView.getSession();
         String preparedSQL = "insert into CATEGORIES (ID, NAME, PARENTID, IMAGE) values (?, ?, ?, ?)";

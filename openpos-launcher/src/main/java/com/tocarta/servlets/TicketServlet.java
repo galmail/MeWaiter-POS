@@ -37,7 +37,6 @@ import com.tocarta.App;
 import com.tocarta.Discount;
 import com.tocarta.Payment;
 import com.tocarta.PaymentLine;
-import com.tocarta.Ticket;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -203,8 +202,18 @@ public class TicketServlet extends HttpServlet {
 
     private TicketInfo setupDiscounts(TicketInfo ticket, List<Discount> discounts) {
         for(Discount discount : discounts){
+            // check if discount already applied
+            boolean discountApplied = false;
+            for(TicketLineInfo line : ticket.getLines()){
+                if(line.getProductID().equals(discount.getSid())){
+                    discountApplied = true;
+                    break;
+                }
+            }
+            if(discountApplied) continue;
+            // apply discount
             String productId = discount.getSid();
-            String categoryId = Discount.discountsCategoryId;
+            String categoryId = Discount.getCategorySid();
             String productName = discount.getName();
             double dMultiply = 1;
             double dPrice = discount.calculateFixDiscount(ticket.getTotal());

@@ -76,15 +76,15 @@ public class Section {
         try {
             if(this.getSubsections().isEmpty()){
                 for(Dish dish : this.getDishes()){
-                    this.insertShortStatement(dish,this.getSid());
-                    this.setPositionStatement(new Object[]{dish.getSid(),dish.getPosition()});
+                    Section.insertShortStatement(dish,this.getSid());
+                    Section.setPositionStatement(new Object[]{dish.getSid(),dish.getPosition()});
                 }
             }
             else {
                 for(Subsection subsection : this.getSubsections()){
                     for(Dish dish : subsection.getDishes()){
-                        this.insertShortStatement(dish,subsection.getSid());
-                        this.setPositionStatement(new Object[]{dish.getSid(),dish.getPosition()});
+                        Section.insertShortStatement(dish,subsection.getSid());
+                        Section.setPositionStatement(new Object[]{dish.getSid(),dish.getPosition()});
                     }
                 }
             }
@@ -93,7 +93,7 @@ public class Section {
         }
     }
     
-    private void insertShortStatement(Dish dish, String parentSid) throws BasicException{
+    public static void insertShortStatement(Dish dish, String parentSid) throws BasicException{
         String attributesSetId = null;
         double dishPrice = new Double(dish.getPrice()).doubleValue();
         Object params = new Object[]{dish.getSid(),dish.getSid(),dish.getSid(),dish.getName(),0.0,dishPrice,parentSid,"001",0,0};
@@ -113,7 +113,7 @@ public class Section {
         }
     }
     
-    private void setPositionStatement(Object params) throws BasicException{
+    public static void setPositionStatement(Object params) throws BasicException{
         Session m_s = App.appView.getSession();
         String preparedSQL = "INSERT INTO PRODUCTS_CAT (PRODUCT, CATORDER) VALUES (?, ?)";
         SerializerWriteBasicExt serWriter = new SerializerWriteBasicExt(new Datas[]{Datas.STRING,Datas.INT}, new int[]{0,1});
