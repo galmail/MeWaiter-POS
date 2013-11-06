@@ -23,6 +23,7 @@ import com.tocarta.servlets.HelloServlet;
 import com.tocarta.servlets.OrderServlet;
 import com.tocarta.servlets.TableServlet;
 import com.tocarta.servlets.TicketServlet;
+import com.tocarta.servlets.actions.SecondCoursesServlet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.jetty.server.Server;
@@ -84,13 +85,16 @@ public class StartPOS {
             System.out.println("Try http://localhost:8080 to make sure server is up");
             
             context.addServlet(new ServletHolder(new TableServlet()), "/table");
-            System.out.println("Try to POST an Order to http://localhost:8080/table");
+            System.out.println("Try to GET/POST a Table on http://localhost:8080/table");
 
             context.addServlet(new ServletHolder(new OrderServlet()), "/order");
-            System.out.println("Try to POST an Order to http://localhost:8080/order");
+            System.out.println("Try to POST an Order on http://localhost:8080/order");
 
             context.addServlet(new ServletHolder(new TicketServlet()), "/ticket");
-            System.out.println("Try to GET Ticket from http://localhost:8080/ticket");
+            System.out.println("Try to GET/POST a Ticket on http://localhost:8080/ticket");
+            
+            context.addServlet(new ServletHolder(new SecondCoursesServlet()), "/actions/bring_second_courses");
+            System.out.println("Try to POST some action on http://localhost:8080/actions/<name>");
 
             server.start();
             server.join();

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Copyright (C) 2013 Tocarta International, S.L.
+    
+    This file matches the resource: Printer.TicketSimpleAction
+ -->
+<output>
+    <display>
+        <line>
+            <text align="center" length="20">Marchando Segundos</text>
+        </line>
+        <line>
+           <text align="center" length="20">${place}</text>
+        </line>
+    </display>
+    <ticket>
+        <line></line>
+        <line>
+           <text align="center" length="40">meWaiter</text>
+        </line>
+        <line>
+           <text align="center" length="40">** Pedido Cocina **</text>
+        </line>
+        <line>
+           <text>----------------------------------------</text>
+        </line>
+        #if ($place != "")
+        <line>
+            <text align="left" length="15">Mesa:</text>
+            <text>${place}</text>
+        </line>  
+        #end
+        <line>
+            <text align="left" length="15">Fecha:</text>
+            <text>${ticket.printDate()}</text>
+        </line>
+        <line>
+             <text>----------------------------------------</text>
+        </line>
+        <line>
+             <text align="center" length="40">Marchar Segundos</text>
+        </line>
+        <line>
+             <text>----------------------------------------</text>
+        </line>
+    </ticket>
+</output>
