@@ -296,14 +296,14 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
                             }
                         }
                         updateStatus("Resources updated!! Setting up discounts from server...");
-                        Discount.insertDiscountCategory();
+                        String discountCategoryId = Discount.insertDiscountCategory();
                         // setting up discounts
                         String posDiscounts = service.path("/cli/mw").path("/discounts").queryParam("auth_token", token).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).get(String.class);
                         map = mapper.readValue(posDiscounts, HashMap.class);
                         List<Discount> discounts = mapper.convertValue(map.get("discounts"), new TypeReference<List<Discount>>() {});
                         if(discounts!=null && discounts.isEmpty()==false){
                             for (Discount discount : discounts) {
-                                discount.insertOnDB();
+                                discount.insertOnDB(discountCategoryId);
                             }
                         }
                         updateStatus("Discounts loaded!!");

@@ -21,14 +21,10 @@ public class Discount {
     private String note;
     private String dtype;
     private double amount;
-    private static String discountsCategoryId;
+    private String categorySid;
     private static final String discountsCategoryName = "Descuentos";
 
     public Discount() {
-    }
-    
-    public static String getCategorySid(){
-        return discountsCategoryId;
     }
 
     public String getSid() {
@@ -78,6 +74,14 @@ public class Discount {
     public void setPosition(int position) {
         this.position = position;
     }
+
+    public String getCategorySid() {
+        return categorySid;
+    }
+
+    public void setCategorySid(String categorySid) {
+        this.categorySid = categorySid;
+    }
     
     public double calculateFixDiscount(double total){
         if(dtype.equals("fixed")){
@@ -91,20 +95,21 @@ public class Discount {
         }
     }
     
-    public static void insertDiscountCategory() throws BasicException {
-        discountsCategoryId = UUID.randomUUID().toString();
+    public static String insertDiscountCategory() throws BasicException {
+        String discountsCategoryId = UUID.randomUUID().toString();
         Object params = new Object[]{discountsCategoryId,discountsCategoryName,null,null};
         Menu.insertStatement(params);
+        return discountsCategoryId;
     }
 
-    public void insertOnDB() throws BasicException {
+    public void insertOnDB(String categoryId) throws BasicException {
         Dish d = new Dish();
         d.setSid(sid);
         d.setPosition(position);
         d.setName(name);
         d.setDescription(note);
         d.setPrice(new Double(amount).toString());
-        Section.insertShortStatement(d,discountsCategoryId);
+        Section.insertShortStatement(d,categoryId);
         Section.setPositionStatement(new Object[]{sid,position});
     }
     

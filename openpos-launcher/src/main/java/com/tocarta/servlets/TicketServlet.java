@@ -158,8 +158,11 @@ public class TicketServlet extends HttpServlet {
             }
 
             // process discounts
-            if(payment.getDiscounts()!=null && payment.getDiscounts().isEmpty()==false){
-                ticket = setupDiscounts(ticket,payment.getDiscounts());
+            List<Discount> discounts = payment.getDiscounts();
+            if(discounts!=null && discounts.isEmpty()==false){
+                // get discounts category
+                String categoryId = dlSales.getProductInfo(discounts.get(0).getSid()).getCategoryID();
+                ticket = setupDiscounts(ticket,payment.getDiscounts(),categoryId);
             }
             
             // assign the payments selected and calculate taxes.
@@ -200,7 +203,7 @@ public class TicketServlet extends HttpServlet {
         return totalBill;
     }
 
-    private TicketInfo setupDiscounts(TicketInfo ticket, List<Discount> discounts) {
+    private TicketInfo setupDiscounts(TicketInfo ticket, List<Discount> discounts, String discountCategoryId) {
         for(Discount discount : discounts){
             // check if discount already applied
             boolean discountApplied = false;
@@ -213,14 +216,13 @@ public class TicketServlet extends HttpServlet {
             if(discountApplied) continue;
             // apply discount
             String productId = discount.getSid();
-            String categoryId = Discount.getCategorySid();
             String productName = discount.getName();
             double dMultiply = 1;
             double dPrice = discount.calculateFixDiscount(ticket.getTotal());
             Properties props = new Properties();
             props.setProperty("product.taxcategoryid", "001");
             props.setProperty("product.com", "false");
-            props.setProperty("product.categoryid", categoryId);
+            props.setProperty("product.categoryid", discountCategoryId);
             props.setProperty("product.name", productName);
             if(discount.getNote()!=null){
                 String sid = Long.toString(UUID.randomUUID().getMostSignificantBits());
