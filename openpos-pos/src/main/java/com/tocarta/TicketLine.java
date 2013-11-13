@@ -96,7 +96,10 @@ public class TicketLine implements Serializable {
     }
     
     public double calculatePrice(){
-        double fixedDiscount = discount.calculateFixDiscount(price);
+        double fixedDiscount = 0;
+        if(discount!=null){
+            fixedDiscount = discount.calculateFixDiscount(price);
+        }
         return price + fixedDiscount;
     }
 

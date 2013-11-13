@@ -64,53 +64,55 @@
         </line>
         #foreach ($paymentline in $ticket.payments)      
             #if ($paymentline.name == "cash")
-            <line></line>     
-            <line>
-                <text bold="true">Efectivo</text>
-            </line>  
-            <line>
-                <text align="left" length="20">Recibido:</text>
-                <text align ="right" length="20">${paymentline.printPaid()}</text>
-            </line>  
-            <line>
-                <text align="left" length="20">Cambio:</text>
-                <text align ="right" length="20">${ticket.printChange()}</text>
-            </line>   
+                <line></line>     
+                <line>
+                    <text bold="true">Efectivo</text>
+                </line>  
+                <line>
+                    <text align="left" length="20">Recibido:</text>
+                    <text align ="right" length="20">${paymentline.printPaid()}</text>
+                </line>  
+                <line>
+                    <text align="left" length="20">Cambio:</text>
+                    <text align ="right" length="20">${ticket.printChange()}</text>
+                </line>   
             #else
-            <line></line>
-            #if ($paymentline.name == "visa" || $paymentline.name == "other_credit_cards")
-            <line>
-                #if ($paymentline.name == "visa")
-                    <text bold="true">Tarjeta Visa</text>
-                #else
-                    <text bold="true">Tarjeta de Crédito</text>
+                <line></line>
+                #if ($paymentline.name == "visa" || $paymentline.name == "other_credit_cards")
+                    <line>
+                        #if ($paymentline.name == "visa")
+                            <text bold="true">Tarjeta Visa</text>
+                        #else
+                            <text bold="true">Tarjeta de Crédito</text>
+                        #end
+                    </line>
+                #elseif ($paymentline.name == "food_tickets")
+                    <line>
+                        <text bold="true">Ticket Restaurante</text>
+                    </line>
+                #elseif ($paymentline.name == "coupons")
+                    <line>
+                        <text bold="true">Cupon</text>
+                    </line>
+                #elseif ($paymentline.name == "credit")
+                    <line>
+                        <text bold="true">A Credito</text>
+                    </line>
+                #elseif ($paymentline.name == "other")
+                    <line>
+                        <text bold="true">Otro Pago</text>
+                    </line>
+                #elseif ($paymentline.name == "free")
+                    <line>
+                        <text bold="true">Gratis</text>
+                    </line>
                 #end
-            </line>
-            #elseif ($paymentline.name == "food_tickets")
                 <line>
-                    <text bold="true">Ticket Restaurante</text>
+                    #if ($paymentline.note != "")
+                        <text align ="left" length="30">${paymentline.note}</text>
+                    #end
+                    <text align ="right" length="10">${paymentline.printPaid()}</text>
                 </line>
-            #elseif ($paymentline.name == "coupons")
-                <line>
-                    <text bold="true">Cupon</text>
-                </line>
-            #elseif ($paymentline.name == "credit")
-                <line>
-                    <text bold="true">A Credito</text>
-                </line>
-            #elseif ($paymentline.name == "other")
-                <line>
-                    <text bold="true">Otro Pago</text>
-                </line>
-            #elseif ($paymentline.name == "free")
-                <line>
-                    <text bold="true">Gratis</text>
-                </line>
-            #end
-            <line>
-                <text align ="left" length="30">${paymentline.note}</text>
-                <text align ="right" length="10">${paymentline.printPaid()}</text>
-            </line>
             #end
         #end
         <line>
