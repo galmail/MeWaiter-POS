@@ -1,4 +1,4 @@
-/openpos-services/target/
+target/
 /openpos-parent/installer/rabbitmq/
 /openpos-parent/installer/lib/
 /openpos-parent/build/installerpos/
