@@ -44,10 +44,12 @@
             </line> 
             #if ($ticketline.productAttSetId)
                 #foreach ($modifier in $ticketline.splitAttrs())
+                    #if ($modifier != "")
                     <line>
                         <text align ="left" length="5">****</text>
                         <text align ="left" length="35">${ticketline.encodeName($modifier)}</text>
                     </line>
+                    #end
                 #end
             #end
         #end

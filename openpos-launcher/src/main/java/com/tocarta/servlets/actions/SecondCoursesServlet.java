@@ -45,6 +45,7 @@ public class SecondCoursesServlet extends HttpServlet
             
             if(ticket!=null){
                 App.printTicket(sresource, ticket, tName);
+                resp = true;
             }
         } catch (BasicException ex) {
             Logger.getLogger(SecondCoursesServlet.class.getName()).log(Level.SEVERE, null, ex);
