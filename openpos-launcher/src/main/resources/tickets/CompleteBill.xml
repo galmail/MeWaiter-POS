@@ -108,10 +108,8 @@
                     </line>
                 #end
                 <line>
-                    #if ($paymentline.note != "")
-                        <text align ="left" length="30">${paymentline.note}</text>
-                    #end
-                    <text align ="right" length="10">${paymentline.printPaid()}</text>
+                    <text align ="left" length="30">${paymentline.printNote()}</text>
+                    <text align ="right" length="10">${paymentline.printTotal()}</text>
                 </line>
             #end
         #end

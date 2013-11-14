@@ -20,6 +20,7 @@
 package com.openbravo.pos.payment;
 
 import com.openbravo.format.Formats;
+import com.openbravo.pos.util.StringUtils;
 
 public abstract class PaymentInfo {
     
@@ -32,5 +33,11 @@ public abstract class PaymentInfo {
     
     public String printTotal() {
         return Formats.CURRENCY.formatValue(new Double(getTotal()));
+    }
+    
+    public String printNote(){
+        String note = StringUtils.encodeXML(getNote());
+        if(note==null) note = "";
+        return note;
     }
 }

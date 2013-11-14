@@ -1,4 +1,5 @@
 target/
+/openpos-launcher/derby.log
 /openpos-parent/installer/rabbitmq/
 /openpos-parent/installer/lib/
 /openpos-parent/build/installerpos/

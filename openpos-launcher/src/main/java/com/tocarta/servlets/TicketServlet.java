@@ -113,22 +113,22 @@ public class TicketServlet extends HttpServlet {
                 pList.add(new PaymentInfoCash(total,paymentLine.getAmount()));
             }
             else if(paymentLine.getName().matches("visa")){
-                pList.add(new PaymentInfoVisa(total,paymentLine.getAmount(),paymentLine.getNote()));
+                pList.add(new PaymentInfoVisa(paymentLine.getAmount(),total,paymentLine.getNote()));
             }
             else if(paymentLine.getName().matches("other_credit_cards")){
-                pList.add(new PaymentInfoOtherCreditCards(total,paymentLine.getAmount(),paymentLine.getNote()));
+                pList.add(new PaymentInfoOtherCreditCards(paymentLine.getAmount(),total,paymentLine.getNote()));
             }
             else if(paymentLine.getName().matches("food_tickets")){
-                pList.add(new PaymentInfoFoodTickets(total,paymentLine.getAmount(),paymentLine.getNote()));
+                pList.add(new PaymentInfoFoodTickets(paymentLine.getAmount(),total,paymentLine.getNote()));
             }
             else if(paymentLine.getName().matches("coupons")){
-                pList.add(new PaymentInfoCoupons(total,paymentLine.getAmount(),paymentLine.getNote()));
+                pList.add(new PaymentInfoCoupons(paymentLine.getAmount(),total,paymentLine.getNote()));
             }
             else if(paymentLine.getName().matches("credit")){
-                pList.add(new PaymentInfoCredit(total,paymentLine.getAmount(),paymentLine.getNote()));
+                pList.add(new PaymentInfoCredit(paymentLine.getAmount(),total,paymentLine.getNote()));
             }
             else if(paymentLine.getName().matches("other")){
-                pList.add(new PaymentInfoOther(total,paymentLine.getAmount(),paymentLine.getNote()));
+                pList.add(new PaymentInfoOther(paymentLine.getAmount(),total,paymentLine.getNote()));
             }
             else if(paymentLine.getName().matches("free")){
                 pList.add(new PaymentInfoFree(total,paymentLine.getNote()));
