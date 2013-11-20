@@ -6,6 +6,7 @@ package com.tocarta;
 
 import java.util.List;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  *
@@ -16,6 +17,8 @@ public class Subsection {
     
     private int id;
     private String sid;
+    @JsonProperty("printer_id")
+    private int printerId;
     private String name;
     private List<Dish> dishes;
 
@@ -52,6 +55,14 @@ public class Subsection {
 
     public void setSid(String sid) {
         this.sid = sid;
+    }
+
+    public int getPrinterId() {
+        return printerId;
+    }
+
+    public void setPrinterId(int printerId) {
+        this.printerId = printerId;
     }
     
 }

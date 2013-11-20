@@ -97,7 +97,7 @@ public class Discount {
     
     public static String insertDiscountCategory() throws BasicException {
         String discountsCategoryId = UUID.randomUUID().toString();
-        Object params = new Object[]{discountsCategoryId,discountsCategoryName,null,null};
+        Object params = new Object[]{discountsCategoryId,discountsCategoryName,null,null,1};
         Menu.insertStatement(params);
         return discountsCategoryId;
     }

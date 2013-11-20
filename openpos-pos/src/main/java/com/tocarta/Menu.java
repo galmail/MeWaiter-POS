@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  *
@@ -26,6 +27,8 @@ public class Menu {
     
     private int id;
     private String sid;
+    @JsonProperty("printer_id")
+    private int printerId;
     private String name;
     private String price;
     private List<Section> sections;
@@ -72,17 +75,25 @@ public class Menu {
     public void setSid(String sid) {
         this.sid = sid;
     }
-    
+
+    public int getPrinterId() {
+        return printerId;
+    }
+
+    public void setPrinterId(int printerId) {
+        this.printerId = printerId;
+    }
+
     public void insertSectionsToDB(){
         try {
-            Object params = new Object[]{this.getSid(),this.getName(),null,null};
+            Object params = new Object[]{this.getSid(),this.getName(),null,null,this.getPrinterId()};
             Menu.insertStatement(params);
             for(Section section : this.getSections()){
-                params = new Object[]{section.getSid(),section.getName(),this.getSid(),null};
+                params = new Object[]{section.getSid(),section.getName(),this.getSid(),null,section.getPrinterId()};
                 Menu.insertStatement(params);
                 if(!section.getSubsections().isEmpty()){
                     for(Subsection subsection : section.getSubsections()){
-                        params = new Object[]{subsection.getSid(),subsection.getName(),section.getSid(),null};
+                        params = new Object[]{subsection.getSid(),subsection.getName(),section.getSid(),null,subsection.getPrinterId()};
                         Menu.insertStatement(params);
                     }
                 }
@@ -95,8 +106,8 @@ public class Menu {
     public static void insertStatement(Object params) throws BasicException{
         // insert the menu itself as a section and then insert the rest of its sections
         Session m_s = App.appView.getSession();
-        String preparedSQL = "insert into CATEGORIES (ID, NAME, PARENTID, IMAGE) values (?, ?, ?, ?)";
-        SerializerWriteBasicExt serWriter = new SerializerWriteBasicExt(new Datas[]{Datas.STRING,Datas.STRING,Datas.STRING,Datas.IMAGE}, new int[]{0,1,2,3});
+        String preparedSQL = "insert into CATEGORIES (ID, NAME, PARENTID, IMAGE, PRINTERID) values (?, ?, ?, ?, ?)";
+        SerializerWriteBasicExt serWriter = new SerializerWriteBasicExt(new Datas[]{Datas.STRING,Datas.STRING,Datas.STRING,Datas.IMAGE,Datas.INT}, new int[]{0,1,2,3,4});
         PreparedSentence ps = new PreparedSentence(m_s, preparedSQL, serWriter, null);
         DataResultSet SRS = ps.openExec(params);
         if (SRS == null) {

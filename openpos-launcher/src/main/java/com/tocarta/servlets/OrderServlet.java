@@ -34,6 +34,7 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -125,7 +126,12 @@ public class OrderServlet extends HttpServlet
             // print current ticket
             Logger.getLogger(OrderServlet.class.getName()).log(Level.INFO, null, "Table "+ ticketId +" has " + ticket.getLinesCount() + " lines");
             String sresource = "Printer.TicketPreview";
-            App.printTicket(sresource, printedTicket, newticket.getTableName());
+
+            TicketInfo[] printTickets = printedTicket.splitPrinting();
+            for(TicketInfo pTicket : printTickets){
+                if(pTicket==null) continue;
+                App.printTicket(sresource, pTicket, newticket.getTableName());
+            }
             return true;
         } catch (BasicException ex) {
             Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);

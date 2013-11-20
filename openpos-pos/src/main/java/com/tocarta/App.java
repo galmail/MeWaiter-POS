@@ -23,6 +23,7 @@ import com.openbravo.pos.sales.TaxesLogic;
 import com.openbravo.pos.scripting.ScriptEngine;
 import com.openbravo.pos.scripting.ScriptException;
 import com.openbravo.pos.scripting.ScriptFactory;
+import com.openbravo.pos.ticket.CategoryInfo;
 import com.openbravo.pos.ticket.TaxInfo;
 import com.openbravo.pos.ticket.TicketInfo;
 import java.util.concurrent.Callable;
@@ -93,7 +94,7 @@ public class App {
         java.util.List<TaxInfo> taxlist = senttax.list();
         ListKeyed taxcollection = new ListKeyed<TaxInfo>(taxlist);
         TaxesLogic taxeslogic = new TaxesLogic(taxlist);
-        TicketParser m_TTP = new TicketParser(m_App.getDeviceTicket(), dlSystem);
+        TicketParser m_TTP = new TicketParser(m_App.getDeviceTicket(), dlSystem, ticket.getPrinterId());
 
         String sresource = dlSystem.getResourceAsXML(sresourcename);
         if (sresource == null) {
@@ -132,5 +133,20 @@ public class App {
         System.exit(0);
     }
     
+    public static int getPrinterId(String productCategoryID) {
+        int defaultPrinterId = 1;
+        AppView m_App = appView;
+        DataLogicSales dlSales = (DataLogicSales) m_App.getBean("com.openbravo.pos.forms.DataLogicSales");
+        CategoryInfo category = null;
+        try {
+            category = dlSales.getCategoryPrinter(productCategoryID).get(0);
+        } catch (BasicException ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(category!=null && category.getPrinterId()>0){
+            defaultPrinterId = category.getPrinterId();
+        }
+        return defaultPrinterId;
+    }    
     
 }

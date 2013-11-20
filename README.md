@@ -9,3 +9,6 @@ Code: https://code.openbravo.com/pos
 Wiki: http://wiki.openbravo.com/wiki/Projects:POS
 Getting Started: http://wiki.openbravo.com/wiki/Projects:POS/Openbravo_POS_Developer_Guide
 
+To test locally printers run the following commands:
+$nc -lk 9100
+$nc -lk 9101

@@ -45,6 +45,8 @@ import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.pos.payment.PaymentInfo;
 import com.openbravo.pos.payment.PaymentInfoMagcard;
 import com.openbravo.pos.util.StringUtils;
+import com.tocarta.App;
+import java.util.Arrays;
 
 /**
  * 
@@ -61,6 +63,7 @@ public class TicketInfo implements SerializableRead, Externalizable {
 	private static DateFormat m_dateformat = new SimpleDateFormat("hh:mm");
 
 	private String m_sId;
+        private int mPrinterId;
 	private int tickettype;
 	private int m_iTicketId;
 	private java.util.Date m_dDate;
@@ -503,4 +506,29 @@ public class TicketInfo implements SerializableRead, Externalizable {
 	public String printTotalPaid() {
 		return Formats.CURRENCY.formatValue(new Double(getTotalPaid()));
 	}
+        
+        public TicketInfo[] splitPrinting(){
+            TicketInfo[] tickets = new TicketInfo[10];
+            TicketInfo ticket = this.copyTicket();
+            // por cada linea del pedido, ver ese plato a que seccion pertenece y esa seccion a que impresora pertenece y asignarla.
+            for(TicketLineInfo line : ticket.getLines()){
+                int printerId = App.getPrinterId(line.getProductCategoryID());
+                if(tickets[printerId]==null){
+                    tickets[printerId] = this.copyTicket();
+                    tickets[printerId].setLines(new ArrayList<TicketLineInfo>());
+                    tickets[printerId].setPrinterId(printerId);
+                }
+                tickets[printerId].addLine(line);
+            }
+            return tickets;
+        }
+
+        private void setPrinterId(int printerId) {
+            mPrinterId = printerId;
+        }
+        
+        public int getPrinterId() {
+            return mPrinterId;
+        }
+        
 }

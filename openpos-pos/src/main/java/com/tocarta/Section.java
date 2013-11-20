@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  *
@@ -25,6 +26,8 @@ public class Section {
     
     private int id;
     private String sid;
+    @JsonProperty("printer_id")
+    private int printerId;
     private String name;
     private List<Subsection> subsections;
     private List<Dish> dishes;
@@ -72,6 +75,14 @@ public class Section {
         this.sid = sid;
     }
 
+    public int getPrinterId() {
+        return printerId;
+    }
+
+    public void setPrinterId(int printerId) {
+        this.printerId = printerId;
+    }
+    
     public void insertDishesToDB() {
         try {
             if(this.getSubsections().isEmpty()){

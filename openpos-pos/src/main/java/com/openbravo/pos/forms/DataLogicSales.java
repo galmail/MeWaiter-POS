@@ -123,13 +123,23 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     // Catalogo de productos
     public final List<CategoryInfo> getRootCategories() throws BasicException {
         return new PreparedSentence(s
-            , "SELECT ID, NAME, IMAGE FROM CATEGORIES WHERE PARENTID IS NULL ORDER BY NAME"
+            , "SELECT ID, NAME, IMAGE, PRINTERID FROM CATEGORIES WHERE PARENTID IS NULL ORDER BY NAME"
             , null
             , CategoryInfo.getSerializerRead()).list();
     }
+    
+    // PrinterID de la Categoria
+    public final List<CategoryInfo> getCategoryPrinter(String category) throws BasicException {
+        return new PreparedSentence(s
+            , "SELECT ID, NAME, IMAGE, PRINTERID FROM CATEGORIES WHERE ID = ?"
+            , SerializerWriteString.INSTANCE
+            , CategoryInfo.getSerializerRead()).list(category);
+    }
+    
+    
     public final List<CategoryInfo> getSubcategories(String category) throws BasicException  {
         return new PreparedSentence(s
-            , "SELECT ID, NAME, IMAGE FROM CATEGORIES WHERE PARENTID = ? ORDER BY NAME"
+            , "SELECT ID, NAME, IMAGE, PRINTERID FROM CATEGORIES WHERE PARENTID = ? ORDER BY NAME"
             , SerializerWriteString.INSTANCE
             , CategoryInfo.getSerializerRead()).list(category);
     }

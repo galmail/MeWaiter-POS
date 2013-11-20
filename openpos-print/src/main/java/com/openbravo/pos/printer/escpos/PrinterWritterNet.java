@@ -24,13 +24,17 @@ import java.net.UnknownHostException;
 
 public class PrinterWritterNet extends PrinterWritter {
 
-    private static final int port = 9100;
+    private int m_port = 9100;
     private String m_sIpAddressPrinter;
     private OutputStream m_out;
     private Socket m_socket;
 
-    public PrinterWritterNet(String sIpAddressPrinter) {
-        m_sIpAddressPrinter = sIpAddressPrinter;
+    public PrinterWritterNet(String sIpAndPort) {
+        String[] parts = sIpAndPort.split(":");
+        m_sIpAddressPrinter = parts[0];
+        try {
+            m_port = new Integer(parts[1]).intValue();
+        } catch(Exception ex){}
         m_out = null;
         m_socket = null;
     }
@@ -40,7 +44,7 @@ public class PrinterWritterNet extends PrinterWritter {
             if (m_out == null) {
                 // Connect to TCP/IP port 9100 of the printer and write data
                 if(m_socket==null){
-                    m_socket = new Socket(m_sIpAddressPrinter, port);
+                    m_socket = new Socket(m_sIpAddressPrinter, m_port);
                 }
                 //out = new PrintWriter(socket.getOutputStream(),true);
                 //in = new BufferedReader(new InputStreamReader(socket.getInputStream()));

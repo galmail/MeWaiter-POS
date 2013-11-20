@@ -4,7 +4,7 @@
         "name": "My Restaurant",
         "chain": {
             "id": "------",
-            "name": "My Restaurants Chain",
+            "name": "My Restaurants Chain"
         }
     },
     "ticket_id": "------",
@@ -22,7 +22,7 @@
         "number": 7,
         "floor": {
             "id": "------",
-            "name": "Terraza",    
+            "name": "Terraza"    
         }
     },
     "waiter": {

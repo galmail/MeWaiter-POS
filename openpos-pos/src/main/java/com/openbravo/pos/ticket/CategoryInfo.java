@@ -35,13 +35,15 @@ public class CategoryInfo implements IKeyed {
     private static final long serialVersionUID = 8612449444103L;
     private String m_sID;
     private String m_sName;
+    private int m_PrinterId;
     private BufferedImage m_Image;
 
     /** Creates new CategoryInfo */
-    public CategoryInfo(String id, String name, BufferedImage image) {
+    public CategoryInfo(String id, String name, BufferedImage image, Integer printerId) {
         m_sID = id;
         m_sName = name;
         m_Image = image;
+        m_PrinterId = printerId.intValue();
     }
 
     public Object getKey() {
@@ -72,6 +74,14 @@ public class CategoryInfo implements IKeyed {
         m_Image = img;
     }
 
+    public int getPrinterId() {
+        return m_PrinterId;
+    }
+
+    public void setPrinterId(int printerId) {
+        this.m_PrinterId = printerId;
+    }
+
     @Override
     public String toString() {
         return m_sName;
@@ -79,7 +89,7 @@ public class CategoryInfo implements IKeyed {
 
     public static SerializerRead getSerializerRead() {
         return new SerializerRead() { public Object readValues(DataRead dr) throws BasicException {
-            return new CategoryInfo(dr.getString(1), dr.getString(2), ImageUtils.readImage(dr.getBytes(3)));
+            return new CategoryInfo(dr.getString(1), dr.getString(2), ImageUtils.readImage(dr.getBytes(3)), dr.getInt(4));
         }};
     }
 }

@@ -39,6 +39,8 @@ import com.openbravo.data.loader.LocalRes;
 import com.openbravo.pos.forms.IDataLogicSystem;
 
 public class TicketParser extends DefaultHandler {
+    
+        private int m_printer_id;
 
 	private static SAXParser m_sp = null;
 
@@ -74,13 +76,19 @@ public class TicketParser extends DefaultHandler {
 		m_printer = printer;
 		m_system = system;
 	}
+        
+        /** Creates a new instance of TicketParser */
+	public TicketParser(DeviceTicket printer, IDataLogicSystem system, int printerId) {
+		m_printer = printer;
+                m_printer_id = printerId;
+		m_system = system;
+	}
 
 	public void printTicket(String sIn) throws TicketPrinterException {
-		printTicket(new StringReader(sIn));
+            printTicket(new StringReader(sIn));
 	}
 
 	public void printTicket(Reader in) throws TicketPrinterException {
-
 		try {
 
 			if (m_sp == null) {
@@ -125,14 +133,14 @@ public class TicketParser extends DefaultHandler {
 		switch (m_iOutputType) {
 			case OUTPUT_NONE:
 				if ("opendrawer".equals(qName)) {
-					m_printer.getDevicePrinter(readString(attributes.getValue("printer"), "1")).openDrawer();
+					m_printer.getDevicePrinter(readString(attributes.getValue("printer"), getPrinterId())).openDrawer();
 				}
 				else if ("play".equals(qName)) {
 					text = new StringBuffer();
 				}
 				else if ("ticket".equals(qName)) {
 					m_iOutputType = OUTPUT_TICKET;
-					m_oOutputPrinter = m_printer.getDevicePrinter(readString(attributes.getValue("printer"), "1"));
+					m_oOutputPrinter = m_printer.getDevicePrinter(readString(attributes.getValue("printer"), getPrinterId()));
 					m_oOutputPrinter.beginReceipt();
 				}
 				else if ("display".equals(qName)) {
@@ -417,4 +425,8 @@ public class TicketParser extends DefaultHandler {
 			return sValue;
 		}
 	}
+        
+        private String getPrinterId(){
+            return new Integer(m_printer_id).toString();
+        }
 }
