@@ -81,6 +81,7 @@ public class TicketInfo implements SerializableRead, Externalizable {
 		m_sId = UUID.randomUUID().toString();
 		tickettype = RECEIPT_NORMAL;
 		m_iTicketId = 0; // incrementamos
+                mPrinterId = 1;
 		m_dDate = new Date();
 		attributes = new Properties();
 		m_User = null;
