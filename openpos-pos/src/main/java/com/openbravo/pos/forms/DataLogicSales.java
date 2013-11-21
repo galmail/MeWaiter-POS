@@ -234,7 +234,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     }
     public final SentenceList getCategoriesList() {
         return new StaticSentence(s
-            , "SELECT ID, NAME, IMAGE FROM CATEGORIES ORDER BY NAME"
+            , "SELECT ID, NAME, IMAGE, PARENTID FROM CATEGORIES ORDER BY NAME"
             , null
             , CategoryInfo.getSerializerRead());
     }

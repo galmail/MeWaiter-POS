@@ -75,6 +75,7 @@ public class TicketParser extends DefaultHandler {
 	public TicketParser(DeviceTicket printer, IDataLogicSystem system) {
 		m_printer = printer;
 		m_system = system;
+                m_printer_id = 1;
 	}
         
         /** Creates a new instance of TicketParser */
