@@ -129,11 +129,11 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     }
     
     // PrinterID de la Categoria
-    public final List<CategoryInfo> getCategoryPrinter(String category) throws BasicException {
-        return new PreparedSentence(s
+    public final CategoryInfo getCategoryPrinter(String category) throws BasicException {
+        return (CategoryInfo) new PreparedSentence(s
             , "SELECT ID, NAME, IMAGE, PRINTERID FROM CATEGORIES WHERE ID = ?"
             , SerializerWriteString.INSTANCE
-            , CategoryInfo.getSerializerRead()).list(category);
+            , CategoryInfo.getSerializerRead()).find(category);
     }
     
     

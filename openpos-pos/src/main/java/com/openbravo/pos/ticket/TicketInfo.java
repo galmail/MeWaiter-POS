@@ -532,4 +532,9 @@ public class TicketInfo implements SerializableRead, Externalizable {
             return mPrinterId;
         }
         
+        public void recreateSid(){
+            m_sId = UUID.randomUUID().toString();
+            refreshLines();
+        }
+        
 }

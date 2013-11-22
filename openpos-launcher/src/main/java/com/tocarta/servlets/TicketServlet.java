@@ -177,6 +177,8 @@ public class TicketServlet extends HttpServlet {
 
             // Save the receipt and assign a receipt number
             if(closeTable){
+                // regenerate ticket sid
+                ticket.recreateSid();
                 dlSales.saveTicket(ticket, m_App.getInventoryLocation());
             }
             
@@ -197,8 +199,10 @@ public class TicketServlet extends HttpServlet {
             }
         } catch (TaxesException ex) {
             Logger.getLogger(TicketServlet.class.getName()).log(Level.SEVERE, null, ex);
+            totalBill = -1;
         } catch (BasicException ex) {
             Logger.getLogger(TicketServlet.class.getName()).log(Level.SEVERE, null, ex);
+            totalBill = -1;
         }
         return totalBill;
     }

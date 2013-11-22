@@ -62,7 +62,7 @@ public class OrderServlet extends HttpServlet
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 1. Get received JSON data from request
-        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+         BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
         String jsonStr = "";
         while(true){
             String line = br.readLine();

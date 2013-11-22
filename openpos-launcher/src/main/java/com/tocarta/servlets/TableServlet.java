@@ -65,8 +65,9 @@ public class TableServlet extends HttpServlet
             DataLogicReceipts dlReceipts = (DataLogicReceipts) m_App.getBean("com.openbravo.pos.sales.DataLogicReceipts");
             if(tMethod!=null && tMethod.equals("open")){
                 TicketInfo ticket = new TicketInfo();
-                //ticket.setTicketId(new Integer(tCode).intValue());
-                dlReceipts.insertSharedTicket(tSid, ticket);
+                if(dlReceipts.getSharedTicket(tSid)==null){
+                    dlReceipts.insertSharedTicket(tSid, ticket);
+                }
             }
             else if(tMethod!=null && tMethod.equals("close")){
                 dlReceipts.deleteSharedTicket(tSid);

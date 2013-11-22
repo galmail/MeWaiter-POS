@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  *
@@ -28,6 +29,8 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 public class Floor {
     
     private int id;
+    @JsonProperty("printer_id")
+    private int printerId;
     private String sid;
     private String name;
     private List<Table> tables;
@@ -67,10 +70,18 @@ public class Floor {
         this.tables = tables;
     }
 
+    public int getPrinterId() {
+        return printerId;
+    }
+
+    public void setPrinterId(int printerId) {
+        this.printerId = printerId;
+    }
+    
     public void insertTablestoDB() {
         try {
             BufferedImage in = ImageIO.read(new URL("http://media-cache-ak0.pinimg.com/originals/99/28/c2/9928c234242bd399de157b4fc3d4761d.jpg"));
-            Object params = new Object[]{this.getSid(),this.getName(),in};
+            Object params = new Object[]{this.getSid(),this.getName(),in, this.getPrinterId()};
             this.insertFloorStatement(params);
             for(Table table : this.getTables()){
                 params = new Object[]{table.getSid(),table.getName(this.getName()),table.getPositionX(),table.getPositionY(),this.getSid()};
@@ -86,8 +97,8 @@ public class Floor {
     private void insertFloorStatement(Object params) throws BasicException{
         // insert the menu itself as a section and then insert the rest of its sections
         Session m_s = App.appView.getSession();
-        String preparedSQL = "insert into FLOORS (ID, NAME, IMAGE) values (?, ?, ?)";
-        SerializerWriteBasicExt serWriter = new SerializerWriteBasicExt(new Datas[]{Datas.STRING,Datas.STRING,Datas.IMAGE}, new int[]{0,1,2});
+        String preparedSQL = "insert into FLOORS (ID, NAME, IMAGE, PRINTERID) values (?, ?, ?, ?)";
+        SerializerWriteBasicExt serWriter = new SerializerWriteBasicExt(new Datas[]{Datas.STRING,Datas.STRING,Datas.IMAGE,Datas.INT}, new int[]{0,1,2,3});
         PreparedSentence ps = new PreparedSentence(m_s, preparedSQL, serWriter, null);
         DataResultSet SRS = ps.openExec(params);
         if (SRS == null) {

@@ -139,7 +139,7 @@ public class App {
         DataLogicSales dlSales = (DataLogicSales) m_App.getBean("com.openbravo.pos.forms.DataLogicSales");
         CategoryInfo category = null;
         try {
-            category = dlSales.getCategoryPrinter(productCategoryID).get(0);
+            category = dlSales.getCategoryPrinter(productCategoryID);
         } catch (BasicException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
