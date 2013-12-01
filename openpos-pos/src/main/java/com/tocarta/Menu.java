@@ -26,7 +26,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Menu {
     
-    private static String SID = null;
+    public static String SID = null;
     private int id;
     private String sid;
     @JsonProperty("printer_id")

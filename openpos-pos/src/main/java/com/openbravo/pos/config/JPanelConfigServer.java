@@ -259,6 +259,7 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
                     List<Menu> menus = mapper.convertValue(map.get("menus"), new TypeReference<List<Menu>>() { });
                     if (menus.isEmpty() == false) {
                         updateStatus("Menus loaded!! Inserting menus in the database...");
+                        Menu.SID = null;
                         for (Menu menu : menus) {
                             menu.insertSectionsToDB();
                             for (Section section : menu.getSections()) {
