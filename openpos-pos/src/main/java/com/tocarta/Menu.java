@@ -101,13 +101,13 @@ public class Menu {
             if(this.getPrice()!=null && new Double(this.getPrice()).doubleValue()>0){
                 // insert menu in menus
                 Dish dish = new Dish();
-                //dish.setId(this.getId());
+                dish.setId(this.getId());
                 dish.setName(this.getName());
-                //dish.setPosition(1);
+                dish.setPosition(1);
                 dish.setPrice(this.getPrice());
                 dish.setSid(this.getSid());
                 Section.insertShortStatement(dish,SID);
-                //Section.setPositionStatement(new Object[]{dish.getSid(),dish.getPosition()});
+                Section.setPositionStatement(new Object[]{dish.getSid(),dish.getPosition()});
             }
         } catch(Exception ex){
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
