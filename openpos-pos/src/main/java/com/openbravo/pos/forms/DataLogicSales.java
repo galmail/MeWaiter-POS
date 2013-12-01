@@ -41,6 +41,7 @@ import com.openbravo.pos.inventory.TaxCategoryInfo;
 import com.openbravo.pos.mant.FloorsInfo;
 import com.openbravo.pos.payment.PaymentInfo;
 import com.openbravo.pos.payment.PaymentInfoTicket;
+import com.openbravo.pos.sales.restaurant.Place;
 import com.openbravo.pos.ticket.FindTicketsInfo;
 import com.openbravo.pos.ticket.TicketTaxInfo;
 import java.io.ByteArrayOutputStream;
@@ -274,7 +275,21 @@ public class DataLogicSales extends BeanFactoryDataSingle {
             , null
             , new SerializerReadClass(FloorsInfo.class));
     }
-
+    
+    public String findPrinterByTableId(String tableId) throws BasicException {
+        Place p = (Place) new PreparedSentence(s
+                , "SELECT ID, NAME, X, Y, FLOOR FROM PLACES WHERE ID = ?"
+                , SerializerWriteString.INSTANCE
+                , new SerializerReadClass(Place.class)).find(tableId);
+        
+        FloorsInfo f = (FloorsInfo) new PreparedSentence(s
+                , "SELECT ID, NAME, PRINTERID FROM FLOORS WHERE ID = ?"
+                , SerializerWriteString.INSTANCE
+                , new SerializerReadClass(FloorsInfo.class)).find(p.getFloor());
+        
+        return f.getPrinterId();
+    }
+    
     public CustomerInfoExt findCustomerExt(String card) throws BasicException {
         return (CustomerInfoExt) new PreparedSentence(s
                 , "SELECT ID, TAXID, SEARCHKEY, NAME, CARD, TAXCATEGORY, NOTES, MAXDEBT, VISIBLE, CURDATE, CURDEBT" +

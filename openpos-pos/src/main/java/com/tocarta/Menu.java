@@ -12,6 +12,7 @@ import com.openbravo.data.loader.PreparedSentence;
 import com.openbravo.data.loader.SerializerWriteBasicExt;
 import com.openbravo.data.loader.Session;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -25,6 +26,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Menu {
     
+    private static String SID = null;
     private int id;
     private String sid;
     @JsonProperty("printer_id")
@@ -83,8 +85,38 @@ public class Menu {
     public void setPrinterId(int printerId) {
         this.printerId = printerId;
     }
+    
+    private void createMenusInDB(){
+        try {
+            SID = UUID.randomUUID().toString();
+            Object params = new Object[]{SID,"Menus",null,null,this.getPrinterId()};
+            Menu.insertStatement(params);
+        } catch (BasicException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void createMenuObjectInDB(){
+        try {
+            if(this.getPrice()!=null && new Double(this.getPrice()).doubleValue()>0){
+                // insert menu in menus
+                Dish dish = new Dish();
+                //dish.setId(this.getId());
+                dish.setName(this.getName());
+                //dish.setPosition(1);
+                dish.setPrice(this.getPrice());
+                dish.setSid(this.getSid());
+                Section.insertShortStatement(dish,SID);
+                //Section.setPositionStatement(new Object[]{dish.getSid(),dish.getPosition()});
+            }
+        } catch(Exception ex){
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public void insertSectionsToDB(){
+        if(SID==null) createMenusInDB();
+        createMenuObjectInDB();
         try {
             Object params = new Object[]{this.getSid(),this.getName(),null,null,this.getPrinterId()};
             Menu.insertStatement(params);

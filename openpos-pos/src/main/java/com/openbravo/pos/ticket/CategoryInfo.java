@@ -43,7 +43,11 @@ public class CategoryInfo implements IKeyed {
         m_sID = id;
         m_sName = name;
         m_Image = image;
-        m_PrinterId = printerId.intValue();
+        try {
+            m_PrinterId = printerId.intValue();
+        } catch(Exception ex){
+            m_PrinterId = 1;
+        }
     }
 
     public Object getKey() {

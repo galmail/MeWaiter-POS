@@ -524,7 +524,7 @@ public class TicketInfo implements SerializableRead, Externalizable {
             return tickets;
         }
 
-        private void setPrinterId(int printerId) {
+        public void setPrinterId(int printerId) {
             mPrinterId = printerId;
         }
         

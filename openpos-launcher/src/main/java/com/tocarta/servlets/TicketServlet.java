@@ -182,6 +182,12 @@ public class TicketServlet extends HttpServlet {
                 dlSales.saveTicket(ticket, m_App.getInventoryLocation());
             }
             
+            // Set Printer
+            String printerId = dlSales.findPrinterByTableId(payment.getTableSid());
+            if(printerId!=null){
+                ticket.setPrinterId(new Integer(printerId).intValue());
+            }
+            
             if(payment.getPaymentLines()!=null && payment.getPaymentLines().isEmpty()==false){
                 // Print Complete Ticket.
                 App.printTicket("Printer.Ticket", ticket, payment.getTableName());

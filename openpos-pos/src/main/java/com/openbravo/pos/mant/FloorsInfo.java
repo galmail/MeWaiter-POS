@@ -35,11 +35,13 @@ public class FloorsInfo implements SerializableRead, IKeyed {
     private static final long serialVersionUID = 8906929819402L;
     private String m_sID;
     private String m_sName;
+    private String m_sPrinterId;
     
     /** Creates a new instance of FloorsInfo */
     public FloorsInfo() {
         m_sID = null;
         m_sName = null;
+        m_sPrinterId = null;
     }
    
     public Object getKey() {
@@ -49,6 +51,7 @@ public class FloorsInfo implements SerializableRead, IKeyed {
     public void readValues(DataRead dr) throws BasicException {
         m_sID = dr.getString(1);
         m_sName = dr.getString(2);
+        m_sPrinterId = dr.getString(3);
     } 
     
     public void setID(String sID) {
@@ -65,7 +68,15 @@ public class FloorsInfo implements SerializableRead, IKeyed {
     
     public void setName(String sName) {
         m_sName = sName;
-    } 
+    }
+    
+    public String getPrinterId() {
+        return m_sPrinterId;
+    }
+    
+    public void setPrinterId(String sPrinterId) {
+        m_sPrinterId = sPrinterId;
+    }
     
     public String toString(){
         return m_sName;
