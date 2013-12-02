@@ -34,6 +34,8 @@ public class DevicePrinterESCPOS implements DevicePrinter  {
 //    private boolean m_bInline;
     private String m_sName;
     
+    public boolean printedOK;
+    
     // Creates new TicketPrinter
     public DevicePrinterESCPOS(PrinterWritter CommOutputPrinter, Codes codes, UnicodeTranslator trans) throws TicketPrinterException {
         
@@ -49,7 +51,16 @@ public class DevicePrinterESCPOS implements DevicePrinter  {
         m_CommOutputPrinter.init(m_codes.getInitSequence());
         m_CommOutputPrinter.write(m_trans.getCodeTable());
 
-        m_CommOutputPrinter.flush();  
+        m_CommOutputPrinter.flush();
+        printedOK = true;
+    }
+    
+    public boolean wasPrintedOK(){
+        return printedOK;
+    }
+    
+    public void setPrinterStatus(boolean writeOK){
+        if(!writeOK) printedOK=false;
     }
    
     public String getPrinterName() {
@@ -65,6 +76,7 @@ public class DevicePrinterESCPOS implements DevicePrinter  {
     }
     
     public void beginReceipt() {
+        printedOK = true;
     }
     
     public void printImage(BufferedImage image) {
@@ -80,62 +92,60 @@ public class DevicePrinterESCPOS implements DevicePrinter  {
     }
     
     public void beginLine(int iTextSize) {
-
-        m_CommOutputPrinter.write(ESCPOS.SELECT_PRINTER);        
+        setPrinterStatus(m_CommOutputPrinter.write(ESCPOS.SELECT_PRINTER));
         
         if (iTextSize == DevicePrinter.SIZE_0) {
-            m_CommOutputPrinter.write(m_codes.getSize0());
+            setPrinterStatus(m_CommOutputPrinter.write(m_codes.getSize0()));
         } else if (iTextSize == DevicePrinter.SIZE_1) {
-            m_CommOutputPrinter.write(m_codes.getSize1());
+            setPrinterStatus(m_CommOutputPrinter.write(m_codes.getSize1()));
         } else if (iTextSize == DevicePrinter.SIZE_2) {
-            m_CommOutputPrinter.write(m_codes.getSize2());
+            setPrinterStatus(m_CommOutputPrinter.write(m_codes.getSize2()));
         } else if (iTextSize == DevicePrinter.SIZE_3) {
-            m_CommOutputPrinter.write(m_codes.getSize3());
+            setPrinterStatus(m_CommOutputPrinter.write(m_codes.getSize3()));
         } else {
-            m_CommOutputPrinter.write(m_codes.getSize0());
+            setPrinterStatus(m_CommOutputPrinter.write(m_codes.getSize0()));
         }
     }
     
     public void printText(int iStyle, String sText) {
 
-        m_CommOutputPrinter.write(ESCPOS.SELECT_PRINTER);   
+        setPrinterStatus(m_CommOutputPrinter.write(ESCPOS.SELECT_PRINTER));   
 
         if ((iStyle & DevicePrinter.STYLE_BOLD) != 0) {
-            m_CommOutputPrinter.write(m_codes.getBoldSet());
+            setPrinterStatus(m_CommOutputPrinter.write(m_codes.getBoldSet()));
         }
         if ((iStyle & DevicePrinter.STYLE_UNDERLINE) != 0) {
-            m_CommOutputPrinter.write(m_codes.getUnderlineSet());
+            setPrinterStatus(m_CommOutputPrinter.write(m_codes.getUnderlineSet()));
         }
         m_CommOutputPrinter.write(m_trans.transString(sText));
         if ((iStyle & DevicePrinter.STYLE_UNDERLINE) != 0) {
-            m_CommOutputPrinter.write(m_codes.getUnderlineReset());
+            setPrinterStatus(m_CommOutputPrinter.write(m_codes.getUnderlineReset()));
         }
         if ((iStyle & DevicePrinter.STYLE_BOLD) != 0) {
-            m_CommOutputPrinter.write(m_codes.getBoldReset());
+            setPrinterStatus(m_CommOutputPrinter.write(m_codes.getBoldReset()));
         }     
     }
     public void endLine() {
-        m_CommOutputPrinter.write(ESCPOS.SELECT_PRINTER);   
-        m_CommOutputPrinter.write(m_codes.getNewLine());
+        setPrinterStatus(m_CommOutputPrinter.write(ESCPOS.SELECT_PRINTER));   
+        setPrinterStatus(m_CommOutputPrinter.write(m_codes.getNewLine()));
     }
     
     public void endReceipt() {
-        m_CommOutputPrinter.write(ESCPOS.SELECT_PRINTER);   
+        setPrinterStatus(m_CommOutputPrinter.write(ESCPOS.SELECT_PRINTER));   
         
-        m_CommOutputPrinter.write(m_codes.getNewLine());
-        m_CommOutputPrinter.write(m_codes.getNewLine());
-        m_CommOutputPrinter.write(m_codes.getNewLine());
-        m_CommOutputPrinter.write(m_codes.getNewLine());
-        m_CommOutputPrinter.write(m_codes.getNewLine());
+        setPrinterStatus(m_CommOutputPrinter.write(m_codes.getNewLine()));
+        setPrinterStatus(m_CommOutputPrinter.write(m_codes.getNewLine()));
+        setPrinterStatus(m_CommOutputPrinter.write(m_codes.getNewLine()));
+        setPrinterStatus(m_CommOutputPrinter.write(m_codes.getNewLine()));
+        setPrinterStatus(m_CommOutputPrinter.write(m_codes.getNewLine()));
 
-        m_CommOutputPrinter.write(m_codes.getCutReceipt());
-        m_CommOutputPrinter.flush();
+        setPrinterStatus(m_CommOutputPrinter.write(m_codes.getCutReceipt()));
+        setPrinterStatus(m_CommOutputPrinter.flush());
     }
     
     public void openDrawer() {
-
-        m_CommOutputPrinter.write(ESCPOS.SELECT_PRINTER);   
-        m_CommOutputPrinter.write(m_codes.getOpenDrawer());
+        setPrinterStatus(m_CommOutputPrinter.write(ESCPOS.SELECT_PRINTER));   
+        setPrinterStatus(m_CommOutputPrinter.write(m_codes.getOpenDrawer()));
         m_CommOutputPrinter.flush();
     }
 }

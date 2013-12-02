@@ -80,6 +80,7 @@ public class OrderServlet extends HttpServlet
     }
     
     private boolean processOrder(Ticket newticket){
+        boolean resp = false;
         try {
             System.out.println(" [x] Received '" + newticket.toString() + "'");
 
@@ -128,19 +129,19 @@ public class OrderServlet extends HttpServlet
             String sresource = "Printer.TicketPreview";
 
             TicketInfo[] printTickets = printedTicket.splitPrinting();
+            boolean allTicketsPrintedOK = true;
             for(TicketInfo pTicket : printTickets){
                 if(pTicket==null) continue;
-                App.printTicket(sresource, pTicket, newticket.getTableName());
+                boolean printedOK = App.printTicket(sresource, pTicket, newticket.getTableName());
+                if(!printedOK) allTicketsPrintedOK = false;
             }
-            return true;
+            if(allTicketsPrintedOK) resp = true;
         } catch (BasicException ex) {
             Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
         } catch (NullPointerException ex) {
             Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
         }
-        
+        return resp;
     }
     
     

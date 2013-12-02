@@ -201,4 +201,9 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
         
         super.finalize();
     }    
+
+    @Override
+    public boolean wasPrintedOK() {
+        return true;
+    }
 }

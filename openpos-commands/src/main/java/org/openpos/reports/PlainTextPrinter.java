@@ -76,4 +76,9 @@ public class PlainTextPrinter implements DevicePrinter {
 	@Override
 	public void openDrawer() {
 	}
+
+    @Override
+    public boolean wasPrintedOK() {
+        return true;
+    }
 }

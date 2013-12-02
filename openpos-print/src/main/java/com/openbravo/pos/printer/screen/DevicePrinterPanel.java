@@ -108,6 +108,11 @@ public class DevicePrinterPanel extends javax.swing.JPanel implements DevicePrin
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane m_jScrollView;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public boolean wasPrintedOK() {
+        return true;
+    }
     
 }
 

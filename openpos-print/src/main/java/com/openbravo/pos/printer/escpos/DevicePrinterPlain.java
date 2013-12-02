@@ -85,5 +85,10 @@ public class DevicePrinterPlain implements DevicePrinter  {
     
     public void openDrawer() {
     }
+
+    @Override
+    public boolean wasPrintedOK() {
+        return true;
+    }
 }
 

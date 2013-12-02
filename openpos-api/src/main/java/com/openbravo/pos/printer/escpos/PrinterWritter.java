@@ -25,6 +25,7 @@ import java.util.concurrent.Executors;
 public abstract class PrinterWritter {
     
     private boolean initialized = false;
+    protected boolean runAtBackground = true;
 
     private ExecutorService exec;
     
@@ -32,9 +33,9 @@ public abstract class PrinterWritter {
         exec = Executors.newSingleThreadExecutor();
     }
     
-    protected abstract void internalWrite(byte[] data);
-    protected abstract void internalFlush();
-    protected abstract void internalClose();
+    protected abstract boolean internalWrite(byte[] data);
+    protected abstract boolean internalFlush();
+    protected abstract boolean internalClose();
     
     public void init(final byte[] data) {
         if (!initialized) {
@@ -43,32 +44,56 @@ public abstract class PrinterWritter {
         }
     }
        
-    public void write(String sValue) {
-        write(sValue.getBytes());
+    public boolean write(String sValue) {
+        return write(sValue.getBytes());
     }
 
-    public void write(final byte[] data) {
-        exec.execute(new Runnable() {
-            public void run() {
-                internalWrite(data);
-            }
-        });
+    public boolean write(final byte[] data) {
+        if(runAtBackground){
+            exec.execute(new Runnable() {
+                @Override
+                public void run() {
+                    internalWrite(data);
+                }
+            });
+            return true;
+        }
+        else {
+            return internalWrite(data);
+        }
     }
     
-    public void flush() {
-        exec.execute(new Runnable() {
-            public void run() {
-                internalFlush();
-            }
-        });
+    public boolean flush() {
+        if(runAtBackground){
+            exec.execute(new Runnable() {
+                @Override
+                public void run() {
+                    internalFlush();
+                }
+            });
+            return true;
+        }
+        else {
+            return internalFlush();
+        }
     }
     
-    public void close() {
-        exec.execute(new Runnable() {
-            public void run() {
-                internalClose();
-            }
-        });
-        exec.shutdown();
+    public boolean close() {
+        boolean resp = false;
+        if(runAtBackground){
+            exec.execute(new Runnable() {
+                @Override
+                public void run() {
+                    internalClose();
+                }
+            });
+            exec.shutdown();
+            return true;
+        }
+        else {
+            resp = internalClose();
+            exec.shutdown();
+        }
+        return resp;
     }
 }

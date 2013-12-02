@@ -39,7 +39,9 @@ public class PrinterWritterRXTX extends PrinterWritter /* implements SerialPortE
         m_out = null; 
     }
     
-    protected void internalWrite(byte[] data) {
+    @Override
+    protected boolean internalWrite(byte[] data) {
+        boolean resp = false;
         try {  
             if (m_out == null) {
                 m_PortIdPrinter = CommPortIdentifier.getPortIdentifier(m_sPortPrinter); // Tomamos el puerto                   
@@ -58,6 +60,7 @@ public class PrinterWritterRXTX extends PrinterWritter /* implements SerialPortE
                 }
             }
             m_out.write(data);
+            resp = true;
         } catch (NoSuchPortException e) {
             System.err.println(e);
         } catch (PortInUseException e) {
@@ -66,20 +69,27 @@ public class PrinterWritterRXTX extends PrinterWritter /* implements SerialPortE
             System.err.println(e);
         } catch (IOException e) {
             System.err.println(e);
-        }      
+        }
+        return resp;
     }
     
-    protected void internalFlush() {
+    @Override
+    protected boolean internalFlush() {
+        boolean resp = false;
         try {  
             if (m_out != null) {
                 m_out.flush();
             }
+            resp = true;
         } catch (IOException e) {
             System.err.println(e);
-        }    
+        }
+        return resp;
     }
     
-    protected void internalClose() {
+    @Override
+    protected boolean internalClose() {
+        boolean resp = false;
         try {  
             if (m_out != null) {
                 m_out.flush();
@@ -88,8 +98,10 @@ public class PrinterWritterRXTX extends PrinterWritter /* implements SerialPortE
                 m_CommPortPrinter = null;
                 m_PortIdPrinter = null;
             }
+            resp = true;
         } catch (IOException e) {
             System.err.println(e);
-        }    
+        }
+        return resp;
     }
 }

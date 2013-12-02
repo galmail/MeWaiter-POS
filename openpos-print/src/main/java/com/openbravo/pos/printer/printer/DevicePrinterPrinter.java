@@ -375,4 +375,9 @@ public class DevicePrinterPrinter implements DevicePrinter {
 		mediasizenamemap.put("EnvC5", MediaSizeName.ISO_C5);
 		mediasizenamemap.put("EnvC6", MediaSizeName.ISO_C6);
 	}
+
+    @Override
+    public boolean wasPrintedOK() {
+        return true;
+    }
 }

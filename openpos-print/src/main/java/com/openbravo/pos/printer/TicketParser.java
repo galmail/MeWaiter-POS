@@ -85,29 +85,30 @@ public class TicketParser extends DefaultHandler {
 		m_system = system;
 	}
 
-	public void printTicket(String sIn) throws TicketPrinterException {
-            printTicket(new StringReader(sIn));
+	public boolean printTicket(String sIn) throws TicketPrinterException {
+            return printTicket(new StringReader(sIn));
 	}
 
-	public void printTicket(Reader in) throws TicketPrinterException {
-		try {
-
-			if (m_sp == null) {
-				SAXParserFactory spf = SAXParserFactory.newInstance();
-				m_sp = spf.newSAXParser();
-			}
-			m_sp.parse(new InputSource(in), this);
-
-		}
-		catch (ParserConfigurationException ePC) {
-			throw new TicketPrinterException(LocalRes.getIntString("exception.parserconfig"), ePC);
-		}
-		catch (SAXException eSAX) {
-			throw new TicketPrinterException(LocalRes.getIntString("exception.xmlfile"), eSAX);
-		}
-		catch (IOException eIO) {
-			throw new TicketPrinterException(LocalRes.getIntString("exception.iofile"), eIO);
-		}
+	public boolean printTicket(Reader in) throws TicketPrinterException {
+            try {
+                if (m_sp == null) {
+                        SAXParserFactory spf = SAXParserFactory.newInstance();
+                        m_sp = spf.newSAXParser();
+                }
+                m_sp.parse(new InputSource(in), this);
+                if(m_oOutputPrinter!=null)
+                    return m_oOutputPrinter.wasPrintedOK();
+                return true;
+            }
+            catch (ParserConfigurationException ePC) {
+                    throw new TicketPrinterException(LocalRes.getIntString("exception.parserconfig"), ePC);
+            }
+            catch (SAXException eSAX) {
+                    throw new TicketPrinterException(LocalRes.getIntString("exception.xmlfile"), eSAX);
+            }
+            catch (IOException eIO) {
+                    throw new TicketPrinterException(LocalRes.getIntString("exception.iofile"), eIO);
+            }
 	}
 
 	@Override
@@ -315,7 +316,8 @@ public class TicketParser extends DefaultHandler {
 				else if ("ticket".equals(qName)) {
 					m_oOutputPrinter.endReceipt();
 					m_iOutputType = OUTPUT_NONE;
-					m_oOutputPrinter = null;
+                                        // TODO ver donde puede fallar al comentar esto...
+					//m_oOutputPrinter = null;
 				}
 				break;
 			case OUTPUT_DISPLAY:

@@ -86,7 +86,8 @@ public class App {
     }
     
     
-    public static void printTicket(String sresourcename, TicketInfo ticket, Object ticketext) throws BasicException {
+    public static boolean printTicket(String sresourcename, TicketInfo ticket, Object ticketext) throws BasicException {
+        boolean resp = false;
         AppView m_App = appView;
         DataLogicSystem dlSystem = (DataLogicSystem) m_App.getBean("com.openbravo.pos.forms.DataLogicSystem");
         DataLogicSales dlSales = (DataLogicSales) m_App.getBean("com.openbravo.pos.forms.DataLogicSales");
@@ -106,13 +107,14 @@ public class App {
                 script.put("taxeslogic", taxeslogic);
                 script.put("ticket", ticket);
                 script.put("place", ticketext);
-                m_TTP.printTicket(script.eval(sresource).toString());
+                resp = m_TTP.printTicket(script.eval(sresource).toString());
             } catch (ScriptException e) {
                 System.out.println("ERROR: ScriptException = " + e.toString());
             } catch (TicketPrinterException e) {
                 System.out.println("ERROR: TicketPrinterException = " + e.toString());
             }
         }
+        return resp;
     }
     
     

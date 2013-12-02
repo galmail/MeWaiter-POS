@@ -71,7 +71,7 @@ public class PrinterWriterRXTX extends PrinterWritter {
 		}
 	}
 
-	protected void daemonClose() {
+	protected boolean daemonClose() {
 		try {
 			if (m_out != null) {
 				daemonFlush();
@@ -87,11 +87,13 @@ public class PrinterWriterRXTX extends PrinterWritter {
 			m_CommPortPrinter = null;
 			m_PortIdPrinter = null;
 		}
+                return true;
 	}
 
-	private void localWrite(byte[] data) {
-		try {
+	private boolean localWrite(byte[] data) {
+                try {
 			baos.write(data);
+                        return true;
 		}
 		catch (IOException e) {
 			throw new RuntimeException(e);
@@ -107,39 +109,41 @@ public class PrinterWriterRXTX extends PrinterWritter {
 	}
 
 	@Override
-	public void write(byte[] data) {
-		localWrite(data);
+	public boolean write(byte[] data) {
+		return localWrite(data);
 	}
 
 	@Override
-	public void write(String sValue) {
-		localWrite(sValue.getBytes());
+	public boolean write(String sValue) {
+		return localWrite(sValue.getBytes());
 	}
 
 	@Override
-	public void flush() {
+	public boolean flush() {
 		daemonWrite(baos.toByteArray());
 		daemonFlush();
 		baos.reset();
 		close();
+                return true;
 	}
 
 	@Override
-	public void close() {
-		daemonClose();
+	public boolean close() {
+		return daemonClose();
 	}
 
 	@Override
-	protected void internalWrite(byte[] data) {
-
+	protected boolean internalWrite(byte[] data) {
+            return true;
 	}
 
 	@Override
-	protected void internalFlush() {
-
+	protected boolean internalFlush() {
+            return true;
 	}
 
 	@Override
-	protected void internalClose() {
+	protected boolean internalClose() {
+            return true;
 	}
 }

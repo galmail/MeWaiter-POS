@@ -31,38 +31,50 @@ public class PrinterWritterFile extends PrinterWritter {
         m_out = null;
     }  
     
-    protected void internalWrite(byte[] data) {
+    @Override
+    protected boolean internalWrite(byte[] data) {
+        boolean resp = false;
         try {  
             if (m_out == null) {
                 m_out = new FileOutputStream(m_sFilePrinter);  // No poner append = true.
             }
             m_out.write(data);
+            resp = true;
         } catch (IOException e) {
             System.err.println(e);
-        }    
+        }
+        return resp;
     }
     
-    protected void internalFlush() {
+    @Override
+    protected boolean internalFlush() {
+        boolean resp = false;
         try {  
             if (m_out != null) {
                 m_out.flush();
                 m_out.close();
                 m_out = null;
             }
+            resp = true;
         } catch (IOException e) {
             System.err.println(e);
-        }    
+        }
+        return resp;
     }
     
-    protected void internalClose() {
+    @Override
+    protected boolean internalClose() {
+        boolean resp = false;
         try {  
             if (m_out != null) {
                 m_out.flush();
                 m_out.close();
                 m_out = null;
             }
+            resp = true;
         } catch (IOException e) {
             System.err.println(e);
-        }    
+        }
+        return resp;
     }    
 }

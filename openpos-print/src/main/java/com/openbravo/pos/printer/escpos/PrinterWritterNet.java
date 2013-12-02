@@ -37,9 +37,12 @@ public class PrinterWritterNet extends PrinterWritter {
         } catch(Exception ex){}
         m_out = null;
         m_socket = null;
+        runAtBackground = false;
     }
 
-    protected void internalWrite(byte[] data) {
+    @Override
+    protected boolean internalWrite(byte[] data) {
+        boolean resp = false;
         try {
             if (m_out == null) {
                 // Connect to TCP/IP port 9100 of the printer and write data
@@ -52,15 +55,18 @@ public class PrinterWritterNet extends PrinterWritter {
             }
             m_out.write(data);
             //m_socket.close();
+            resp = true;
         } catch (UnknownHostException e) {
             System.err.println("Unknown host: " + m_sIpAddressPrinter);
         } catch (IOException e) {
             System.err.println("No I/O: " + e.getMessage());
         }
+        return resp;
     }
 
-    protected void internalFlush() {
-        this.internalClose();
+    @Override
+    protected boolean internalFlush() {
+        return this.internalClose();
 //        try {  
 //            if (m_out != null) {
 //                m_out.flush();
@@ -71,7 +77,9 @@ public class PrinterWritterNet extends PrinterWritter {
 //        }    
     }
 
-    protected void internalClose() {
+    @Override
+    protected boolean internalClose() {
+        boolean resp = false;
         try {  
             if (m_out != null) {
                 m_out.flush();
@@ -82,8 +90,10 @@ public class PrinterWritterNet extends PrinterWritter {
                 }
                 m_socket = null;
             }
+            resp = true;
         } catch (IOException e) {
             System.err.println(e);
-        }    
+        }
+        return resp;
     }
 }

@@ -65,4 +65,9 @@ public class DevicePrinterNull implements DevicePrinter {
     }
     public void openDrawer() {
     }
+
+    @Override
+    public boolean wasPrintedOK() {
+        return true;
+    }
 }

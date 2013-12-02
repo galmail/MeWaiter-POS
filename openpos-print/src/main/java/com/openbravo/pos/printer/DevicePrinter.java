@@ -43,13 +43,16 @@ public interface DevicePrinter {
     public static final String POSITION_BOTTOM = "bottom";
     public static final String POSITION_NONE = "none";
     
+    public boolean printedOK = false;
+    
     // INTERFAZ DESCRIPCION
     public String getPrinterName();
     public String getPrinterDescription();
     public JComponent getPrinterComponent();
     public void reset();
     
-    // INTERFAZ PRINTER   
+    // INTERFAZ PRINTER
+    public boolean wasPrintedOK();
     public void beginReceipt();
     public void printImage(BufferedImage image);
     public void printBarCode(String type, String position, String code);
