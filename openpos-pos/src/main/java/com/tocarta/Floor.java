@@ -83,9 +83,11 @@ public class Floor {
             BufferedImage in = ImageIO.read(new URL("http://media-cache-ak0.pinimg.com/originals/99/28/c2/9928c234242bd399de157b4fc3d4761d.jpg"));
             Object params = new Object[]{this.getSid(),this.getName(),in, this.getPrinterId()};
             this.insertFloorStatement(params);
+            int counter = 1;
             for(Table table : this.getTables()){
-                params = new Object[]{table.getSid(),table.getName(this.getName()),table.getPositionX(),table.getPositionY(),this.getSid()};
+                params = new Object[]{table.getSid(),table.getName(this.getName()),table.getPositionX(counter),table.getPositionY(counter),this.getSid()};
                 this.insertTableStatement(params);
+                counter++;
             }
         } catch (BasicException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);

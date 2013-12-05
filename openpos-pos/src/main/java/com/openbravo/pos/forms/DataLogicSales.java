@@ -348,7 +348,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
         return ticket;
     }
 
-    public final void saveTicket(final TicketInfo ticket, final String location) throws BasicException {
+    public final Transaction saveTicket(final TicketInfo ticket, final String location, boolean executeTransaction) throws BasicException {
 
         Transaction t = new Transaction(s) {
             public Object transact() throws BasicException {
@@ -468,7 +468,8 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 return null;
             }
         };
-        t.execute();
+        if(executeTransaction) t.execute();
+        return t;
     }
 
     public final void deleteTicket(final TicketInfo ticket, final String location) throws BasicException {

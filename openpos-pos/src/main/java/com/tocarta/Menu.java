@@ -104,6 +104,7 @@ public class Menu {
                 dish.setId(this.getId());
                 dish.setName(this.getName());
                 dish.setPosition(1);
+                dish.setTaxIncluded(true);
                 dish.setPrice(this.getPrice());
                 dish.setSid(this.getSid());
                 Section.insertShortStatement(dish,SID);

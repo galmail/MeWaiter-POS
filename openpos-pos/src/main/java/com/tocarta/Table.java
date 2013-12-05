@@ -47,11 +47,12 @@ class Table {
         this.number = number;
     }
     
-    public int getPositionX() {
+    public int getPositionX(int counter) {
+        if(counter<1) counter = this.number;
         if(this.positionX>0) return positionX;
         else {
             int leftMargin = 80;
-            int res = ((this.number-1)%4)*143;
+            int res = ((counter-1)%4)*143;
             return res+leftMargin;
         }
     }
@@ -60,11 +61,12 @@ class Table {
         this.positionX = positionX;
     }
 
-    public int getPositionY() {
+    public int getPositionY(int counter) {
+        if(counter<1) counter = this.number;
         if(this.positionY>0) return positionY;
         else {
-            int factor = (int) Math.ceil(this.number / 4.0);
-            return (factor*113);
+            int factor = (int) Math.ceil(counter / 4.0);
+            return (factor*50); //113
         }
     }
 

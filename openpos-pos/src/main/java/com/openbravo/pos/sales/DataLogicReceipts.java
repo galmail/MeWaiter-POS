@@ -29,6 +29,7 @@ import com.openbravo.data.loader.SerializerWriteBasicExt;
 import com.openbravo.data.loader.SerializerWriteString;
 import com.openbravo.data.loader.Session;
 import com.openbravo.data.loader.StaticSentence;
+import com.openbravo.data.loader.Transaction;
 import com.openbravo.pos.forms.BeanFactoryDataSingle;
 import com.openbravo.pos.ticket.TicketInfo;
 
@@ -69,6 +70,22 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
                 , new SerializerReadClass(SharedTicketInfo.class)).list();
     }
     
+    public final Transaction updateSharedTicket(final String id, final TicketInfo ticket, boolean transactional) throws BasicException {
+        if(transactional){
+            Transaction t = new Transaction(s) {
+                public Object transact() throws BasicException {
+                    updateSharedTicket(id, ticket);
+                    return null;
+                }
+            };
+            return t;
+        }
+        else {
+            this.updateSharedTicket(id,ticket);
+            return null;
+        }
+    }
+    
     public final void updateSharedTicket(final String id, final TicketInfo ticket) throws BasicException {
          
         Object[] values = new Object[] {id, ticket.getName(), ticket};
@@ -86,6 +103,17 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
         new PreparedSentence(s
             , "INSERT INTO SHAREDTICKETS (ID, NAME,CONTENT) VALUES (?, ?, ?)"
             , new SerializerWriteBasicExt(datas, new int[] {0, 1, 2})).exec(values);
+    }
+    
+    public final Transaction deleteSharedTicket(final String id, boolean executeTransaction) throws BasicException {
+        Transaction t = new Transaction(s) {
+            public Object transact() throws BasicException {
+                deleteSharedTicket(id);
+                return null;
+            }
+        };
+        if(executeTransaction) t.execute();
+        return t;
     }
     
     public final void deleteSharedTicket(final String id) throws BasicException {

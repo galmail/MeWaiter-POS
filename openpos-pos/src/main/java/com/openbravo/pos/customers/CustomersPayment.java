@@ -518,7 +518,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
             ticket.setCustomer(customerext);
 
             try {
-                dlsales.saveTicket(ticket, app.getInventoryLocation());
+                dlsales.saveTicket(ticket, app.getInventoryLocation(),true);
             } catch (BasicException eData) {
                 MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE, AppLocal.getIntString("message.nosaveticket"), eData);
                 msg.show(this);

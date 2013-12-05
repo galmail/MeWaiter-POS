@@ -920,7 +920,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                         if (executeEvent(ticket, ticketext, "ticket.save") == null) {
                             // Save the receipt and assign a receipt number
                             try {
-                                dlSales.saveTicket(ticket, m_App.getInventoryLocation());                       
+                                dlSales.saveTicket(ticket, m_App.getInventoryLocation(),true);                       
                             } catch (BasicException eData) {
                                 MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE, AppLocal.getIntString("message.nosaveticket"), eData);
                                 msg.show(this);

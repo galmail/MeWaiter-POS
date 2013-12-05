@@ -44,8 +44,7 @@ public class SecondCoursesServlet extends HttpServlet
             TicketInfo ticket = dlReceipts.getSharedTicket(tSid);
             
             if(ticket!=null){
-                App.printTicket(sresource, ticket, tName);
-                resp = true;
+                resp = App.printTicket(sresource, ticket, tName);
             }
         } catch (BasicException ex) {
             Logger.getLogger(SecondCoursesServlet.class.getName()).log(Level.SEVERE, null, ex);

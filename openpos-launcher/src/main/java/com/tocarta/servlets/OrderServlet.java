@@ -12,6 +12,7 @@ package com.tocarta.servlets;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.ListKeyed;
 import com.openbravo.data.loader.SentenceList;
+import com.openbravo.data.loader.Transaction;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.forms.DataLogicSystem;
@@ -61,8 +62,9 @@ public class OrderServlet extends HttpServlet
     }
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        boolean resp = false;
         // 1. Get received JSON data from request
-         BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
         String jsonStr = "";
         while(true){
             String line = br.readLine();
@@ -72,7 +74,7 @@ public class OrderServlet extends HttpServlet
         // 2. Process JSON to Ticket Object
         ObjectMapper mapper = new ObjectMapper();
         Ticket ticket = mapper.readValue(jsonStr,Ticket.class);
-        boolean resp = this.processOrder(ticket);
+        resp = this.processOrder(ticket);
         // 3. Send result OK
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
@@ -122,7 +124,7 @@ public class OrderServlet extends HttpServlet
             }
             
             // save ticket in database
-            dlReceipts.updateSharedTicket(ticketId, ticket);
+            Transaction transactionUpdateTicket = dlReceipts.updateSharedTicket(ticketId, ticket, true);
 
             // print current ticket
             Logger.getLogger(OrderServlet.class.getName()).log(Level.INFO, null, "Table "+ ticketId +" has " + ticket.getLinesCount() + " lines");
@@ -135,7 +137,10 @@ public class OrderServlet extends HttpServlet
                 boolean printedOK = App.printTicket(sresource, pTicket, newticket.getTableName());
                 if(!printedOK) allTicketsPrintedOK = false;
             }
-            if(allTicketsPrintedOK) resp = true;
+            if(allTicketsPrintedOK){
+                transactionUpdateTicket.execute();
+                resp = true;
+            }
         } catch (BasicException ex) {
             Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NullPointerException ex) {
