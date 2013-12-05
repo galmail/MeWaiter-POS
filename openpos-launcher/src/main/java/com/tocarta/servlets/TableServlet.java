@@ -68,13 +68,20 @@ public class TableServlet extends HttpServlet
                 if(dlReceipts.getSharedTicket(tSid)==null){
                     dlReceipts.insertSharedTicket(tSid, ticket);
                 }
+                resp = true;
             }
             else if(tMethod!=null && tMethod.equals("close")){
                 dlReceipts.deleteSharedTicket(tSid);
+                resp = true;
             }
-            resp = true;
+            else {
+                // hay un bug en android, ponemos siempre en true
+                resp = true;
+                //resp = false;
+            }
         } catch (BasicException ex) {
             Logger.getLogger(TableServlet.class.getName()).log(Level.SEVERE, null, ex);
+            resp = false;
         }
         // 3. Send result OK
         response.setContentType("application/json");

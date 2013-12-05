@@ -31,6 +31,7 @@ import com.openbravo.pos.forms.AppLocal;
 import java.util.List;
 import java.util.Properties;
 import com.tocarta.Modifier;
+import com.tocarta.Sale;
 
 /**
  *
@@ -340,5 +341,20 @@ public class TicketLineInfo implements SerializableWrite, SerializableRead, Seri
     public String encodeName(String name) {
         return StringUtils.encodeXML(name);
     }
+    
+    public Sale setupSale(Sale sale){
+        // Building the sale ticketline
+        sale.setTICKETLINES_TICKET(m_sTicket);
+        sale.setTICKETLINES_LINE(m_iLine);
+        sale.setTICKETLINES_PRODUCT(productid);
+        sale.setTICKETLINES_ATTRIBUTESETINSTANCE_ID(attsetinstid);
+        sale.setTICKETLINES_UNITS(multiply);
+        sale.setTICKETLINES_PRICE(price);
+        sale.setTICKETLINES_TAXID(tax.getId());
+        sale.setTICKETLINES_ATTRIBUTES(attributes);
+        return sale;
+    }
+    
+    
     
 }

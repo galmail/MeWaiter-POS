@@ -44,6 +44,7 @@ import com.openbravo.pos.payment.PaymentInfoTicket;
 import com.openbravo.pos.sales.restaurant.Place;
 import com.openbravo.pos.ticket.FindTicketsInfo;
 import com.openbravo.pos.ticket.TicketTaxInfo;
+import com.tocarta.Sale;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -369,6 +370,24 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                             throw new BasicException();
                     }
                 }
+                
+                // Set Transaction Sentence
+                Sale saleToInsert = new Sale();
+                SentenceExec saleInsertSentence = new PreparedSentence(s
+                    , "INSERT INTO SALES ("+
+                            "ID,RECEIPTS_ID,RECEIPTS_MONEY,RECEIPTS_DATENEW,RECEIPTS_ATTRIBUTES,"+
+                            "TICKETS_ID,TICKETS_TICKETTYPE,TICKETS_TICKETID,TICKETS_PERSON,TICKETS_CUSTOMER,TICKETS_STATUS,"+
+                            "TICKETLINES_TICKET,TICKETLINES_LINE,TICKETLINES_PRODUCT,TICKETLINES_ATTRIBUTESETINSTANCE_ID,TICKETLINES_UNITS,TICKETLINES_PRICE,TICKETLINES_TAXID,TICKETLINES_ATTRIBUTES,"+
+                            "PAYMENTS_ID,PAYMENTS_RECEIPT,PAYMENTS_PAYMENT,PAYMENTS_NOTE,PAYMENTS_TOTAL,PAYMENTS_TRANSID,PAYMENTS_RETURNMSG,"+
+                            "TAXLINES_ID,TAXLINES_RECEIPT,TAXLINES_TAXID,TAXLINES_BASE,TAXLINES_AMOUNT"+
+                            ") VALUES ("+
+                            "?, ?, ?, ?, ?,"+
+                            "?, ?, ?, ?, ?, ?,"+
+                            "?, ?, ?, ?, ?, ?, ?, ?,"+
+                            "?, ?, ?, ?, ?, ?, ?,"+
+                            "?, ?, ?, ?, ?"+
+                            ")"
+                    , SerializerWriteBuilder.INSTANCE);
 
                 // new receipt
                 new PreparedSentence(s
@@ -386,7 +405,13 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                             setBytes(4, null);
                         }
                     }});
-
+                
+                // Building the sale receipt
+                saleToInsert.setRECEIPTS_ID(ticket.getId());
+                saleToInsert.setRECEIPTS_MONEY(ticket.getActiveCash());
+                saleToInsert.setRECEIPTS_DATENEW(ticket.getDate());
+                saleToInsert.setRECEIPTS_ATTRIBUTES(ticket.getProperties());
+                
                 // new ticket
                 new PreparedSentence(s
                     , "INSERT INTO TICKETS (ID, TICKETTYPE, TICKETID, PERSON, CUSTOMER) VALUES (?, ?, ?, ?, ?)"
@@ -398,6 +423,13 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                         setString(4, ticket.getUser().getId());
                         setString(5, ticket.getCustomerId());
                     }});
+                
+                // Building the sale ticket
+                saleToInsert.setTICKETS_ID(ticket.getId());
+                saleToInsert.setTICKETS_TICKETTYPE(ticket.getTicketType());
+                saleToInsert.setTICKETS_TICKETID(ticket.getTicketId());
+                saleToInsert.setTICKETS_PERSON(ticket.getUser().getId());
+                saleToInsert.setTICKETS_CUSTOMER(ticket.getCustomerId());
 
                 SentenceExec ticketlineinsert = new PreparedSentence(s
                     , "INSERT INTO TICKETLINES (TICKET, LINE, PRODUCT, ATTRIBUTESETINSTANCE_ID, UNITS, PRICE, TAXID, ATTRIBUTES) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
@@ -420,7 +452,12 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                             new Double(l.getPrice())
                         });
                     }
+                    saleToInsert = l.setupSale(saleToInsert);
+                    // insert the sale in database
+                    saleInsertSentence.exec(saleToInsert);
+                    saleToInsert.recreateID();
                 }
+                saleToInsert.clearTicketLine();
 
                 SentenceExec paymentinsert = new PreparedSentence(s
                     , "INSERT INTO PAYMENTS (ID, RECEIPT, PAYMENT, TOTAL, TRANSID, NOTE, RETURNMSG) VALUES (?, ?, ?, ?, ?, ?, ?)"
@@ -435,6 +472,15 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                         setString(6, p.getNote());
                         setBytes(7, (byte[]) Formats.BYTEA.parseValue(ticket.getReturnMessage()));
                     }});
+                    
+                    // Building the sale payment
+                    saleToInsert.setPAYMENTS_ID(UUID.randomUUID().toString());
+                    saleToInsert.setPAYMENTS_RECEIPT(ticket.getId());
+                    saleToInsert.setPAYMENTS_PAYMENT(p.getName());
+                    saleToInsert.setPAYMENTS_NOTE(p.getNote());
+                    saleToInsert.setPAYMENTS_TOTAL(p.getTotal());
+                    saleToInsert.setPAYMENTS_TRANSID(ticket.getTransactionID());
+                    saleToInsert.setPAYMENTS_RETURNMSG(ticket.getReturnMessage());
 
                     if ("debt".equals(p.getName()) || "debtpaid".equals(p.getName())) {
 
@@ -462,9 +508,21 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                             setDouble(4, tickettax.getSubTotal());
                             setDouble(5, tickettax.getTax());
                         }});
+                        
+                        // Building the sale taxlines
+                        saleToInsert.setTAXLINES_ID(UUID.randomUUID().toString());
+                        saleToInsert.setTAXLINES_RECEIPT(ticket.getId());
+                        saleToInsert.setTAXLINES_TAXID(tickettax.getTaxInfo().getId());
+                        saleToInsert.setTAXLINES_BASE(tickettax.getSubTotal());
+                        saleToInsert.setTAXLINES_AMOUNT(tickettax.getTax());
+                        
+                        // insert the sale in database
+                        saleInsertSentence.exec(saleToInsert);
+                        saleToInsert.recreateID();
                     }
                 }
-
+                saleToInsert.clearTaxLine();
+                saleInsertSentence.exec(saleToInsert);
                 return null;
             }
         };
