@@ -131,13 +131,19 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     }
     
     // PrinterID de la Categoria
-    public final CategoryInfo getCategoryPrinter(String category) throws BasicException {
+    public final CategoryInfo getCategoryPrinter(String categoryId) throws BasicException {
         return (CategoryInfo) new PreparedSentence(s
             , "SELECT ID, NAME, IMAGE, PRINTERID FROM CATEGORIES WHERE ID = ?"
             , SerializerWriteString.INSTANCE
-            , CategoryInfo.getSerializerRead()).find(category);
+            , CategoryInfo.getSerializerRead()).find(categoryId);
     }
     
+    public final List<CategoryInfo> getMainCourseCategories() throws BasicException {
+        return new PreparedSentence(s
+            , "SELECT ID, NAME, IMAGE, PRINTERID FROM CATEGORIES WHERE NAME IN ('%hamburg%','%pizza%','%pasta%','%carne%','%entrante%','%principal%','%ensalada%','%plato%')"
+            , null
+            , CategoryInfo.getSerializerRead()).list();
+    }
     
     public final List<CategoryInfo> getSubcategories(String category) throws BasicException  {
         return new PreparedSentence(s
