@@ -4,6 +4,7 @@
  */
 package com.tocarta;
 
+import com.openbravo.pos.ticket.TaxInfo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,12 +96,13 @@ public class TicketLine implements Serializable {
         this.discount = discount;
     }
     
-    public double calculatePrice(){
+    public double calculatePrice(TaxInfo tax){
         double fixedDiscount = 0;
         if(discount!=null){
             fixedDiscount = discount.calculateFixDiscount(price);
         }
-        return price + fixedDiscount;
+        double dPrice = price + fixedDiscount;
+        return dPrice / (1+tax.getRate());
     }
 
     public String printAllModifiers() {

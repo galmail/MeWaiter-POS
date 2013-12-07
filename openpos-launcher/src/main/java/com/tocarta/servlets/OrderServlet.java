@@ -104,7 +104,7 @@ public class OrderServlet extends HttpServlet
                 String categoryId = newticketLine.getCategorySid();
                 String productName = newticketLine.getProductName();
                 double dMultiply = newticketLine.getMultiply();
-                double dPrice = newticketLine.calculatePrice();
+                double dPrice = newticketLine.calculatePrice(tax);
                 Properties props = new Properties();
                 props.setProperty("product.taxcategoryid", "001");
                 props.setProperty("product.com", "false");
