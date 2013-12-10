@@ -118,19 +118,13 @@ public class PaymentsModel {
 	}
 
 	public static void sumModels(PaymentsModel finalPaymentsModel, PaymentsModel monthPaymentsModel) {
-		finalPaymentsModel.m_iPayments = sumNullableInteger(finalPaymentsModel.m_iPayments,
-				monthPaymentsModel.m_iPayments);
-		finalPaymentsModel.m_dPaymentsTotal = sumNullableDouble(finalPaymentsModel.m_dPaymentsTotal,
-				monthPaymentsModel.m_dPaymentsTotal);
+		finalPaymentsModel.m_iPayments = sumNullableInteger(finalPaymentsModel.m_iPayments,monthPaymentsModel.m_iPayments);
+		finalPaymentsModel.m_dPaymentsTotal = sumNullableDouble(finalPaymentsModel.m_dPaymentsTotal,monthPaymentsModel.m_dPaymentsTotal);
 		finalPaymentsModel.m_iSales = sumNullableInteger(finalPaymentsModel.m_iSales, monthPaymentsModel.m_iSales);
-		finalPaymentsModel.m_dSalesBase = sumNullableDouble(finalPaymentsModel.m_dSalesBase,
-				monthPaymentsModel.m_dSalesBase);
-		finalPaymentsModel.m_dSalesTaxes = sumNullableDouble(finalPaymentsModel.m_dSalesTaxes,
-				monthPaymentsModel.m_dSalesTaxes);
-
+		finalPaymentsModel.m_dSalesBase = sumNullableDouble(finalPaymentsModel.m_dSalesBase,monthPaymentsModel.m_dSalesBase);
+		finalPaymentsModel.m_dSalesTaxes = sumNullableDouble(finalPaymentsModel.m_dSalesTaxes,monthPaymentsModel.m_dSalesTaxes);
 		sumPayments(finalPaymentsModel, monthPaymentsModel);
 		sumTaxes(finalPaymentsModel, monthPaymentsModel);
-
 	}
 
 	private static void sumTaxes(PaymentsModel finalPaymentsModel, PaymentsModel monthPaymentsModel) {

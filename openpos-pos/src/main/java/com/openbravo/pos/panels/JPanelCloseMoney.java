@@ -187,9 +187,10 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
                 script.put("payments", m_PaymentsToClose);
                 String evaluatedReport = script.eval(sresource).toString();
                 m_TTP.printTicket(evaluatedReport);
-                IReportsPublishService reportsPublishService = OpenPos.getApplicationContext().getBean(IReportsPublishService.class);
-                reportsPublishService.sendDayEndReport(evaluatedReport);
-                
+                if(OpenPos.getApplicationContext()!=null){
+                    IReportsPublishService reportsPublishService = OpenPos.getApplicationContext().getBean(IReportsPublishService.class);
+                    reportsPublishService.sendDayEndReport(evaluatedReport);
+                }
             } catch (ScriptException e) {
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotprintticket"), e);
                 msg.show(this);

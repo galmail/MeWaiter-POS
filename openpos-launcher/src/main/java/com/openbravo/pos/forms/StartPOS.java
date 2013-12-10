@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.openpos.OpenPos;
 
 /**
  *
@@ -58,7 +59,7 @@ public class StartPOS {
     }
 
     public static void main(final String args[]) throws InterruptedException {
-
+        //OpenPos.initApplicationContext("org.openpos","com.openbravo");
         java.awt.EventQueue.invokeLater(new OpenPOS(args));
 
         try {

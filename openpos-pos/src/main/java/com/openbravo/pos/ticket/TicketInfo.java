@@ -70,6 +70,7 @@ public class TicketInfo implements SerializableRead, Externalizable {
 	private Properties attributes;
 	private UserInfo m_User;
 	private CustomerInfoExt m_Customer;
+        private int m_diners;
 	private String m_sActiveCash;
 	private List<TicketLineInfo> m_aLines;
 	private List<PaymentInfo> payments;
@@ -82,6 +83,7 @@ public class TicketInfo implements SerializableRead, Externalizable {
 		tickettype = RECEIPT_NORMAL;
 		m_iTicketId = 0; // incrementamos
                 mPrinterId = 1;
+                m_diners = 0;
 		m_dDate = new Date();
 		attributes = new Properties();
 		m_User = null;
@@ -104,6 +106,7 @@ public class TicketInfo implements SerializableRead, Externalizable {
 		out.writeObject(m_dDate);
 		out.writeObject(attributes);
 		out.writeObject(m_aLines);
+                out.writeInt(m_diners);
 	}
 
 	@Override
@@ -113,9 +116,10 @@ public class TicketInfo implements SerializableRead, Externalizable {
 		tickettype = in.readInt();
 		m_iTicketId = in.readInt();
 		m_Customer = (CustomerInfoExt)in.readObject();
-		m_dDate = (Date)in.readObject();
+                m_dDate = (Date)in.readObject();
 		attributes = (Properties)in.readObject();
 		m_aLines = (List<TicketLineInfo>)in.readObject();
+                m_diners = in.readInt();
 		m_User = null;
 		m_sActiveCash = null;
 
@@ -141,6 +145,7 @@ public class TicketInfo implements SerializableRead, Externalizable {
 		m_User = new UserInfo(dr.getString(7), dr.getString(8));
 		m_Customer = new CustomerInfoExt(dr.getString(9));
 		m_aLines = new ArrayList<TicketLineInfo>();
+                m_diners = dr.getInt(10).intValue();
 
 		payments = new ArrayList<PaymentInfo>();
 		taxes = null;
@@ -156,6 +161,7 @@ public class TicketInfo implements SerializableRead, Externalizable {
 		t.attributes = (Properties)attributes.clone();
 		t.m_User = m_User;
 		t.m_Customer = m_Customer;
+                t.m_diners = m_diners;
 
 		t.m_aLines = new ArrayList<TicketLineInfo>();
 		for (TicketLineInfo l : m_aLines) {
@@ -237,6 +243,14 @@ public class TicketInfo implements SerializableRead, Externalizable {
 	public void setUser(UserInfo value) {
 		m_User = value;
 	}
+
+        public int getDiners() {
+            return m_diners;
+        }
+
+        public void setDiners(int diners) {
+            this.m_diners = diners;
+        }
 
 	public CustomerInfoExt getCustomer() {
 		return m_Customer;
@@ -435,14 +449,15 @@ public class TicketInfo implements SerializableRead, Externalizable {
 	}
 
 	public TicketTaxInfo getTaxLine(TaxInfo tax) {
+            if(taxes==null) return null;
 
-		for (TicketTaxInfo taxline : taxes) {
-			if (tax.getId().equals(taxline.getTaxInfo().getId())) {
-				return taxline;
-			}
-		}
+            for (TicketTaxInfo taxline : taxes) {
+                    if (tax.getId().equals(taxline.getTaxInfo().getId())) {
+                            return taxline;
+                    }
+            }
 
-		return new TicketTaxInfo(tax);
+            return new TicketTaxInfo(tax);
 	}
 
 	public TicketTaxInfo[] getTaxLines() {

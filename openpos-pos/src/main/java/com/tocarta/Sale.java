@@ -41,6 +41,7 @@ public class Sale implements SerializableWrite, SerializableRead, Serializable {
     private String TICKETS_PERSON;
     private String TICKETS_CUSTOMER;
     private int TICKETS_STATUS;
+    private int TICKETS_DINERS;
     
     private String TICKETLINES_TICKET;
     private int TICKETLINES_LINE;
@@ -155,6 +156,14 @@ public class Sale implements SerializableWrite, SerializableRead, Serializable {
 
     public void setTICKETS_STATUS(int TICKETS_STATUS) {
         this.TICKETS_STATUS = TICKETS_STATUS;
+    }
+
+    public int getTICKETS_DINERS() {
+        return TICKETS_DINERS;
+    }
+
+    public void setTICKETS_DINERS(int TICKETS_DINERS) {
+        this.TICKETS_DINERS = TICKETS_DINERS;
     }
 
     public String getTICKETLINES_TICKET() {
@@ -345,6 +354,7 @@ public class Sale implements SerializableWrite, SerializableRead, Serializable {
         dw.setString(counter++, TICKETS_PERSON);
         dw.setString(counter++, TICKETS_CUSTOMER);
         dw.setInt(counter++, TICKETS_STATUS);
+        dw.setInt(counter++, TICKETS_DINERS);
         
         // TICKETLINES
         dw.setString(counter++, TICKETLINES_TICKET);

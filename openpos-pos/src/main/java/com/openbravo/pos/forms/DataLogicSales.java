@@ -140,7 +140,10 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     
     public final List<CategoryInfo> getMainCourseCategories() throws BasicException {
         return new PreparedSentence(s
-            , "SELECT ID, NAME, IMAGE, PRINTERID FROM CATEGORIES WHERE NAME IN ('%hamburg%','%pizza%','%pasta%','%carne%','%entrante%','%principal%','%ensalada%','%plato%')"
+            , "SELECT ID, NAME, IMAGE, PRINTERID FROM CATEGORIES WHERE "+
+               "UPPER(NAME) LIKE UPPER('Primero%') OR UPPER(NAME) LIKE UPPER('%Segundo%') OR UPPER(NAME) LIKE UPPER('%Hamburg%') "+
+               "OR UPPER(NAME) LIKE UPPER('%Pasta%') OR UPPER(NAME) LIKE UPPER('%Entrante%') OR UPPER(NAME) LIKE UPPER('%Pizza%') "+
+               "OR UPPER(NAME) LIKE UPPER('%Principal%')"
             , null
             , CategoryInfo.getSerializerRead()).list();
     }
@@ -382,13 +385,13 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 SentenceExec saleInsertSentence = new PreparedSentence(s
                     , "INSERT INTO SALES ("+
                             "ID,RECEIPTS_ID,RECEIPTS_MONEY,RECEIPTS_DATENEW,RECEIPTS_ATTRIBUTES,"+
-                            "TICKETS_ID,TICKETS_TICKETTYPE,TICKETS_TICKETID,TICKETS_PERSON,TICKETS_CUSTOMER,TICKETS_STATUS,"+
+                            "TICKETS_ID,TICKETS_TICKETTYPE,TICKETS_TICKETID,TICKETS_PERSON,TICKETS_CUSTOMER,TICKETS_STATUS,TICKETS_DINERS,"+
                             "TICKETLINES_TICKET,TICKETLINES_LINE,TICKETLINES_PRODUCT,TICKETLINES_ATTRIBUTESETINSTANCE_ID,TICKETLINES_UNITS,TICKETLINES_PRICE,TICKETLINES_TAXID,TICKETLINES_ATTRIBUTES,"+
                             "PAYMENTS_ID,PAYMENTS_RECEIPT,PAYMENTS_PAYMENT,PAYMENTS_NOTE,PAYMENTS_TOTAL,PAYMENTS_TRANSID,PAYMENTS_RETURNMSG,"+
                             "TAXLINES_ID,TAXLINES_RECEIPT,TAXLINES_TAXID,TAXLINES_BASE,TAXLINES_AMOUNT"+
                             ") VALUES ("+
                             "?, ?, ?, ?, ?,"+
-                            "?, ?, ?, ?, ?, ?,"+
+                            "?, ?, ?, ?, ?, ?, ?,"+
                             "?, ?, ?, ?, ?, ?, ?, ?,"+
                             "?, ?, ?, ?, ?, ?, ?,"+
                             "?, ?, ?, ?, ?"+
@@ -420,7 +423,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 
                 // new ticket
                 new PreparedSentence(s
-                    , "INSERT INTO TICKETS (ID, TICKETTYPE, TICKETID, PERSON, CUSTOMER) VALUES (?, ?, ?, ?, ?)"
+                    , "INSERT INTO TICKETS (ID, TICKETTYPE, TICKETID, PERSON, CUSTOMER, DINERS) VALUES (?, ?, ?, ?, ?, ?)"
                     , SerializerWriteParams.INSTANCE
                     ).exec(new DataParams() { public void writeValues() throws BasicException {
                         setString(1, ticket.getId());
@@ -428,6 +431,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                         setInt(3, ticket.getTicketId());
                         setString(4, ticket.getUser().getId());
                         setString(5, ticket.getCustomerId());
+                        setInt(6, ticket.getDiners());
                     }});
                 
                 // Building the sale ticket
@@ -436,6 +440,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 saleToInsert.setTICKETS_TICKETID(ticket.getTicketId());
                 saleToInsert.setTICKETS_PERSON(ticket.getUser().getId());
                 saleToInsert.setTICKETS_CUSTOMER(ticket.getCustomerId());
+                saleToInsert.setTICKETS_DINERS(ticket.getDiners());
 
                 SentenceExec ticketlineinsert = new PreparedSentence(s
                     , "INSERT INTO TICKETLINES (TICKET, LINE, PRODUCT, ATTRIBUTESETINSTANCE_ID, UNITS, PRICE, TAXID, ATTRIBUTES) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"

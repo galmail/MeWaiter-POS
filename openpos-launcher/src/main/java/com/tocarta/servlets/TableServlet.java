@@ -66,6 +66,7 @@ public class TableServlet extends HttpServlet
             if(tMethod!=null && tMethod.equals("open")){
                 TicketInfo ticket = new TicketInfo();
                 if(dlReceipts.getSharedTicket(tSid)==null){
+                    if(tPax!=null) ticket.setDiners(new Integer(tPax).intValue());
                     dlReceipts.insertSharedTicket(tSid, ticket);
                 }
                 resp = true;
