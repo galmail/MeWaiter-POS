@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tocarta.servlets;
+package com.tocarta.servlets.v1;
 
 /**
  *
@@ -25,7 +25,7 @@ public class HelloServlet extends HttpServlet
     {
         response.setContentType("text/html");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().println("<h1>MeWaiter POS is up and running!</h1>");
+        response.getWriter().println("<h1>MeWaiter POS v1 is up and running!</h1>");
         //response.getWriter().println("session=" + request.getSession(true).getId());
     }
 }

@@ -11,6 +11,7 @@ import com.openbravo.data.loader.LocalRes;
 import com.openbravo.data.loader.PreparedSentence;
 import com.openbravo.data.loader.SerializerWriteBasicExt;
 import com.openbravo.data.loader.Session;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.UUID;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;

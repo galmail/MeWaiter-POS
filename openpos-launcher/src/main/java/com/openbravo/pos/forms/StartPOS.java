@@ -19,17 +19,12 @@
 package com.openbravo.pos.forms;
 
 import com.openbravo.pos.instance.InstanceQuery;
-import com.tocarta.servlets.HelloServlet;
-import com.tocarta.servlets.OrderServlet;
-import com.tocarta.servlets.TableServlet;
-import com.tocarta.servlets.TicketServlet;
-import com.tocarta.servlets.actions.SecondCoursesServlet;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.openpos.OpenPos;
 
 /**
  *
@@ -77,30 +72,44 @@ public class StartPOS {
         try {
             // listen to Web Services on port 8080
             Server server = new Server(port);
-
             ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
             context.setContextPath("/");
+            context = setupV1API(context);
+            context = setupV2API(context);
             server.setHandler(context);
-
-            context.addServlet(new ServletHolder(new HelloServlet()), "/");
-            System.out.println("Try http://localhost:8080 to make sure server is up");
-            
-            context.addServlet(new ServletHolder(new TableServlet()), "/table");
-            System.out.println("Try to GET/POST a Table on http://localhost:8080/table");
-
-            context.addServlet(new ServletHolder(new OrderServlet()), "/order");
-            System.out.println("Try to POST an Order on http://localhost:8080/order");
-
-            context.addServlet(new ServletHolder(new TicketServlet()), "/ticket");
-            System.out.println("Try to GET/POST a Ticket on http://localhost:8080/ticket");
-            
-            context.addServlet(new ServletHolder(new SecondCoursesServlet()), "/actions/bring_second_courses");
-            System.out.println("Try to POST some action on http://localhost:8080/actions/<name>");
-
             server.start();
             server.join();
         } catch (Exception ex) {
             Logger.getLogger(StartPOS.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    private static ServletContextHandler setupV1API(ServletContextHandler context){
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v1.HelloServlet()), "/");
+        System.out.println("Try http://localhost:8080 to make sure server is up");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v1.TableServlet()), "/table");
+        System.out.println("Try to GET/POST a Table on http://localhost:8080/table");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v1.OrderServlet()), "/order");
+        System.out.println("Try to POST an Order on http://localhost:8080/order");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v1.TicketServlet()), "/ticket");
+        System.out.println("Try to GET/POST a Ticket on http://localhost:8080/ticket");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v1.SecondCoursesServlet()), "/actions/bring_second_courses");
+        System.out.println("Try to POST some action on http://localhost:8080/actions/<name>");
+        return context;
+    }
+    
+    private static ServletContextHandler setupV2API(ServletContextHandler context){
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.HelloServlet()), "/v2");
+        System.out.println("Try http://localhost:8080/v2 to make sure server is up");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.TableServlet()), "/v2/table");
+        System.out.println("Try to GET/POST a Table on http://localhost:8080/v2/table");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.OrderServlet()), "/v2/order");
+        System.out.println("Try to POST an Order on http://localhost:8080/v2/order");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.TicketServlet()), "/v2/ticket");
+        System.out.println("Try to GET/POST a Ticket on http://localhost:8080/v2/ticket");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.SecondCoursesServlet()), "/v2/actions/bring_second_courses");
+        System.out.println("Try to POST some action on http://localhost:8080/v2/actions/<name>");
+        return context;
+    }
+    
 }

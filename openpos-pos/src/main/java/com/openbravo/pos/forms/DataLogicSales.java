@@ -32,6 +32,7 @@ import com.openbravo.format.Formats;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.model.Field;
 import com.openbravo.data.model.Row;
+import com.openbravo.pos.customers.CustomerInfo;
 import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.pos.inventory.AttributeSetInfo;
 import com.openbravo.pos.inventory.TaxCustCategoryInfo;
@@ -44,6 +45,7 @@ import com.openbravo.pos.payment.PaymentInfoTicket;
 import com.openbravo.pos.sales.restaurant.Place;
 import com.openbravo.pos.ticket.FindTicketsInfo;
 import com.openbravo.pos.ticket.TicketTaxInfo;
+import com.tocarta.ModifierList;
 import com.tocarta.Sale;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -136,6 +138,21 @@ public class DataLogicSales extends BeanFactoryDataSingle {
             , "SELECT ID, NAME, IMAGE, PRINTERID FROM CATEGORIES WHERE ID = ?"
             , SerializerWriteString.INSTANCE
             , CategoryInfo.getSerializerRead()).find(categoryId);
+    }
+    
+    // ModifierList
+    public final SentenceList getModifierList(String sid) throws BasicException {
+        return new StaticSentence(s
+            , new QBFBuilder("SELECT ID, NAME FROM ATTRIBUTE WHERE ID = ?",new String[] {sid})
+            , new SerializerWriteBasic(new Datas[] {Datas.STRING, Datas.STRING})
+            , new SerializerRead() {
+                    public Object readValues(DataRead dr) throws BasicException {
+                        ModifierList mList = new ModifierList();
+                        mList.setSid(dr.getString(1));
+                        mList.setName(dr.getString(2));
+                        return mList;
+                    }
+                });
     }
     
     public final List<CategoryInfo> getMainCourseCategories() throws BasicException {

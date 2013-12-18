@@ -2,12 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tocarta.servlets;
+package com.tocarta.servlets.v2;
 
 /**
  *
  * @author gal
  */
+
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.ListKeyed;
 import com.openbravo.data.gui.MessageInf;
