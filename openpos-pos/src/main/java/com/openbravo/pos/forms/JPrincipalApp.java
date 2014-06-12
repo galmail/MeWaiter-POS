@@ -326,6 +326,7 @@ public class JPrincipalApp extends javax.swing.JPanel implements AppUserView {
     }
     
     private void showView(String sView) {
+        logger.log(Level.INFO, "========== Display View: " + sView);
         CardLayout cl = (CardLayout)(m_jPanelContainer.getLayout());
         cl.show(m_jPanelContainer, sView);       
     }

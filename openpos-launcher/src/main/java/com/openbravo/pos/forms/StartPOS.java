@@ -19,12 +19,21 @@
 package com.openbravo.pos.forms;
 
 import com.openbravo.pos.instance.InstanceQuery;
+import java.awt.Desktop;
+import java.net.URL;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.resource.Resource;
+import org.eclipse.jetty.util.resource.ResourceCollection;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 /**
  *
@@ -33,7 +42,8 @@ import org.eclipse.jetty.servlet.ServletHolder;
 public class StartPOS {
 
     private static Logger logger = Logger.getLogger("com.openbravo.pos.forms.StartPOS");
-    private static int port = 8080;
+    
+    private static AppConfig config = null;
 
     /**
      * Creates a new instance of StartPOS
@@ -54,62 +64,89 @@ public class StartPOS {
     }
 
     public static void main(final String args[]) throws InterruptedException {
-        //OpenPos.initApplicationContext("org.openpos","com.openbravo");
-        java.awt.EventQueue.invokeLater(new OpenPOS(args));
-
+        // load config file
+        config = new AppConfig(args);
+        config.load();
+        // start openbravo
+        java.awt.EventQueue.invokeLater(new OpenPOS(config));
         try {
             // start listening to RabbitMQ messages
             //new Thread(new ApiReceiver(args)).start();
+            
             // start web server
-            startWebServer();
+            int port = Integer.parseInt(config.getProperty("mw.server_port"));
+            openWebpage("http://localhost:"+port);
+            startWebServer(port);
         } catch (Exception ex) {
             Logger.getLogger(OpenPOS.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
     
-    private static void startWebServer(){
+    private static void openWebpage(String urlString) {
+        try {
+            Desktop.getDesktop().browse(new URL(urlString).toURI());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private static boolean startWebServer(int port){
         try {
             // listen to Web Services on port 8080
             Server server = new Server(port);
+            
+            String webapp = "src/main/webapp";
+            ResourceHandler resource_handler = new ResourceHandler();
+            resource_handler.setWelcomeFiles(new String[]{ "index.html" });
+            resource_handler.setResourceBase(webapp);
+            
             ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-            context.setContextPath("/");
             context = setupV1API(context);
             context = setupV2API(context);
-            server.setHandler(context);
+            context = setupLocalServlets(context);
+            context.setContextPath("/cli");
+            
+            HandlerList handlers = new HandlerList();
+            handlers.setHandlers(new Handler[] { context, resource_handler , new DefaultHandler() });
+            server.setHandler(handlers);
+            
             server.start();
             server.join();
+            return true;
         } catch (Exception ex) {
             Logger.getLogger(StartPOS.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
     }
     
     private static ServletContextHandler setupV1API(ServletContextHandler context){
-        context.addServlet(new ServletHolder(new com.tocarta.servlets.v1.HelloServlet()), "/");
-        System.out.println("Try http://localhost:8080 to make sure server is up");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v1.HelloServlet(config)), "/hello");
         context.addServlet(new ServletHolder(new com.tocarta.servlets.v1.TableServlet()), "/table");
-        System.out.println("Try to GET/POST a Table on http://localhost:8080/table");
         context.addServlet(new ServletHolder(new com.tocarta.servlets.v1.OrderServlet()), "/order");
-        System.out.println("Try to POST an Order on http://localhost:8080/order");
         context.addServlet(new ServletHolder(new com.tocarta.servlets.v1.TicketServlet()), "/ticket");
-        System.out.println("Try to GET/POST a Ticket on http://localhost:8080/ticket");
         context.addServlet(new ServletHolder(new com.tocarta.servlets.v1.SecondCoursesServlet()), "/actions/bring_second_courses");
-        System.out.println("Try to POST some action on http://localhost:8080/actions/<name>");
         return context;
     }
     
     private static ServletContextHandler setupV2API(ServletContextHandler context){
         context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.HelloServlet()), "/v2");
-        System.out.println("Try http://localhost:8080/v2 to make sure server is up");
         context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.TableServlet()), "/v2/table");
-        System.out.println("Try to GET/POST a Table on http://localhost:8080/v2/table");
         context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.OrderServlet()), "/v2/order");
-        System.out.println("Try to POST an Order on http://localhost:8080/v2/order");
         context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.TicketServlet()), "/v2/ticket");
-        System.out.println("Try to GET/POST a Ticket on http://localhost:8080/v2/ticket");
         context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.SecondCoursesServlet()), "/v2/actions/bring_second_courses");
-        System.out.println("Try to POST some action on http://localhost:8080/v2/actions/<name>");
         return context;
     }
+    
+    private static ServletContextHandler setupLocalServlets(ServletContextHandler context){
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.local.MainServlet()), "/");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.local.LoginServlet(config)), "/login");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.local.LogoutServlet()), "/logout");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.local.UpdateServlet()), "/update");
+        
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.local.ShutdownServlet()), "/shutdown");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.local.ShowConfigServlet(config)), "/show_config");
+        return context;
+    }
+    
     
 }

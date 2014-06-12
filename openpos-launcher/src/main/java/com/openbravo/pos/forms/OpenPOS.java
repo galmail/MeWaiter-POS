@@ -21,11 +21,11 @@ import org.jvnet.substance.api.SubstanceSkin;
 public class OpenPOS implements Runnable {
     
         private static Logger logger = Logger.getLogger("com.openbravo.pos.forms.OpenPOS");
+        
+        private AppConfig config = null;
 
-        private String[] initArgs = null;
-
-        public OpenPOS(String[] args) {
-            initArgs = args;
+        public OpenPOS(AppConfig conf) {
+            config = conf;
         }
 
         public void run() {
@@ -34,9 +34,6 @@ public class OpenPOS implements Runnable {
 //                if (!registerApp()) {
 //                    System.exit(1);
 //                }
-
-            AppConfig config = new AppConfig(initArgs);
-            config.load();
 
             // set Locale.
             String slang = config.getProperty("user.language");

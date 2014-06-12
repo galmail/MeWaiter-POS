@@ -154,11 +154,16 @@ public class JRootApp extends JPanel implements AppView, OnStatusChangedNotifier
 				return false;
 			}
 			else {
+                            int DialogAnswer = JOptionPane.YES_OPTION;
+                            if ("true".equals(m_props.getProperty("mw.run_in_background"))) {
+                                // do nothing
+                            }
+                            else {
+                                DialogAnswer = JOptionPane.showConfirmDialog(this, AppLocal.getIntString(sDBVersion == null ? "message.createdatabase" : "message.updatedatabase"), AppLocal.getIntString("message.title"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                            }
+
 				// Create or upgrade script exists.
-				if (JOptionPane
-						.showConfirmDialog(this, AppLocal.getIntString(sDBVersion == null ? "message.createdatabase"
-								: "message.updatedatabase"), AppLocal.getIntString("message.title"),
-								JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+				if (DialogAnswer == JOptionPane.YES_OPTION) {
 
 					try {
 						session.begin();

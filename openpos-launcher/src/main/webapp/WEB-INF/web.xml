@@ -8,11 +8,12 @@
  
   <servlet>
     <servlet-name>Hello</servlet-name>
-    <servlet-class>com.openbravo.pos.forms.HelloServlet</servlet-class>
+    <servlet-class>com.tocarta.servlets.v1.HelloServlet</servlet-class>
   </servlet>
+  
   <servlet-mapping>
     <servlet-name>Hello</servlet-name>
-    <url-pattern>/hello/*</url-pattern>
+    <url-pattern>/</url-pattern>
   </servlet-mapping>
  
 </web-app>

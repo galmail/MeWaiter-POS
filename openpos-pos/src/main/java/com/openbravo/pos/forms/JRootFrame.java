@@ -74,9 +74,23 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
             pack();
             setLocationRelativeTo(null);        
             
-            setVisible(true);                        
+            
+            if ("true".equals(props.getProperty("mw.run_in_background"))) {
+                // running in background
+                setVisible(false);
+            }
+            else {
+                setVisible(true);
+            }
+            AppLocal.APP_STATUS = "App is running OK!";
         } else {
-            new JFrmConfig(props).setVisible(true); // Show the configuration window.
+            if ("true".equals(props.getProperty("mw.run_in_background"))) {
+                // do nothing
+            }
+            else {
+                new JFrmConfig(props).setVisible(true); // Show the configuration window.
+            }
+            AppLocal.APP_STATUS = "App not started, please kill current instance and check config.";
         }
         return m_rootapp;
     }

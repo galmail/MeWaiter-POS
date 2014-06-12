@@ -34,10 +34,11 @@ import javax.swing.UIManager;
 public class JFrmConfig extends javax.swing.JFrame {
     
     private JPanelConfiguration config;
+    private AppProperties propis = null;
     
     /** Creates new form JFrmConfig */
     public JFrmConfig(AppProperties props) {
-        
+        propis = props;
         initComponents();
         
         try {
@@ -66,7 +67,12 @@ public class JFrmConfig extends javax.swing.JFrame {
             }
         }
         public void windowClosed(WindowEvent evt) {
-            System.exit(0);
+            if ("true".equals(propis.getProperty("mw.run_in_background"))) {
+                // do nothing...
+            }
+            else {
+                System.exit(0);
+            }
         }
     }    
     /** This method is called from within the constructor to
