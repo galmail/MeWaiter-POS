@@ -10,7 +10,7 @@ package com.tocarta.servlets.local;
  */
 
 import com.openbravo.pos.config.JFrmConfig;
-import com.openbravo.pos.forms.AppConfig;
+import com.tocarta.services.Setup;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,17 +21,15 @@ import javax.servlet.http.HttpServletResponse;
  
 public class ShowConfigServlet extends HttpServlet
 {   
-    private AppConfig config = null;
     
-    public ShowConfigServlet(AppConfig conf){
-        config = conf;
+    public ShowConfigServlet(){
     }
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         boolean resp = false;
         try {
-            JFrmConfig configWindow = new JFrmConfig(config);
+            JFrmConfig configWindow = new JFrmConfig(Setup.config);
             configWindow.setVisible(true);
             configWindow.setAlwaysOnTop(true);
             resp = true;

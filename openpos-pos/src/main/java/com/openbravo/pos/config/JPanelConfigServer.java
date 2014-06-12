@@ -311,10 +311,10 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
                         
                         updateStatus("Menu Imported Succesfully!");
                         // show popup if user wants to restart the app
-                        int res = JOptionPane.showConfirmDialog(this, AppLocal.getIntString("message.restartApp"), AppLocal.getIntString("title.editor"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-                        if (res == JOptionPane.YES_OPTION) {
-                            App.restartApp("unix");
-                        }
+//                        int res = JOptionPane.showConfirmDialog(this, AppLocal.getIntString("message.restartApp"), AppLocal.getIntString("title.editor"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+//                        if (res == JOptionPane.YES_OPTION) {
+//                            App.restartApp("unix");
+//                        }
                         
                     } else {
                         updateStatus("Menus were not loaded!");

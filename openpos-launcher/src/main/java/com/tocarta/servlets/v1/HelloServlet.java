@@ -9,12 +9,8 @@ package com.tocarta.servlets.v1;
  * @author gal
  */
 
-import com.openbravo.pos.config.JFrmConfig;
-import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,10 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  
 public class HelloServlet extends HttpServlet
 {   
-    private AppConfig config = null;
-    
-    public HelloServlet(AppConfig conf){
-        config = conf;
+    public HelloServlet(){
     }
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException

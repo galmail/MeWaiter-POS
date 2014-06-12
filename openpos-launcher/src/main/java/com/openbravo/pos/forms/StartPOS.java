@@ -19,6 +19,7 @@
 package com.openbravo.pos.forms;
 
 import com.openbravo.pos.instance.InstanceQuery;
+import com.tocarta.services.Setup;
 import java.awt.Desktop;
 import java.net.URL;
 
@@ -67,6 +68,8 @@ public class StartPOS {
         // load config file
         config = new AppConfig(args);
         config.load();
+        Setup.init(config);
+        
         // start openbravo
         java.awt.EventQueue.invokeLater(new OpenPOS(config));
         try {
@@ -100,14 +103,12 @@ public class StartPOS {
             resource_handler.setWelcomeFiles(new String[]{ "index.html" });
             resource_handler.setResourceBase(webapp);
             
-            ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-            context = setupV1API(context);
-            context = setupV2API(context);
-            context = setupLocalServlets(context);
-            context.setContextPath("/cli");
+            ServletContextHandler contextV1 = setupV1API();
+            ServletContextHandler contextV2 = setupV2API();
+            ServletContextHandler contextCLI = setupLocalServlets();
             
             HandlerList handlers = new HandlerList();
-            handlers.setHandlers(new Handler[] { context, resource_handler , new DefaultHandler() });
+            handlers.setHandlers(new Handler[] { contextV1, contextV2, contextCLI, resource_handler , new DefaultHandler() });
             server.setHandler(handlers);
             
             server.start();
@@ -119,8 +120,10 @@ public class StartPOS {
         }
     }
     
-    private static ServletContextHandler setupV1API(ServletContextHandler context){
-        context.addServlet(new ServletHolder(new com.tocarta.servlets.v1.HelloServlet(config)), "/hello");
+    private static ServletContextHandler setupV1API(){
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/v1");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v1.HelloServlet()), "/hello");
         context.addServlet(new ServletHolder(new com.tocarta.servlets.v1.TableServlet()), "/table");
         context.addServlet(new ServletHolder(new com.tocarta.servlets.v1.OrderServlet()), "/order");
         context.addServlet(new ServletHolder(new com.tocarta.servlets.v1.TicketServlet()), "/ticket");
@@ -128,23 +131,26 @@ public class StartPOS {
         return context;
     }
     
-    private static ServletContextHandler setupV2API(ServletContextHandler context){
-        context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.HelloServlet()), "/v2");
-        context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.TableServlet()), "/v2/table");
-        context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.OrderServlet()), "/v2/order");
-        context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.TicketServlet()), "/v2/ticket");
-        context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.SecondCoursesServlet()), "/v2/actions/bring_second_courses");
+    private static ServletContextHandler setupV2API(){
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/v2");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.HelloServlet()), "/hello");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.TableServlet()), "/table");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.OrderServlet()), "/order");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.TicketServlet()), "/ticket");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.v2.SecondCoursesServlet()), "/actions/bring_second_courses");
         return context;
     }
     
-    private static ServletContextHandler setupLocalServlets(ServletContextHandler context){
+    private static ServletContextHandler setupLocalServlets(){
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/cli");
         context.addServlet(new ServletHolder(new com.tocarta.servlets.local.MainServlet()), "/");
-        context.addServlet(new ServletHolder(new com.tocarta.servlets.local.LoginServlet(config)), "/login");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.local.LoginServlet()), "/login");
         context.addServlet(new ServletHolder(new com.tocarta.servlets.local.LogoutServlet()), "/logout");
         context.addServlet(new ServletHolder(new com.tocarta.servlets.local.UpdateServlet()), "/update");
-        
         context.addServlet(new ServletHolder(new com.tocarta.servlets.local.ShutdownServlet()), "/shutdown");
-        context.addServlet(new ServletHolder(new com.tocarta.servlets.local.ShowConfigServlet(config)), "/show_config");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.local.ShowConfigServlet()), "/show_config");
         return context;
     }
     

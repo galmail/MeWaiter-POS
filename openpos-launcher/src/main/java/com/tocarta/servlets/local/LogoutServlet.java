@@ -9,6 +9,8 @@ package com.tocarta.servlets.local;
  * @author gal
  */
 
+import com.openbravo.pos.util.AltEncrypter;
+import com.tocarta.services.Setup;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,8 +29,10 @@ public class LogoutServlet extends HttpServlet
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        HttpSession session = request.getSession(true);
-        session.setAttribute("mwuser", null);
+        // RESET EMAIL/PASSWD IN CONFIG FILE
+        Setup.config.setProperty("mw.email", "");
+        Setup.config.setProperty("mw.password", "");
+        Setup.config.save();
         response.sendRedirect("/");
     }
 }
