@@ -16,20 +16,24 @@ import com.tocarta.Menu;
 import com.tocarta.ModifierListSet;
 import com.tocarta.Resource;
 import com.tocarta.Section;
+import com.tocarta.services.Setup;
 import com.tocarta.services.TestConnection;
 import com.tocarta.services.Update;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.ocpsoft.prettytime.PrettyTime;
  
 public class UpdateServlet extends HttpServlet
 {   
@@ -37,10 +41,17 @@ public class UpdateServlet extends HttpServlet
     
     }
     
-    private void writeJsonResponse(boolean res, HttpServletResponse response) throws IOException{
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        String res = "Before you start, please update system!";
+        String lastUpdate = Setup.config.getProperty("mw.last_update");
+        if(lastUpdate!=null && lastUpdate.length()>0){
+            PrettyTime pTime = new PrettyTime(new Locale("en"));
+            res = "Last time updated " + pTime.format(new Date(Long.parseLong(lastUpdate)));
+        }
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().print("{ \"success\": "+ res +" }");
+        response.getWriter().print("{ \"result\": \""+ res +"\" }");
     }
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -144,6 +155,9 @@ public class UpdateServlet extends HttpServlet
                 }
             }
             Logger.getLogger(UpdateServlet.class.getName()).log(Level.INFO, "Updated Successfull.");
+            long now = new Date().getTime();
+            Setup.config.setProperty("mw.last_update",new Long(now).toString());
+            Setup.config.save();
             resp = true;
         } catch (Exception ex) {
             Logger.getLogger(UpdateServlet.class.getName()).log(Level.SEVERE, ex.getMessage());
@@ -151,4 +165,11 @@ public class UpdateServlet extends HttpServlet
         }
         writeJsonResponse(resp,response);
     }
+    
+    private void writeJsonResponse(boolean res, HttpServletResponse response) throws IOException{
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().print("{ \"success\": "+ res +" }");
+    }
+    
 }

@@ -159,9 +159,9 @@ public class AppConfig implements AppProperties {
         
         m_propsconfig.setProperty("swing.defaultlaf", System.getProperty("swing.defaultlaf", "javax.swing.plaf.metal.MetalLookAndFeel"));
         
-        m_propsconfig.setProperty("machine.printer", "screen");
-        m_propsconfig.setProperty("machine.printer.2", "Not defined");
-        m_propsconfig.setProperty("machine.printer.3", "Not defined");
+        m_propsconfig.setProperty("machine.printer", "Kitchen screen");
+        m_propsconfig.setProperty("machine.printer.2", "Bar screen");
+        m_propsconfig.setProperty("machine.printer.3", "Bill screen");
         m_propsconfig.setProperty("machine.display", "screen");
         m_propsconfig.setProperty("machine.scale", "Not defined");
         m_propsconfig.setProperty("machine.screenmode", "window"); // fullscreen / window

@@ -177,7 +177,10 @@ public class TicketServlet extends HttpServlet {
             ticket.setPayments(setupPayments(ticket.getTotal(),payment.getPaymentLines()));
         }
         // Asigno los valores definitivos del ticket...
-        ticket.setUser(m_App.getAppUserView().getUser().getUserInfo()); // El usuario que lo cobra
+        
+        ticket.setUser(App.loggedUser().getUserInfo()); // El usuario que lo cobra
+        //ticket.setUser(m_App.getAppUserView().getUser().getUserInfo()); // El usuario que lo cobra
+        
         ticket.setActiveCash(m_App.getActiveCashIndex());
         ticket.setDate(new Date()); // Le pongo la fecha de cobro
         // Set Printer

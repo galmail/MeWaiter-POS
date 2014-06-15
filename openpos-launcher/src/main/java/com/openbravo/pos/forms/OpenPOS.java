@@ -70,7 +70,6 @@ public class OpenPOS implements Runnable {
             if ("fullscreen".equals(screenmode)) {
                 JRootKiosk rootkiosk = new JRootKiosk();
                 App.appView = rootkiosk.initFrame(config);
-                
             } else {
                 JRootFrame rootframe = new JRootFrame();
                 App.appView = rootframe.initFrame(config);

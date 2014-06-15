@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
         <!-- Custom styles for this template -->
-        <link href="navbar-fixed-top.css" rel="stylesheet">
+        <link href="main.css" rel="stylesheet">
 
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -39,29 +39,47 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a class="post_action" href="/cli/show_config">Configuration</a></li>
-                        <li><a class="post_action" href="/cli/printer">Screen Printer</a></li>
+                        <li><a class="post_action" href="/cli/show_printer">Screen Printer</a></li>
                         <li><a class="post_action" href="/cli/shutdown">Shutdown App</a></li>
                         <li><a href="/cli/logout">Logout</a></li>
                     </ul>
                 </div>
             </div>
         </div>
-
-<!--        <div class="container">
-            <div class="jumbotron">
-                <h1>Home</h1>
-                <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-                <p>To see the difference between static and fixed top navbars, just scroll.</p>
-                <p>
-                    <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-                </p>
+        <div class="container">
+            <div id="alert" class="alert alert-warning">
+                <p id="alertMsg"></p>
             </div>
-        </div>-->
+        </div>
 
         <div class="container">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Restaurant Info</h3>
+                    <h3 class="panel-title">Daily Activity on <span id="today_label"></span></h3>
+                </div>
+                <div id="dailyActivityPanel" class="panel-body">
+                    <p id="daily_cash_label">** refresh page to load **</p>
+                    <p><a id="closeCashButton" href="/cli/close_cash" class="btn btn-lg btn-danger" role="button">Close Cash</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">System Updates</h3>
+                </div>
+                <div class="panel-body">
+                    <p id="last_update_label"></p>
+                    <p><a id="updateButton" href="/cli/update" class="btn btn-primary btn-lg" role="button">Update Now</a></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Restaurant</h3>
                 </div>
                 <div class="panel-body">
                     <p>** Restaurant Name **</p>
@@ -72,24 +90,17 @@
         <div class="container">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Sync Info</h3>
-                </div>
-                <div class="panel-body">
-                    <p style="float: left;font-size: xx-large;margin-right: 30px;">Last updated on July 2, 2014 at 14:10</p>
-                    <p><a href="/cli/update" class="btn btn-primary btn-lg post_action" role="button">Update Now</a></p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="container">
-            <div class="panel panel-default">
-                <div class="panel-heading">
                     <h3 class="panel-title">About meWaiter</h3>
                 </div>
                 <div class="panel-body">
                     <p>meWaiter v1.0.1 was built on OpenBravo POS</p>
-                    <p>Copyright Tocarta International SL, 2014</p>
                 </div>
+            </div>
+        </div>
+
+        <div id="footer">
+            <div class="container">
+                <p class="text-muted"><a target="_blank" href="http://tocarta.com">Copyright © Tocarta International SL</a></p>
             </div>
         </div>
 

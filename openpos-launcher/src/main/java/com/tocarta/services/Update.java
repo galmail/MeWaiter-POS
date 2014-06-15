@@ -27,11 +27,13 @@ public class Update {
     public static boolean uploadPosIP(){
         try {
             String ip = InetAddress.getLocalHost().getHostAddress();
+            String port = Setup.config.getProperty("mw.server_port");
+            String apiVersion = Setup.config.getProperty("mw.api_version");
             String token = Setup.config.getProperty("mw.auth_token");
             // set POS IP Address
             MultivaluedMap ipData = new MultivaluedMapImpl();
             ipData.add("auth_token", token);
-            ipData.add("ip", ip);
+            ipData.add("ip", "http://"+ip+":"+port+"/"+apiVersion);
             String response = Setup.service.path("/cli/mw").path("/load_pos_ip_address").accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(ClientResponse.class, ipData).getEntity(String.class);
 //            ObjectMapper mapper = new ObjectMapper();
 //            HashMap<String, Object> map = mapper.readValue(response, HashMap.class);

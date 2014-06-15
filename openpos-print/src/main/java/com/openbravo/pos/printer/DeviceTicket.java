@@ -56,7 +56,7 @@ public class DeviceTicket {
         m_deviceprinters = new HashMap<String, DevicePrinter>();
         m_deviceprinterslist = new ArrayList<DevicePrinter>();
 
-        DevicePrinter p = new DevicePrinterPanel();
+        DevicePrinter p = new DevicePrinterPanel(null);
         m_deviceprinters.put("1", p);
         m_deviceprinterslist.add(p);
     }
@@ -93,7 +93,7 @@ public class DeviceTicket {
         }
 
         try {
-            if ("screen".equals(sDisplayType)) {
+            if (sDisplayType.contains("screen")) {
                 m_devicedisplay = new DeviceDisplayPanel();
             } else if ("window".equals(sDisplayType)) {
                 m_devicedisplay = new DeviceDisplayWindow();
@@ -137,8 +137,8 @@ public class DeviceTicket {
             }
 
             try {
-                if ("screen".equals(sPrinterType)) {
-                    addPrinter(sPrinterIndex, new DevicePrinterPanel());
+                if (sPrinterType.contains("screen")) {
+                    addPrinter(sPrinterIndex, new DevicePrinterPanel(sPrinterType));
                 } else if ("printer".equals(sPrinterType)) {
 
                     // backward compatibility

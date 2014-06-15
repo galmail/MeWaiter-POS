@@ -32,9 +32,6 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.util.resource.ResourceCollection;
-import org.eclipse.jetty.webapp.WebAppContext;
 
 /**
  *
@@ -151,6 +148,9 @@ public class StartPOS {
         context.addServlet(new ServletHolder(new com.tocarta.servlets.local.UpdateServlet()), "/update");
         context.addServlet(new ServletHolder(new com.tocarta.servlets.local.ShutdownServlet()), "/shutdown");
         context.addServlet(new ServletHolder(new com.tocarta.servlets.local.ShowConfigServlet()), "/show_config");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.local.ShowPrinterServlet()), "/show_printer");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.local.DailyCashServlet()), "/daily_cash");
+        context.addServlet(new ServletHolder(new com.tocarta.servlets.local.CloseCashServlet()), "/close_cash");
         return context;
     }
     

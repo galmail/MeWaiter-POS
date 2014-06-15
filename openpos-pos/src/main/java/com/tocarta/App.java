@@ -13,6 +13,7 @@ import com.openbravo.data.loader.PreparedSentence;
 import com.openbravo.data.loader.SentenceList;
 import com.openbravo.data.loader.SerializerWriteBasicExt;
 import com.openbravo.data.loader.Session;
+import com.openbravo.pos.forms.AppUser;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.forms.DataLogicSystem;
@@ -45,6 +46,20 @@ public class App {
 
     public App() {
     }
+    
+    // For now, this function returns the admin user
+    public static AppUser loggedUser(){
+        AppUser adminUser = null;
+        try {
+            DataLogicSystem dlSystem = (DataLogicSystem) appView.getBean("com.openbravo.pos.forms.DataLogicSystem");
+            java.util.List people = dlSystem.listPeopleVisible();
+            adminUser = (AppUser)people.get(0);
+        } catch (BasicException ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return adminUser;
+    }
+    
     
     public static void cleanDB() {
         // delete stock

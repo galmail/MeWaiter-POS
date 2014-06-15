@@ -170,7 +170,9 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
         jcboTicketsBag.addItem("restaurant");
 
         // Printer 1
-        jcboMachinePrinter.addItem("screen");
+        jcboMachinePrinter.addItem("Kitchen screen");
+        jcboMachinePrinter.addItem("Bar screen");
+        jcboMachinePrinter.addItem("Bill screen");
         jcboMachinePrinter.addItem("printer");
         jcboMachinePrinter.addItem("epson");
         jcboMachinePrinter.addItem("tmu220");
@@ -196,7 +198,9 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
         jcboSerialPrinter.addItem("/dev/ttyS3");
 
         // Printer 2        
-        jcboMachinePrinter2.addItem("screen");
+        jcboMachinePrinter2.addItem("Kitchen screen");
+        jcboMachinePrinter2.addItem("Bar screen");
+        jcboMachinePrinter2.addItem("Bill screen");
         jcboMachinePrinter2.addItem("printer");
         jcboMachinePrinter2.addItem("epson");
         jcboMachinePrinter2.addItem("tmu220");
@@ -222,7 +226,9 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
         jcboSerialPrinter2.addItem("/dev/ttyS3");
 
         // Printer 3
-        jcboMachinePrinter3.addItem("screen");
+        jcboMachinePrinter3.addItem("Kitchen screen");
+        jcboMachinePrinter3.addItem("Bar screen");
+        jcboMachinePrinter3.addItem("Bill screen");
         jcboMachinePrinter3.addItem("printer");
         jcboMachinePrinter3.addItem("epson");
         jcboMachinePrinter3.addItem("tmu220");
@@ -248,7 +254,9 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
         jcboSerialPrinter3.addItem("/dev/ttyS3");
 
         // Printer 4
-        jcboMachinePrinter4.addItem("screen");
+        jcboMachinePrinter4.addItem("Kitchen screen");
+        jcboMachinePrinter4.addItem("Bar screen");
+        jcboMachinePrinter4.addItem("Bill screen");
         jcboMachinePrinter4.addItem("printer");
         jcboMachinePrinter4.addItem("epson");
         jcboMachinePrinter4.addItem("tmu220");
@@ -274,7 +282,9 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
         jcboSerialPrinter4.addItem("/dev/ttyS3");
         
         // Printer 5
-        jcboMachinePrinter5.addItem("screen");
+        jcboMachinePrinter5.addItem("Kitchen screen");
+        jcboMachinePrinter5.addItem("Bar screen");
+        jcboMachinePrinter5.addItem("Bill screen");
         jcboMachinePrinter5.addItem("printer");
         jcboMachinePrinter5.addItem("epson");
         jcboMachinePrinter5.addItem("tmu220");
@@ -300,7 +310,9 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
         jcboSerialPrinter5.addItem("/dev/ttyS3");
         
         // Printer 6
-        jcboMachinePrinter6.addItem("screen");
+        jcboMachinePrinter6.addItem("Kitchen screen");
+        jcboMachinePrinter6.addItem("Bar screen");
+        jcboMachinePrinter6.addItem("Bill screen");
         jcboMachinePrinter6.addItem("printer");
         jcboMachinePrinter6.addItem("epson");
         jcboMachinePrinter6.addItem("tmu220");
