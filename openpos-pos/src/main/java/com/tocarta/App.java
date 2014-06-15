@@ -13,6 +13,7 @@ import com.openbravo.data.loader.PreparedSentence;
 import com.openbravo.data.loader.SentenceList;
 import com.openbravo.data.loader.SerializerWriteBasicExt;
 import com.openbravo.data.loader.Session;
+import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppUser;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
@@ -43,6 +44,7 @@ public class App {
     public static AppView appView = null;
     public static int attrCounter = 0;
     public static JPaymentSelect jpaymentView = null;
+    public static AppConfig config = null;
 
     public App() {
     }

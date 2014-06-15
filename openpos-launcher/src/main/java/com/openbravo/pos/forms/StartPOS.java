@@ -95,10 +95,14 @@ public class StartPOS {
             // listen to Web Services on port 8080
             Server server = new Server(port);
             
-            String webapp = "src/main/webapp";
+            String webapp = "webapp";
+            String webDir = StartPOS.class.getClassLoader().getResource(webapp).toExternalForm();
+            
+            System.out.println("****** WEBDIR="+webDir);
+
             ResourceHandler resource_handler = new ResourceHandler();
             resource_handler.setWelcomeFiles(new String[]{ "index.html" });
-            resource_handler.setResourceBase(webapp);
+            resource_handler.setResourceBase(webDir);
             
             ServletContextHandler contextV1 = setupV1API();
             ServletContextHandler contextV2 = setupV2API();

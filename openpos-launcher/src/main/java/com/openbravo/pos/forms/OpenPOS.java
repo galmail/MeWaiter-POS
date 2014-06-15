@@ -6,6 +6,7 @@ package com.openbravo.pos.forms;
 
 import com.openbravo.format.Formats;
 import com.tocarta.App;
+import com.tocarta.services.Setup;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -74,5 +75,6 @@ public class OpenPOS implements Runnable {
                 JRootFrame rootframe = new JRootFrame();
                 App.appView = rootframe.initFrame(config);
             }
+            //App.config = Setup.config;
         }
     }

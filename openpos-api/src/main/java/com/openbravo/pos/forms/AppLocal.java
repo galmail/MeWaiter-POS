@@ -26,10 +26,10 @@ import com.openbravo.beans.LocaleResources;
  */
 public class AppLocal {
 
-	public static final String APP_NAME = "Openbravo POS";
-	public static final String APP_ID = "openbravopos";
-	public static final String APP_VERSION = "2.30.2";
-	public static final String DB_VERSION = "2.40.1";
+	public static final String APP_NAME = "meWaiter Server"; // Openbravo POS
+	public static final String APP_ID = "mewaiter"; // openbravopos
+	public static final String APP_VERSION = "1.0.1"; // 2.30.2
+	public static final String DB_VERSION = "2.40.1"; 
         public static String APP_STATUS = "App initializing...";
         
 	// private static List<ResourceBundle> m_messages;

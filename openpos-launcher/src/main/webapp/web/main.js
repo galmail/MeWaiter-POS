@@ -11,7 +11,14 @@ var mw = {
     reload_daily_cash_label: function() {
         $.get("/cli/daily_cash", function(data) {
             if (data.success) {
-                $("#daily_cash_label").html("Total: " + data.total + " on " + data.payments + " payments.");
+                if(data.payments==0){
+                    $("#daily_cash_label").html("Just started, no payments yet.");
+                    $("#closeCashButton").addClass('disabled').prop('disabled', true);
+                }
+                else {
+                    $("#daily_cash_label").html("Total: " + data.total + " on " + data.payments + " payments.");
+                    $("#closeCashButton").removeClass('disabled').prop('disabled', false);
+                }
             }
         });
     },

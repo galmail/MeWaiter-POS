@@ -128,6 +128,18 @@ public class AppConfig implements AppProperties {
         String dirname = System.getProperty("dirname.path");
         dirname = dirname == null ? "./" : dirname;
         
+        // mewaiter properties
+        m_propsconfig.setProperty("mw.server_port", "8080");
+        m_propsconfig.setProperty("mw.api_version", "v1");
+        m_propsconfig.setProperty("mw.run_in_background", "true");
+        m_propsconfig.setProperty("mw.url", "http://beta.tocarta.es");
+        m_propsconfig.setProperty("mw.localIP", "");
+        m_propsconfig.setProperty("mw.email", "");
+        m_propsconfig.setProperty("mw.password", "");
+        m_propsconfig.setProperty("mw.auth_token", "");
+        m_propsconfig.setProperty("mw.last_update", "");
+        
+        
         m_propsconfig.setProperty("db.driverlib", new File(new File(dirname), "lib/derby.jar").getAbsolutePath());
         m_propsconfig.setProperty("db.driver", "org.apache.derby.jdbc.EmbeddedDriver");
         m_propsconfig.setProperty("db.URL", "jdbc:derby:" + new File(new File(System.getProperty("user.home")), AppLocal.APP_ID + "-database").getAbsolutePath() + ";create=true");
@@ -162,10 +174,13 @@ public class AppConfig implements AppProperties {
         m_propsconfig.setProperty("machine.printer", "Kitchen screen");
         m_propsconfig.setProperty("machine.printer.2", "Bar screen");
         m_propsconfig.setProperty("machine.printer.3", "Bill screen");
+        m_propsconfig.setProperty("machine.printer.4", "Not defined");
+        m_propsconfig.setProperty("machine.printer.5", "Not defined");
+        m_propsconfig.setProperty("machine.printer.6", "Not defined");
         m_propsconfig.setProperty("machine.display", "screen");
         m_propsconfig.setProperty("machine.scale", "Not defined");
         m_propsconfig.setProperty("machine.screenmode", "window"); // fullscreen / window
-        m_propsconfig.setProperty("machine.ticketsbag", "standard");
+        m_propsconfig.setProperty("machine.ticketsbag", "restaurant");
         m_propsconfig.setProperty("machine.scanner", "Not defined");
         
         m_propsconfig.setProperty("payment.gateway", "external");

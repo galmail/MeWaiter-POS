@@ -61,6 +61,11 @@ public class JPanelConfigServer extends javax.swing.JPanel implements PanelConfi
      */
     public JPanelConfigServer() {
         initComponents();
+        //if ("true".equals(App.config.getProperty("mw.run_in_background"))) {
+            jPanel1.setVisible(false);
+        //}
+        
+        
         jtxtMwURL.getDocument().addDocumentListener(dirty);
         jtxtMwEmail.getDocument().addDocumentListener(dirty);
         jtxtMwPassword.getDocument().addDocumentListener(dirty);

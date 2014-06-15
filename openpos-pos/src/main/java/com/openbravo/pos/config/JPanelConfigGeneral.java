@@ -27,6 +27,7 @@ import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.util.ReportUtils;
 import com.openbravo.pos.util.StringParser;
+import com.tocarta.App;
 import java.util.Map;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
@@ -58,7 +59,12 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
     public JPanelConfigGeneral() {
 
         initComponents();
-
+        
+        // hide panels when it runs in background...
+        //if ("true".equals(App.config.getProperty("mw.run_in_background"))) {
+        
+        //}
+        
         String[] printernames = ReportUtils.getPrintNames();
 
         jtxtMachineHostname.getDocument().addDocumentListener(dirty);
